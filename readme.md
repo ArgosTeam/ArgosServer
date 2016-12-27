@@ -1,3 +1,24 @@
+# Argos Server
+
+## How to get set up ?
+
+Argos Server uses [Docker](https://www.docker.com/) in order to deploy fast.
+
+Laravel uses the DotEnv technology. In order to get set up you will need a .env file like the .env.example file provided.
+
+Type the commands below :
+
+```
+docker-compose up -d
+php artisan migrate
+```
+
+In order to stop the entities from docker :
+
+```
+docker-compose stop
+```
+
 # Laravel PHP Framework
 
 [![Build Status](https://travis-ci.org/laravel/framework.svg)](https://travis-ci.org/laravel/framework)
