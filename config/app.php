@@ -25,7 +25,8 @@ return [
     |
     */
 
-    'env' => env('APP_ENV', 'production'),
+    // Get env from nginx configuration
+    'env' => env('APP_ENV', 'development'),
 
     /*
     |--------------------------------------------------------------------------

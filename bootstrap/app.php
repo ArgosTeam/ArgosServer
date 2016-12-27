@@ -15,6 +15,9 @@ $app = new Illuminate\Foundation\Application(
     realpath(__DIR__.'/../')
 );
 
+// $dotenv = new Dotenv\Dotenv(__DIR__ . '/../', '.env' . '.' . $_ENV['APP_ENV']);
+// $dotenv->overload(); //this is important
+
 /*
 |--------------------------------------------------------------------------
 | Bind Important Interfaces

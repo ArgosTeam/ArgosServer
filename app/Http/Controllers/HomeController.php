@@ -24,7 +24,8 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        
+        return view('home')->with("environment", $_ENV['APP_ENV']);
     }
 
 
