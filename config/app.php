@@ -1,5 +1,5 @@
 <?php
-
+1;95;0c
 return [
 
     /*
@@ -25,7 +25,7 @@ return [
     |
     */
 
-    // Get env from nginx configuration
+    // TODO :: Get env from nginx configuration
     'env' => env('APP_ENV', 'development'),
 
     /*
