@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\User;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Log;
 use App\Http\Requests;
 
 class AuthController extends Controller
@@ -12,14 +11,13 @@ class AuthController extends Controller
     //
 
     public function registerManual(Requests\SubmitRegisterRequest $request){
-
         $data = $request->all();
-
+        \Illuminate\Support\Facades\Log::info('Showing request registerManual : ' . json_encode($data));
         //Check if object exists
         $user = \App\Models\User::where('email', $data["email"])->orWhere('phone', $data["phone"])->first();
 
         if(is_object($user)){
-            return (["registered" => false]);
+            return (response()->json(["registered" => false]));
         }
 
 
@@ -34,7 +32,7 @@ class AuthController extends Controller
         $user->password = bcrypt($data["password"]);
         $user->save();
 
-        return (["registered" => true, "user_id" => $user->id]);
+        return (response()->json(["registered" => true, "user_id" => $user->id]));
 
     }
 }
