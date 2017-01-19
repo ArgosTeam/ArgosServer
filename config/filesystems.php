@@ -58,8 +58,8 @@ return [
             'driver' => 's3',
             'key' => 'AKIAJYDIKQCK72XEMQMA',
             'secret' => '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',
-            'region' => 'eu-west-1',
-            'bucket' => 'argos-app-storage',
+            'region' => 'eu-west-2',
+            'bucket' => 'argos-pictures',
         ],
 
     ],
