@@ -27,7 +27,7 @@ class SearchTest extends TestCase
         $token = json_decode($tokenResponse->getContent(), true);
         //$this->header('Authorization: ' . $token['access_token']);
         $response = $this->call('GET',
-                                '/api/searchrelatives/au',[],[],[], ['HTTP_Authorization' => 'Bearer ' . $token['access_token']]);
+                                '/api/searchrelatives/z',[],[],[], ['HTTP_Authorization' => 'Bearer ' . $token['access_token']]);
         $this->assertEquals(200, $response->status());
     }
 }

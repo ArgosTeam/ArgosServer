@@ -19,8 +19,8 @@ class SearchFunctions {
         
         
         $data = [];
+        $newEntry = [];
         foreach ($users as $user) {
-            $newEntry = [];
             $newEntry['id'] = $user['id'];
             $newEntry['url'] = null;
             $newEntry['name'] = $user['firstName'] . ' ' . $user['lastName'];
@@ -28,7 +28,6 @@ class SearchFunctions {
             array_push($data, $newEntry);
         }
         foreach ($groups as $group) {
-            $newEntry = [];
             $newEntry['id'] = $group['id'];
             $newEntry['url'] = null;
             $newEntry['name'] = $group['name'];
