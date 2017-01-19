@@ -20,10 +20,10 @@ class AuthTest extends TestCase
             'grant_type' => 'password',
             'client_id' => '4',
             'client_secret' => '5nLIzZv1vnYGIgrOWIWjOtR2uSm9Qpvd70IHZqGB',
-            'phone' => 'aure.girardeau@gmail.com',
-            'email' => 'aure.girardeau@gmail.com',
-            'firstname' => 'Aurelien',
-            'lastname' => 'Girardeau',
+            'phone' => 'aure.giardeau@gmail.com',
+            'email' => 'aure.giardeau@gmail.com',
+            'firstname' => 'Ausdfsdf',
+            'lastname' => 'Girard',
             'password' => 'toto',
             'password_confirm' => 'toto',
             'sex' => 'male',
@@ -48,7 +48,7 @@ class AuthTest extends TestCase
                                     'grant_type' => 'password',
                                     'client_id' => '4',
                                     'client_secret' => '5nLIzZv1vnYGIgrOWIWjOtR2uSm9Qpvd70IHZqGB',
-                                    'username' => 'aure.girardeau@gmail.com',
+                                    'username' => 'aure.giardeau@gmail.com',
                                     'password' => 'toto',
                                     'scope' => '*'
                                 ]);

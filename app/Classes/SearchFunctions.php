@@ -25,15 +25,16 @@ class SearchFunctions {
             $newEntry['url'] = null;
             $newEntry['name'] = $user['firstName'] . ' ' . $user['lastName'];
             $newEntry['type'] = 'user';
-            array_push($data, $newEntry);
         }
+        $data[] = $newEntry;
         foreach ($groups as $group) {
             $newEntry['id'] = $group['id'];
             $newEntry['url'] = null;
             $newEntry['name'] = $group['name'];
             $newEntry['type'] = 'group';
-            array_push($data, $newEntry);
         }
+        $data[] = $newEntry;
+        \Illuminate\Support\Facades\Log::info(print_r($data, true));
         return (json_encode($newEntry));
     }
 }
