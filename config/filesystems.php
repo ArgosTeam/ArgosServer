@@ -56,8 +56,8 @@ return [
 
         's3' => [
             'driver' => 's3',
-            'key' => 'AKIAI2YH7UL2ZSSF5TCA',
-            'secret' => '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',
+            'key' => 'AKIAJYDIKQCK72XEMQMA',
+            'secret' => '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',
             'region' => 'eu-west-1',
             'bucket' => 'argos-app-storage',
         ],
