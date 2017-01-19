@@ -28,13 +28,4 @@ class HomeController extends Controller
         return view('home')->with("environment", $_ENV['APP_ENV']);
     }
 
-
-
-    public function selectData(){
-
-        return DropdownFunctions::generalSelect();
-
-    }
-
-
 }

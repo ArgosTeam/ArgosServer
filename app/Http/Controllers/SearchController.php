@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Hashtag;
 use Illuminate\Http\Request;
-
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests;
+use App\Classes\SearchFunctions;
 
 class SearchController extends Controller
 {
@@ -27,5 +29,14 @@ class SearchController extends Controller
 
         return $data;
 
+    }
+
+    public function selectData(){
+        return DropdownFunctions::generalSelect();
+    }
+
+    public function searchRelatives($search) {
+        $user = User::find(Auth::user()->id);
+        return SearchFunctions::getRelatives($user, $search);
     }
 }
