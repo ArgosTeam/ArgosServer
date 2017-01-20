@@ -49,7 +49,7 @@ class PhotoFunctions
 
         Storage::disk('s3')->put('myfile.txt', 'tototata', 'public');
         
-        \Illuminate\Support\Facades\Log::info('DEBUG');
+        \Illuminate\Support\Facades\Log::info('DEBUG : ' . $decode);
         
         $full = Image::make($decode)->rotate(-90);
         $avatar = Image::make($decode)->resize(60, 60)->rotate(-90);
