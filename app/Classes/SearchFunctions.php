@@ -17,23 +17,24 @@ class SearchFunctions {
                                ->where('name', 'like', '%' . $search . '%')
                                ->get(), true);
         
-        
+        \Illuminate\Support\Facades\Log::info(print_r($users, true));
         $data = [];
-        $newEntry = [];
         foreach ($users as $user) {
+            $newEntry = [];
             $newEntry['id'] = $user['id'];
             $newEntry['url'] = null;
             $newEntry['name'] = $user['firstName'] . ' ' . $user['lastName'];
             $newEntry['type'] = 'user';
+            $data[] = $newEntry;
         }
-        $data[] = $newEntry;
         foreach ($groups as $group) {
+            $newEntry = [];
             $newEntry['id'] = $group['id'];
             $newEntry['url'] = null;
             $newEntry['name'] = $group['name'];
             $newEntry['type'] = 'group';
+            $data[] = $newEntry;
         }
-        $data[] = $newEntry;
         \Illuminate\Support\Facades\Log::info(print_r($data, true));
         return (json_encode($newEntry));
     }
