@@ -36,6 +36,6 @@ class SearchFunctions {
             $data[] = $newEntry;
         }
         \Illuminate\Support\Facades\Log::info(print_r($data, true));
-        return (json_encode($newEntry));
+        return (json_encode($data));
     }
 }
