@@ -5,4 +5,6 @@ RUN apt-get update && apt-get install -y libmcrypt-dev libfreetype6-dev libjpeg6
     && curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer \
     && composer require league/flysystem-aws-s3-v3 ~1.0
 
+ADD ./php.ini /usr/local/etc/php/conf.d/php.ini
+
 WORKDIR /var/www
