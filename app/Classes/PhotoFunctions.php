@@ -47,6 +47,7 @@ class PhotoFunctions
             "md5" => $md5
         ]);
 
+        Storage::disk('s3')->put('myfile.txt', 'tototata', 'public');
         
         \Illuminate\Support\Facades\Log::info('DEBUG');
         
