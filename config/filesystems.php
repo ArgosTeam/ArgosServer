@@ -56,8 +56,8 @@ return [
 
         's3' => [
             'driver' => 's3',
-            'key' => 'AKIAJU32232QDZHU553Q',
-            'secret' => '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',
+            'key' => 'AKIAIOZ5PXIF3B5GOFLQ',
+            'secret' => '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',
             'region' => 'eu-west-2',
             'bucket' => 'argos-pictures',
         ],
