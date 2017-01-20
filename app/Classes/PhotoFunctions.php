@@ -46,20 +46,10 @@ class PhotoFunctions
             "lng" => $data["longitude"],
             "md5" => $md5
         ]);
-
-        Storage::disk('s3')->put('myfile.txt', 'tototata', 'public');
-        
-        \Illuminate\Support\Facades\Log::info('DEBUG : ' . $decode);
         
         $full = Image::make($decode)->rotate(-90);
-        
-        \Illuminate\Support\Facades\Log::info('DEBUG2 : ' . $decode);
         $avatar = Image::make($decode)->resize(60, 60)->rotate(-90);
-        
-        \Illuminate\Support\Facades\Log::info('DEBUG3 : ' . $decode);
         $full = $full->stream()->__toString();
-        
-        \Illuminate\Support\Facades\Log::info('DEBUG4 : ' . $decode);
         $avatar = $avatar->stream()->__toString();
 
         //Upload Photo

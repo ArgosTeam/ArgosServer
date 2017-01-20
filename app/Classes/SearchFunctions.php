@@ -16,8 +16,6 @@ class SearchFunctions {
         $groups =  json_decode(DB::table('groups')
                                ->where('name', 'like', '%' . $search . '%')
                                ->get(), true);
-        
-        \Illuminate\Support\Facades\Log::info(print_r($users, true));
         $data = [];
         foreach ($users as $user) {
             $newEntry = [];
@@ -35,7 +33,6 @@ class SearchFunctions {
             $newEntry['type'] = 'group';
             $data[] = $newEntry;
         }
-        \Illuminate\Support\Facades\Log::info(print_r($data, true));
         return (json_encode($data));
     }
 }
