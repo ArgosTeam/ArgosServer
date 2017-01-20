@@ -8,3 +8,4 @@ Homestead.yaml
 .env*
 *~
 vhost.conf
+docker-compose.yml
