@@ -47,12 +47,14 @@ class PhotoFunctions
             "md5" => $md5
         ]);
 
+        
+        \Illuminate\Support\Facades\Log::info('DEBUG');
+        
         $full = Image::make($decode)->rotate(-90);
         $avatar = Image::make($decode)->resize(60, 60)->rotate(-90);
         $full = $full->stream()->__toString();
         $avatar = $avatar->stream()->__toString();
 
-        \Illuminate\Support\Facades\Log::info('DEBUG');
         //Upload Photo
         Storage::disk('s3')->put($path, $full, 'public');
 
