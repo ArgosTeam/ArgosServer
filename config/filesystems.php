@@ -59,7 +59,7 @@ return [
             'key' => 'AKIAIOZ5PXIF3B5GOFLQ',
             'secret' => '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',
             'region' => 'eu-west-2',
-            'bucket' => 'argos-pictures',
+            'bucket' => 'argospic',
         ],
 
     ],

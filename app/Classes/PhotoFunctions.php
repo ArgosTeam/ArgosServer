@@ -7,7 +7,8 @@ use App\Models\Photo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use Intervention\Image\Facades\Image;
+use Intervention\Image\Facades\Image
+use Illuminate\Support\Facades\Log;
 
 /**
  * Created by PhpStorm.
@@ -51,6 +52,7 @@ class PhotoFunctions
         $full = $full->stream()->__toString();
         $avatar = $avatar->stream()->__toString();
 
+        \Illuminate\Support\Facades\Log::info('DEBUG');
         //Upload Photo
         Storage::disk('s3')->put($path, $full, 'public');
 
