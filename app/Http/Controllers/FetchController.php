@@ -14,7 +14,7 @@ class FetchController extends Controller
     public function fetch(){
 
         $f = new fetchFunctions();
-        return $f->fetch();
+        return response($f->fetch());
 
     }
 }

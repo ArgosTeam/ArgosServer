@@ -50,17 +50,17 @@ class fetchFunctions
             ]
         ];
 
-        $width = ($poly[0][0] - $poly[3][0])/4;
-        $height = ($poly[3][1] - $poly[0][1])/8;
+        $width = ((float)$poly[0][0] - (float)$poly[3][0])/4;
+        $height = ((float)$poly[3][1] - (float)$poly[0][1])/8;
 
 
         for($i = 0; $i < 8; $i++){
             for($a = 0; $a < 4; $a++){
 
-                $leftTop = (($poly[2][0]) + ($height * ($i + 1))) . " " . (($poly[2][1]) + ($width * $a));
-                $rightTop = (($poly[2][0]) + ($height * ($i + 1))) . " " . (($poly[2][1]) + ($width * ($a + 1)));
-                $rightBttm = (($poly[2][0]) + ($height * ($i))) . " " . (($poly[2][1]) + ($width * ($a + 1)));
-                $leftBttm = (($poly[2][0]) + ($height * $i)) . " " . (($poly[2][1]) + ($width * ($a)));
+                $leftTop = (((float)$poly[2][0]) + ($height * ($i + 1))) . " " . (((float)$poly[2][1]) + ($width * $a));
+                $rightTop = (((float)$poly[2][0]) + ($height * ($i + 1))) . " " . (((float)$poly[2][1]) + ($width * ($a + 1)));
+                $rightBttm = (((float)$poly[2][0]) + ($height * ($i))) . " " . (((float)$poly[2][1]) + ($width * ($a + 1)));
+                $leftBttm = (((float)$poly[2][0]) + ($height * $i)) . " " . (((float)$poly[2][1]) + ($width * ($a)));
 
                 $cells[$i][$a] = [$leftTop, $rightTop, $rightBttm, $leftBttm, $leftTop];
             }
