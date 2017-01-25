@@ -18,14 +18,13 @@ class SearchTest extends TestCase
                                 '/oauth/token',
                                 [
                                     'grant_type' => 'password',
-                                    'client_id' => '4',
-                                    'client_secret' => '5nLIzZv1vnYGIgrOWIWjOtR2uSm9Qpvd70IHZqGB',
+                                    'client_id' => '1',
+                                    'client_secret' => '8KD1qlhGoguCBCTZDgWsRtV1cU6OZtRrsOJT0cjb',
                                     'username' => 'aure.girardeau@gmail.com',
                                     'password' => 'toto',
                                     'scope' => '*'
                                 ]);
         $token = json_decode($tokenResponse->getContent(), true);
-        //$this->header('Authorization: ' . $token['access_token']);
         $response = $this->call('GET',
                                 '/api/searchrelatives/a',[],[],[], ['HTTP_Authorization' => 'Bearer ' . $token['access_token']]);
         print_r(json_decode($response->getContent()));

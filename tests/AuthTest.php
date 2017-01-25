@@ -18,12 +18,12 @@ class AuthTest extends TestCase
         $data = [
             'csrf_token' => csrf_token(),
             'grant_type' => 'password',
-            'client_id' => '4',
-            'client_secret' => '5nLIzZv1vnYGIgrOWIWjOtR2uSm9Qpvd70IHZqGB',
-            'phone' => 'aure.giardeau@gmail.com',
-            'email' => 'aure.giardeau@gmail.com',
-            'firstname' => 'Ausdfsdf',
-            'lastname' => 'Girard',
+            'client_id' => '1',
+            'client_secret' => '8KD1qlhGoguCBCTZDgWsRtV1cU6OZtRrsOJT0cjb',
+            'phone' => 'aure.girardeau@gmail.com',
+            'email' => 'aure.girardeau@gmail.com',
+            'firstname' => 'Aurelien',
+            'lastname' => 'Girardeau',
             'password' => 'toto',
             'password_confirm' => 'toto',
             'sex' => 'male',
@@ -46,9 +46,9 @@ class AuthTest extends TestCase
                                 '/oauth/token',
                                 [
                                     'grant_type' => 'password',
-                                    'client_id' => '4',
-                                    'client_secret' => '5nLIzZv1vnYGIgrOWIWjOtR2uSm9Qpvd70IHZqGB',
-                                    'username' => 'aure.giardeau@gmail.com',
+                                    'client_id' => '1',
+                                    'client_secret' => '8KD1qlhGoguCBCTZDgWsRtV1cU6OZtRrsOJT0cjb',
+                                    'username' => 'aure.girardeau@gmail.com',
                                     'password' => 'toto',
                                     'scope' => '*'
                                 ]);
