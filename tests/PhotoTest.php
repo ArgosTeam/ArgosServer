@@ -27,7 +27,7 @@ class   PhotoTest extends TestCase
 
         // Test Fetch
         $response = $this->call('GET',
-                    '/fetch',
+                    '/api/fetch',
                     [
                         'farRight' => 'lat/lng: (54.38655404338235, -5.277385468750026)',
                         'farLeft' => 'lat/lng: (54.38655404338235, -7.254924531250026)',
