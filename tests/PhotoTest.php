@@ -26,7 +26,7 @@ class   PhotoTest extends TestCase
         $token = json_decode($tokenResponse->getContent(), true);
 
         // Test Fetch
-        $this->call('GET',
+        $response = $this->call('GET',
                     '/fetch',
                     [
                         'farRight' => 'lat/lng: (54.38655404338235, -5.277385468750026)',
