@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Input;
 
 /**
  * Created by PhpStorm.
@@ -21,10 +22,11 @@ use Intervention\Image\Facades\Image;
 //http://gis.stackexchange.com/questions/31628/find-points-within-a-distance-using-mysql
 class fetchFunctions
 {
+    
     public function fetch(){
 
-        $data = $_GET;
-
+        $data = \Illuminate\Support\Facades\Input::get();
+        
         $poly[0] = explode(",",str_replace(["lat/lng: (", ")"], " ", $data["farLeft"]));
         $poly[1] = explode(",",str_replace(["lat/lng: (", ")"], " ", $data["farRight"]));
         $poly[2] = explode(",",str_replace(["lat/lng: (", ")"], " ", $data["nearLeft"]));
