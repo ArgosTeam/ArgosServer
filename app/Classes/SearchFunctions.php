@@ -28,7 +28,7 @@ class SearchFunctions {
             $newEntry['url'] = null;
             $newEntry['name'] = $user->firstName . ' ' . $user->lastName;
             $newEntry['type'] = 'user';
-            $newEntry['pending'] = $user->active;
+            $newEntry['pending'] = isset($user->active) ? false : $user->active;
             $data[] = $newEntry;
         }
         foreach ($groups as $group) {
@@ -37,7 +37,7 @@ class SearchFunctions {
             $newEntry['url'] = null;
             $newEntry['name'] = $group->name;
             $newEntry['type'] = 'group';
-            $newEntry['pending'] = $user->active;
+            $newEntry['pending'] = false;
             $data[] = $newEntry;
         }
         return (json_encode($data));
