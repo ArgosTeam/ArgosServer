@@ -32,7 +32,7 @@ class FriendController extends Controller
         $user = User::find(Auth::user()->id);
         $friendId = $request->input("user_id");
         $friend = User::find($friendId);
-        FriendFunctions::refuse($friend, $user->id)
+        FriendFunctions::refuse($friend, $user->id);
         return FriendFunctions::refuse($user, $friendId);
     }
 
