@@ -13,10 +13,10 @@ class SearchFunctions {
         
         
         // TODO: use known_only to seek in friends tab
-        $users = User::where('firstname', 'like', $search . '%')
-               ->orWhere('lastname', 'like', $search . '%')
+        $users = User::where('firstname', 'like', $nameBegin . '%')
+               ->orWhere('lastname', 'like', $nameBegin . '%')
                ->get();
-        $groups =  Group::where('name', 'like', '%' . $search . '%')
+        $groups =  Group::where('name', 'like', $nameBegin . '%')
                 ->get();
         $data = [];
         foreach ($users as $user) {
