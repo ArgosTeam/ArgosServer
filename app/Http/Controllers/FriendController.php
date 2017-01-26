@@ -6,8 +6,8 @@ use App\Classes\FriendFunctions;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Friend;
 use App\Models\User;
+use App\Models\Friend;
 
 class FriendController extends Controller
 {
