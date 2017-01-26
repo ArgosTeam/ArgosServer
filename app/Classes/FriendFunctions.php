@@ -24,7 +24,7 @@ class FriendFunctions
                     "reason" => "friendship already exists",
                     "http" => 404];
         }
-        $friend = new Friend();
+        $friend = new App\Models\Friend();
         $friend->user_id = $user->id;
         $friend->friend_id = $friendId;
         $friend->active = $active;
@@ -36,7 +36,7 @@ class FriendFunctions
     }
 
     public static function accept($user, $friendId) {
-        $friend = Friend::where("friend_id", $user->id)
+        $friend = App\Models\Friend::where("friend_id", $user->id)
                 ->where("user_id", $friendId)
                 ->first();
         $friend->active = true;
@@ -49,7 +49,7 @@ class FriendFunctions
     }
 
     public static function refuse($user, $friendId) {
-        $friend = Friend::where("friend_id", $user->id)
+        $friend = App\Models\Friend::where("friend_id", $user->id)
                 ->where("user_id", $friendId)
                 ->first();
         if ($friend->delete()) {
