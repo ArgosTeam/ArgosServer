@@ -14,7 +14,7 @@ class SearchFunctions {
         
         
         // TODO: use known_only to seek in friends tab
-        $users = User::join('user_users', 'users.id', '=', 'user_users.user_id')
+        $users = User::leftJoin('user_users', 'users.id', '=', 'user_users.user_id')
                ->where('users.firstname', 'like', $nameBegin . '%')
                ->orWhere('users.lastname', 'like', $nameBegin . '%')
                ->get();
@@ -28,7 +28,7 @@ class SearchFunctions {
             $newEntry['url'] = null;
             $newEntry['name'] = $user->firstName . ' ' . $user->lastName;
             $newEntry['type'] = 'user';
-            $newEntry['pending'] = false;
+            $newEntry['pending'] = $user->active;
             $data[] = $newEntry;
         }
         foreach ($groups as $group) {
@@ -37,7 +37,7 @@ class SearchFunctions {
             $newEntry['url'] = null;
             $newEntry['name'] = $group->name;
             $newEntry['type'] = 'group';
-            $newEntry['pending'] = false;
+            $newEntry['pending'] = $user->active;
             $data[] = $newEntry;
         }
         return (json_encode($data));
