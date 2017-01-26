@@ -14,7 +14,7 @@ use App\Models\User;
 
 class FriendFunctions
 {
-    public function add($user, $friendId, $active = false) {
+    public static function add($user, $friendId, $active = false) {
         $friend = Friend::where("friend_id", $friendId)
                 ->where("user_id", $user->id)
                 ->first();
@@ -34,7 +34,7 @@ class FriendFunctions
         }
     }
 
-    public function accept($user, $friendId) {
+    public static function accept($user, $friendId) {
         $friend = Friend::where("friend_id", $user->id)
                 ->where("user_id", $friendId)
                 ->first();
@@ -47,7 +47,7 @@ class FriendFunctions
         }
     }
 
-    public function refuse($user, $friendId) {
+    public static function refuse($user, $friendId) {
         $friend = Friend::where("friend_id", $user->id)
                 ->where("user_id", $friendId)
                 ->first();
