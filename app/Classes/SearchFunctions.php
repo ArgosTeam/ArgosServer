@@ -12,7 +12,7 @@ class SearchFunctions {
 
     private static function getUsers($user, $nameBegin, $knownOnly) {
         $users = [];
-        if ($knownOnly) {
+        if (!$knownOnly) {
             $users = User::leftJoin('user_users', 'users.id', '=', 'user_users.user_id')
                    ->where('users.firstname', 'like', $nameBegin . '%')
                    ->orWhere('users.lastname', 'like', $nameBegin . '%')
