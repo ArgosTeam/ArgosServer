@@ -9,34 +9,30 @@ use Illuminate\Support\Facades\Input;
 
 class SearchFunctions {
 
-    public static function  getContacts($user) {
-        $search = \Illuminate\Support\Facades\Input::get('name_begin');
-        $search = \Illuminate\Support\Facades\Input::get('known_only');
-
-
+    public static function  getContacts($user, $nameBegin, $knownOnly) {
+        
+        
         // TODO: use known_only to seek in friends tab
-        $users = json_decode(DB::table('users')
-                             ->where('firstname', 'like', '%' . $search . '%')
-                             ->orWhere('lastname', 'like', '%' . $search . '%')
-                             ->get(), true);
-        $groups =  json_decode(DB::table('groups')
-                               ->where('name', 'like', '%' . $search . '%')
-                               ->get(), true);
+        $users = User::where('firstname', 'like', $search . '%')
+               ->orWhere('lastname', 'like', $search . '%')
+               ->get();
+        $groups =  Group::where('name', 'like', '%' . $search . '%')
+                ->get();
         $data = [];
         foreach ($users as $user) {
             $newEntry = [];
-            $newEntry['id'] = $user['id'];
+            $newEntry['id'] = $user->id;
             $newEntry['url'] = null;
-            $newEntry['name'] = $user['firstName'] . ' ' . $user['lastName'];
+            $newEntry['name'] = $user->firstName . ' ' . $user->lastName;
             $newEntry['type'] = 'user';
             $newEntry['pending'] = false;
             $data[] = $newEntry;
         }
         foreach ($groups as $group) {
             $newEntry = [];
-            $newEntry['id'] = $group['id'];
+            $newEntry['id'] = $group->id;
             $newEntry['url'] = null;
-            $newEntry['name'] = $group['name'];
+            $newEntry['name'] = $group->name;
             $newEntry['type'] = 'group';
             $newEntry['pending'] = false;
             $data[] = $newEntry;

@@ -7,18 +7,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Group extends Model
 {
-    //
-    use SoftDeletes;
 
-    public function photos(){
-
+    public function photos() {
         return $this->belongsToMany(Photo::class);
-
     }
 
-    public function users(){
-
+    public function users() {
         return $this->belongsToMany(User::class);
-
     }
 }

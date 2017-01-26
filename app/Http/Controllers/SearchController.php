@@ -35,8 +35,10 @@ class SearchController extends Controller
         return DropdownFunctions::generalSelect();
     }
 
-    public function contacts() {
+    public function contacts(Request $request) {
         $user = User::find(Auth::user()->id);
-        return SearchFunctions::getContacts($user);
+        $nameBegin = $request->input("name_begin");
+        $knownOnly = $request->input("known_only");
+        return SearchFunctions::getContacts($user, $nameBegin, $knownOnly);
     }
 }
