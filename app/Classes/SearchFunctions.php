@@ -27,6 +27,7 @@ class SearchFunctions {
                    ->limit(13)
                    ->get();
         }
+        return $users ? $users : [];
     }
     
     public static function  getContacts($currentUser, $nameBegin, $knownOnly) {
