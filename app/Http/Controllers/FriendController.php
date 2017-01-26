@@ -16,7 +16,7 @@ class FriendController extends Controller
         $friendId = $request->input("user_id");
         $level = $request->input("level");
 
-        $friend = new App\Models\Friend();
+        $friend = new Friend();
         $friend->user_id = $user->id;
         $friend->friend_id = $friendId;
         $friend->level = $level;
@@ -30,7 +30,7 @@ class FriendController extends Controller
 
     public function accept(Request $request) {
         $user = User::find(Auth::user()->id);
-        $friend = App\Models\Friend::where("friend_id", $user->id);
+        $friend = Friend::where("friend_id", $user->id);
         $friend->active = true;
         if ($friend->save()) {
             return ["status" => "success", "http" => 200];
@@ -41,7 +41,7 @@ class FriendController extends Controller
 
     public function refuse(Request $request) {
         $user = User::find(Auth::user()->id);
-        $friend = App\Models\Friend::where("friend_id", $user->id);
+        $friend = Friend::where("friend_id", $user->id);
         if ($friend->delete()) {
             return ["status" => "success", "http" => 200];
         } else {
@@ -50,7 +50,7 @@ class FriendController extends Controller
     }
 
     public function delete(Request $request) {
-        $friendRequest = App\Models\Friend::where("user_id", $request->input["user_id"]);
+        $friendRequest = Friend::where("user_id", $request->input["user_id"]);
         if ($friend->delete()) {
             return ["status" => "success", "http" => 200];
         } else {
