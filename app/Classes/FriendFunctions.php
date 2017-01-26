@@ -14,49 +14,50 @@ use App\Models\User;
 
 class FriendFunctions
 {
-
-    //UserId is the user requesting
-    public function request($userId, $friendId){
-
-        $user = User::find($userId);
-        if (is_object($user)) {
-            $user->friends->attach($friendId, ["status" => "pending"]);
+    public function add($user, $friendId, $active = false) {
+        $friend = Friend::where("friend_id", $friendId)
+                ->where("user_id", $user->id)
+                ->first();
+        if ($friend) {
+            return ["status" => "refused",
+                    "reason" => "friendship already exists",
+                    "http" => 404];
         }
-        else {
-            return (["status" => "refused", "http" => 404]);
+        $friend = new Friend();
+        $friend->user_id = $user->id;
+        $friend->friend_id = $friendId;
+        $friend->active = $active;
+        if ($friend->save()) {
+            return ["status" => "success", "http" => 200];
+        } else {
+            return ["status" => "refused", "http" => 404];
         }
-        return (["status" => "success", "http" => 200]);
-
     }
 
-    //User Id and friendId are the reverse the the request function
-    public function accept($userId, $friendId){
-
-        $user = User::find($userId);
-        if(is_object($user)){
-            $user->friends2->updateExistingPivot($friendId, ["status" => "accepted"]);
-        }else{
-            return (["status" => "refused", "http" => 404]);
+    public function accept($user, $friendId) {
+        $friend = Friend::where("friend_id", $user->id)
+                ->where("user_id", $friendId)
+                ->first();
+        $friend->active = true;
+        if ($friend->save()) {
+            add($user, $friendId, true);
+            return ["status" => "success", "http" => 200];
+        } else {
+            return ["status" => "refused", "http" => 404];
         }
-
-        return (["status" => "success", "http" => 200]);
-
     }
 
-    //User Id and friendId are the reverse the the request function
-    public function decline($userId, $friendId){
-
-        $user = User::find($userId);
-        if(is_object($user)){
-            $user->friends2->updateExistingPivot($friendId, ["status" => "declined"]);
-        }else{
-            return (["status" => "refused", "http" => 404]);
+    public function refuse($user, $friendId) {
+        $friend = Friend::where("friend_id", $user->id)
+                ->where("user_id", $friendId)
+                ->first();
+        if ($friend->delete()) {
+            return ["status" => "success", "http" => 200];
+        } else {
+            return ["status" => "refused", "http" => 404];
         }
-
-        return (["status" => "success", "http" => 200]);
-
     }
-
+    
     public function fetch($userId, $includePending = false){
 
         $rtn = [];
