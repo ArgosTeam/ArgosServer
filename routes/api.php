@@ -39,7 +39,7 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::get('/search',           "SearchController@selectData");
     
-    Route::get('/search/contacts', "SearchController@testContacts");
+    Route::get('/search/contacts', "SearchController@contacts");
 
     Route::get('/friend/{userId}/{includePending?}', "FriendController@fetchRequests");
     Route::post('/friend/request/create', "FriendController@createRequest");
