@@ -13,7 +13,7 @@ class SearchTest extends TestCase
         parent::setUp();
     }
 
-    public function testSearchRelatives() {
+    public function testContacts() {
         $tokenResponse = $this->call('POST',
                                 '/oauth/token',
                                 [
@@ -26,7 +26,7 @@ class SearchTest extends TestCase
                                 ]);
         $token = json_decode($tokenResponse->getContent(), true);
         $response = $this->call('GET',
-                                '/api/searchrelatives/a',[],[],[], ['HTTP_Authorization' => 'Bearer ' . $token['access_token']]);
+                                '/api/search/contacts',[],[],[], ['HTTP_Authorization' => 'Bearer ' . $token['access_token']]);
         print_r(json_decode($response->getContent()));
         $this->assertEquals(200, $response->status());
     }

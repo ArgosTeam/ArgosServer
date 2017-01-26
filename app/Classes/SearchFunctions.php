@@ -5,10 +5,13 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Group;
+use Illuminate\Support\Facades\Input;
 
 class SearchFunctions {
 
-    public static function  getRelatives($user, $search) {
+    public static function  getContacts($user) {
+        $search = \Illuminate\Support\Facades\Input::get('search');
+        
         $users = json_decode(DB::table('users')
                              ->where('firstname', 'like', '%' . $search . '%')
                              ->orWhere('lastname', 'like', '%' . $search . '%')

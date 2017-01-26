@@ -31,12 +31,12 @@ class SearchController extends Controller
 
     }
 
-    public function selectData(){
+    public function selectData() {
         return DropdownFunctions::generalSelect();
     }
 
-    public function searchRelatives($search) {
+    public function contacts() {
         $user = User::find(Auth::user()->id);
-        return SearchFunctions::getRelatives($user, $search);
+        return SearchFunctions::getContacts($user);
     }
 }
