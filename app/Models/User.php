@@ -1,7 +1,7 @@
 <?php
 
-namespace App\Models;
-
+namespace App;
+use Illuminate\Database\Eloquent\Model;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -33,14 +33,11 @@ class User extends Authenticatable
         return $this->hasMany(Photo::class);
     }
 
-    public function groups(){
-        return $this->belongsToMany(Group::class)->withPivot('status');
+    public function groups() {
+        return $this->belongsToMany(Group::class);
     }
 
-    public function friends(){
-        return $this->belongsToMany(User::class, 'users_users', 'user_id')->withPivot('status');
-    }
-    public function friends2(){
-        return $this->belongsToMany(User::class, 'users_users', 'friend_id')->withPivot('status');
+    public function friends() {
+        return $this->belongsToMany(Friend::class);
     }
 }

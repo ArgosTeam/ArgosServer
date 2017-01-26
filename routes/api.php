@@ -21,7 +21,6 @@ use Illuminate\Http\Request;
 Route::group(['middleware' => 'auth:api'], function () {
 
     Route::get('/fetch',            "FetchController@fetch");
-
     Route::get('/user/{userId}', "UserController@profileRequests");
 
     // TEMPORARY SINCE I DONT HAVE ACCESS TO DB
@@ -41,10 +40,11 @@ Route::group(['middleware' => 'auth:api'], function () {
     
     Route::get('/search/contacts', "SearchController@contacts");
 
-    Route::get('/friend/{userId}/{includePending?}', "FriendController@fetchRequests");
-    Route::post('/friend/request/create', "FriendController@createRequest");
-    Route::post('/friend/request/accept', "FriendController@acceptRequest");
-    Route::post('/friend/request/decline', "FriendController@declineRequest");
+
+    /*
+    ** Route regarding friends actions
+    */
+    Route::post('/friend/add', "FriendController@add");
 
 
     Route::get('/group/{groupId}', "GroupController@fetchGroups");

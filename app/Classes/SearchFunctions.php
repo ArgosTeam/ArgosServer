@@ -10,8 +10,11 @@ use Illuminate\Support\Facades\Input;
 class SearchFunctions {
 
     public static function  getContacts($user) {
-        $search = \Illuminate\Support\Facades\Input::get('search');
-        
+        $search = \Illuminate\Support\Facades\Input::get('name_begin');
+        $search = \Illuminate\Support\Facades\Input::get('known_only');
+
+
+        // TODO: use known_only to seek in friends tab
         $users = json_decode(DB::table('users')
                              ->where('firstname', 'like', '%' . $search . '%')
                              ->orWhere('lastname', 'like', '%' . $search . '%')
@@ -26,6 +29,7 @@ class SearchFunctions {
             $newEntry['url'] = null;
             $newEntry['name'] = $user['firstName'] . ' ' . $user['lastName'];
             $newEntry['type'] = 'user';
+            $newEntry['pending'] = false;
             $data[] = $newEntry;
         }
         foreach ($groups as $group) {
@@ -34,6 +38,7 @@ class SearchFunctions {
             $newEntry['url'] = null;
             $newEntry['name'] = $group['name'];
             $newEntry['type'] = 'group';
+            $newEntry['pending'] = false;
             $data[] = $newEntry;
         }
         return (json_encode($data));
