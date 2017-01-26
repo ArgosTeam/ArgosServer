@@ -18,7 +18,7 @@ class SearchFunctions {
                ->where('users.firstname', 'like', $nameBegin . '%')
                ->orWhere('users.lastname', 'like', $nameBegin . '%')
                ->get();
-        Illuminate\Support\Facades\Log::info(print_r($users, true));
+        Log::info(print_r($users, true));
         $groups =  Group::where('name', 'like', $nameBegin . '%')
                 ->get();
         $data = [];
