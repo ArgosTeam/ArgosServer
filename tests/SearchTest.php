@@ -27,7 +27,8 @@ class SearchTest extends TestCase
         $token = json_decode($tokenResponse->getContent(), true);
         $response = $this->call('GET',
                                 '/api/search/contacts',[
-                                    'name_begin' => 'c'
+                                    'name_begin' => 'a',
+                                    'known_only' => true
                                 ],[],[], ['HTTP_Authorization' => 'Bearer ' . $token['access_token']]);
         print_r(json_decode($response->getContent()));
         $this->assertEquals(200, $response->status());
