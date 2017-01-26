@@ -11,6 +11,7 @@ namespace App\Classes;
 
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\Friend;
 
 class FriendFunctions
 {
