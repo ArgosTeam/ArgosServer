@@ -16,7 +16,7 @@ use App\Models\Friend;
 class FriendFunctions
 {
     public static function add($user, $friendId, $active = false) {
-        $friend = Friend::where("friend_id", $friendId)
+        $friend = App\Models\Friend::where("friend_id", $friendId)
                 ->where("user_id", $user->id)
                 ->first();
         if ($friend) {
