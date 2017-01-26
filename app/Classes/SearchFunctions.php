@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Log;
 class SearchFunctions {
 
     private static function getUsers($user, $nameBegin, $knownOnly) {
-        $users = null;
+        $users = [];
         if ($knownOnly) {
             $users = User::leftJoin('user_users', 'users.id', '=', 'user_users.user_id')
                    ->where('users.firstname', 'like', $nameBegin . '%')
