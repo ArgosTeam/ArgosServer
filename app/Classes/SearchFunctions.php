@@ -10,16 +10,30 @@ use Illuminate\Support\Facades\Log;
 
 class SearchFunctions {
 
-    public static function  getContacts($user, $nameBegin, $knownOnly) {
-        
-        
-        // TODO: use known_only to seek in friends tab
-        $users = User::leftJoin('user_users', 'users.id', '=', 'user_users.user_id')
-               ->where('users.firstname', 'like', $nameBegin . '%')
-               ->orWhere('users.lastname', 'like', $nameBegin . '%')
-               ->get();
+    private static function getUsers($user, $nameBegin, $knownOnly) {
+        $users = null;
+        if ($knownOnly) {
+            $users = User::leftJoin('user_users', 'users.id', '=', 'user_users.user_id')
+                   ->where('users.firstname', 'like', $nameBegin . '%')
+                   ->orWhere('users.lastname', 'like', $nameBegin . '%')
+                   ->limit(13)
+                   ->get();
+        } else {
+            $users = User::leftJoin('user_users', 'users.id', '=', 'user_users.user_id')
+                   ->where('users.firstname', 'like', $nameBegin . '%')
+                   ->where('user_users.friend_id', '=', $user->id)
+                   ->orWhere('users.lastname', 'like', $nameBegin . '%')
+                   ->where('user_users.friend_id', '=', $user->id)
+                   ->limit(13)
+                   ->get();
+        }
+    }
+    
+    public static function  getContacts($currentUser, $nameBegin, $knownOnly) {
+        $users = SearchFunctions::getUsers($currentUser, $nameBegin, $knownOnly);
         Log::info(print_r($users, true));
         $groups =  Group::where('name', 'like', $nameBegin . '%')
+                ->limit(12)
                 ->get();
         $data = [];
         foreach ($users as $user) {
@@ -28,7 +42,11 @@ class SearchFunctions {
             $newEntry['url'] = null;
             $newEntry['name'] = $user->firstName . ' ' . $user->lastName;
             $newEntry['type'] = 'user';
-            $newEntry['pending'] = $user->active == null ? false : $user->active;
+            if ($currentUser->id == $user->friend_id) {
+                $newEntry['pending'] = $user->active == null ? false : $user->active;
+            } else {
+                $newEntry['pending'] = false;
+            }
             $data[] = $newEntry;
         }
         foreach ($groups as $group) {
