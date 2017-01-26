@@ -41,7 +41,7 @@ class FriendFunctions
                 ->first();
         $friend->active = true;
         if ($friend->save()) {
-            add($user, $friendId, true);
+            FriendFunctions::add($user, $friendId, true);
             return ["status" => "success", "http" => 200];
         } else {
             return ["status" => "refused", "http" => 404];
