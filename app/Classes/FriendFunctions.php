@@ -15,7 +15,7 @@ use App\Models\Friend;
 
 class FriendFunctions
 {
-    public static function add($user, $friendId, $active = false) {
+    public static function add($user, $friendId, $own = false, $active = false) {
         $friend = Friend::where("friend_id", $friendId)
                 ->where("user_id", $user->id)
                 ->first();
@@ -41,7 +41,6 @@ class FriendFunctions
                 ->first();
         $friend->active = true;
         if ($friend->save()) {
-            FriendFunctions::add($user, $friendId, true);
             return ["status" => "success", "http" => 200];
         } else {
             return ["status" => "refused", "http" => 404];

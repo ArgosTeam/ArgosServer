@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Group;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Log;
 
 class SearchFunctions {
 
@@ -13,9 +14,11 @@ class SearchFunctions {
         
         
         // TODO: use known_only to seek in friends tab
-        $users = User::where('firstname', 'like', $nameBegin . '%')
-               ->orWhere('lastname', 'like', $nameBegin . '%')
+        $users = User::join('user_users', 'users.id', '=', 'user_users.user_id')
+               ->where('users.firstname', 'like', $nameBegin . '%')
+               ->orWhere('users.lastname', 'like', $nameBegin . '%')
                ->get();
+        Illuminate\Support\Facades\Log::info(print_r($users, true));
         $groups =  Group::where('name', 'like', $nameBegin . '%')
                 ->get();
         $data = [];
