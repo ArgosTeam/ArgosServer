@@ -49,7 +49,7 @@ class FriendController extends Controller
     }
 
     public function delete(Request $request) {
-        $friendRequest = App\Models\Friend::where('friend_id' => $request->input['user_id']);
+        $friendRequest = App\Models\Friend::where('user_id' => $request->input['user_id']);
         if ($friend->delete()) {
             return ["status" => "success", "http" => 200];
         } else {
