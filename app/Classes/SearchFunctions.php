@@ -28,7 +28,7 @@ class SearchFunctions {
             $newEntry['url'] = null;
             $newEntry['name'] = $user->firstName . ' ' . $user->lastName;
             $newEntry['type'] = 'user';
-            $newEntry['pending'] = $user->active == null ? false : $user->active;
+            $newEntry['pending'] = false;//$user->active == null ? false : $user->active;
             $data[] = $newEntry;
         }
         foreach ($groups as $group) {
