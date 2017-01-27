@@ -28,8 +28,8 @@ class GroupController extends Controller
     public function add(Request $request){
 
         $user = User::find(Auth::user()->id);
-        $public = request->input('public');
-        $name = request->input('name');
+        $public = $request->input('public');
+        $name = $request->input('name');
         return GroupFunctions::add($user, $public, $name);
 
     }
