@@ -53,10 +53,11 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post("/friend/refuse", "FriendController@refuse");
     Route::post("/friend/delete", "FriendController@delete");
 
-    Route::get('/group/{groupId}', "GroupController@fetchGroups");
-    Route::get('/group/user/{userId}', "GroupController@fetchUsersGroups");
+
+    /*
+    ** Route regarding groups actions
+    */
     Route::post('/group/add', "GroupController@add");
-    Route::post('/group/request/create', "GroupController@inviteCreate");
-    Route::post('/group/request/accept', "GroupController@inviteAccept");
-    Route::post('/group/request/decline', "GroupController@inviteDecline");
+    Route::post('/group/join', "GroupController@join");
+    Route::post('/group/accept', "GroupController@accept");
 });

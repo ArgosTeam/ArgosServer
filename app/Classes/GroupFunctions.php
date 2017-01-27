@@ -11,13 +11,13 @@ namespace App\Classes;
 
 use App\Models\Group;
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
 
 class GroupFunctions
 {
 
 
     public static function add($user, $public, $name) {
-
         $group = Group::where('name', '=', $name)
                ->first();
         if (is_object($group)) {
@@ -45,105 +45,29 @@ class GroupFunctions
 
     }
 
-    public function fetch($groupId)
-    {
-
-        $group = Group::find($groupId);
-
-        $rtn = [];
-        if (is_object($group)) {
-
-            $rtn["group"]["id"] = $group->id;
-            $rtn["group"]["name"] = $group->name;
-
-            foreach ($group->users AS $user){
-                $rtn["group"]["users"][] = [
-                    "id" => $user->id,
-                    "firstName" => $user->firstName,
-                    "lastName" => $user->lastName,
-                ];
-            }
-        }
-
-        return $rtn;
-
+    public static function join($user, $group_id) {
+        $group = Group::find($group_id);
+        $user->groups()->attach($group_id, [
+            'status' => 'pending',
+            'admin' => false
+        ]);
+        return response('Join request sent', 200);
     }
 
-    public function getUserGroups($userId){
+    public static function accept($currentUser, $user_id, $group_id) {
+        $group = Group::find($group_id);
+        $userToAccept = User::find($user_id);
 
-
-        $user = User::find($userId);
-        if(is_object($user)){
-
-            $rtn = [];
-
-            foreach($user->groups AS $group){
-                $rtn["group"][] = [
-                    "id" => $group->id,
-                    "name" => $group->name,
-                ];
-            }
-
-
-        }else{
-            return response('User not found', 404);
-        }
-
-        return response('Accepted', 200);
-
+        Log::info(print_r($userToAccept, true));
+        // if ($group->admin) {
+        //     $user->groups()->attach($group_id, [
+        //         'status' => 'accepted',
+        //         'admin' => false
+        //     ]);
+        //     return response('Join request sent', 200);
+        // } else {
+        //     return response('Access refused, need to be admin', 404);
+        // }
     }
-
-    public function inviteToGroup($groupId, $userId){
-
-        $user = User::find($userId);
-        $group = Group::find($groupId);
-        if(is_object($user)){
-            if(is_object($group)){
-                $user->groups()->attach($groupId);
-            }else{
-                return response('Group not found', 404);
-            }
-        }else{
-            return response('User not found', 404);
-        }
-
-        return response('Accepted', 200);
-
-    }
-
-    public function accept($groupId, $userId){
-
-        $user = User::find($userId);
-        $group = Group::find($groupId);
-        if(is_object($user)){
-            if(is_object($group)){
-                $user->groups()->updateExistingPivot($groupId);
-            }else{
-                return response('Group not found', 404);
-            }
-        }else{
-            return response('User not found', 404);
-        }
-
-        return response('Accepted', 200);
-
-    }
-
-    public function decline($groupId, $userId){
-
-        $user = User::find($userId);
-        $group = Group::find($groupId);
-        if(is_object($user)){
-            if(is_object($group)){
-                $user->groups()->updateExistingPivot($groupId);
-            }else{
-                return response('Group not found', 404);
-            }
-        }else{
-            return response('User not found', 404);
-        }
-
-        return response('Accepted', 200);
-
-    }
+    
 }

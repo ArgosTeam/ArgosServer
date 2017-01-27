@@ -43,8 +43,10 @@ class SearchFunctions {
             $newEntry['name'] = $user->firstName . ' ' . $user->lastName;
             $newEntry['type'] = 'user';
             if ($currentUser->id == $user->friend_id) {
-                $newEntry['pending'] = $user->active == null ? false : $user->active;
+                $newEntry['friend'] = $user->active;
+                $newEntry['pending'] = $user->active == null ? false : true;
             } else {
+                $newEntry['friend'] = false;
                 $newEntry['pending'] = false;
             }
             $data[] = $newEntry;
@@ -54,6 +56,7 @@ class SearchFunctions {
             $newEntry['id'] = $group->id;
             $newEntry['url'] = null;
             $newEntry['name'] = $group->name;
+            $newEntry['public'] = $group->public;
             $newEntry['type'] = 'group';
             $newEntry['pending'] = false;
             $data[] = $newEntry;
