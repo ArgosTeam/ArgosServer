@@ -7,9 +7,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Group extends Model
 {
+    protected $fillable = [
+        'name', 'public'
+    ];
 
+    
     public function photos() {
-        return $this->belongsToMany(Photo::class);
+        return $this->belongsToMany(Photo::class)
+            ->withTimestamps();
     }
 
     public function users() {
