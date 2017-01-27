@@ -25,12 +25,13 @@ class EventTest extends TestCase
                                          'scope' => '*'
                                      ]);
         $token = json_decode($tokenResponse->getContent(), true);
+        $timestamp = date('Y-m-d G:i:s', strtotime('+7 days'));
         $response = $this->call('POST',
                                 '/api/event/add',[
                                     'lat' => 49.5746472,
                                     'lng' => 50.456738,
                                     'name' => "event_test",
-                                    'expires' => strtotime('+7 days', (new Datetime())->getTimestamp()),
+                                    'expires' => $timestamp,
                                     'public' => true
                                 ],[],[], ['HTTP_Authorization' => 'Bearer ' . $token['access_token']]);
         $this->assertEquals(200, $response->status());
