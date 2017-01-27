@@ -93,18 +93,20 @@ class fetchFunctions
                 $location = Location::query()
                           ->whereRaw("ST_CONTAINS(PolygonFromText('POLYGON((" . implode(',', $poly) . "))'), GeomFromText(CONCAT('Point(',`lat`, ' ', `lng`,')')))");
                 $location = $location->latest()->first();
-                $photo = Photo::where('location_id', '=', $location->id)
-                       ->first();
-                
-                if(is_object($photo)) {
+                if (is_object($location)) {
+                    $photo = Photo::where('location_id', '=', $location->id)
+                           ->first();
                     
-                    $results[] = [
-                        "id" => $photo->id,
-                        "name" => $photo->name,
-                        "path" => env('S3_URL') . env('S3_BUCKET') . "/avatar-" . $photo->path,
-                        "lat" => $location->lat,
-                        "lng" => $location->lng,
-                    ];
+                    if(is_object($photo)) {
+                        
+                        $results[] = [
+                            "id" => $photo->id,
+                            "name" => $photo->name,
+                            "path" => env('S3_URL') . env('S3_BUCKET') . "/avatar-" . $photo->path,
+                            "lat" => $location->lat,
+                            "lng" => $location->lng,
+                        ];
+                    }
                 }
 
             }
