@@ -30,7 +30,6 @@ class GroupFunctions
                 'status' => 'accepted',
                 'admin' => true
             ]);
-            $user->groups()->updateExistingPivot($group->id);
 
         } else {
             return response('User not found', 404);
