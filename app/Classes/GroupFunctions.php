@@ -63,15 +63,15 @@ class GroupFunctions
         $userToAccept = User::find($user_id);
 
         Log::info(print_r($group, true));
-        // if ($group->admin) {
-        //     $user->groups()->attach($group_id, [
-        //         'status' => 'accepted',
-        //         'admin' => false
-        //     ]);
-        //     return response('Join request sent', 200);
-        // } else {
-        //     return response('Access refused, need to be admin', 404);
-        // }
+        if ($group->admin) {
+            $userToAccept->groups()->attach($group_id, [
+                'status' => 'accepted',
+                'admin' => false
+            ]);
+            return response('Join request sent', 200);
+        } else {
+            return response('Access refused, need to be admin', 404);
+        }
     }
     
 }
