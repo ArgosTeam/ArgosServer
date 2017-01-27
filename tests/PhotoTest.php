@@ -38,7 +38,6 @@ class   PhotoTest extends TestCase
                         'groupId' => null
                     ], [], [],
                     ['HTTP_Authorization' => 'Bearer ' . $token['access_token']]);
-        print_r(json_decode($response->getContent()));
         $this->assertEquals(200, $response->status());
     }
 }
