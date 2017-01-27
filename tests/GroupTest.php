@@ -54,7 +54,7 @@ class GroupTest extends TestCase
         $response = $this->call('POST',
                                 '/api/group/join',
                                 [
-                                    'group_id' => 4
+                                    'group_id' => 6
                                 ], [], [],
                                 ['HTTP_Authorization' => 'Bearer ' . $token['access_token']]);
         
@@ -80,7 +80,7 @@ class GroupTest extends TestCase
                                 '/api/group/accept',
                                 [
                                     'user_id' => 1,
-                                    'group_id' => 4
+                                    'group_id' => 6
                                 ], [], [],
                                 ['HTTP_Authorization' => 'Bearer ' . $token['access_token']]);
         
