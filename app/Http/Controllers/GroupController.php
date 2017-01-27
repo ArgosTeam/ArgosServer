@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Classes\GroupFunctions;
 use Illuminate\Http\Request;
 
+
 use App\Http\Requests;
 
 class GroupController extends Controller
@@ -26,9 +27,10 @@ class GroupController extends Controller
 
     public function add(Request $request){
 
-
-        $data = $request->all();
-        return GroupFunctions::add($data["name"], $data["userId"]);
+        $user = User::find(Auth::user()->id);
+        $public = request->input('public');
+        $name = request->input('name');
+        return GroupFunctions::add($user, $public, $name);
 
     }
 

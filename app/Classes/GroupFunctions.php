@@ -16,15 +16,13 @@ class GroupFunctions
 {
 
 
-    public static function add($name, $adminId){
-
-
-        $user = User::find($adminId);
+    public static function add($user, $public, $name) {
 
         if(is_object($user)) {
 
             $group = new Group();
             $group->name = $name;
+            $group->public = $public;
             $group->save();
 
 
