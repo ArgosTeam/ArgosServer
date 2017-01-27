@@ -58,7 +58,7 @@ class GroupFunctions
         $group = Group::find($group_id);
         $userToAccept = User::find($user_id);
 
-        Log::info(print_r($userToAccept, true));
+        Log::info(print_r($group, true));
         // if ($group->admin) {
         //     $user->groups()->attach($group_id, [
         //         'status' => 'accepted',
