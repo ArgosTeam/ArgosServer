@@ -72,7 +72,6 @@ class fetchFunctions
         $results = [];
         $results["photos"] = $this->fetchPhotos($cells);
         $results["events"] = $this->fetchEvents($cells);
-        $results["locations"] = $this->fetchLocations($cells);
 
         return ($results);
 
