@@ -18,6 +18,12 @@ class GroupFunctions
 
     public static function add($user, $public, $name) {
 
+        $group = Group::where('name', '=', $name)
+               ->first();
+        if (is_object($group)) {
+            return response('This group name already exists', 404);
+        }
+        
         if(is_object($user)) {
 
             $group = new Group();
