@@ -12,11 +12,11 @@ class EventController extends Controller
 {
     //
 
-    public function fetch($id){
+    // public function fetch($id){
 
-        return EventFunctions::fetch($id);
+    //     return EventFunctions::fetch($id);
 
-    }
+    // }
 
     public function add(Request $request){
 
