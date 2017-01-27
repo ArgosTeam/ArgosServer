@@ -50,21 +50,21 @@ class EventFunctions
         }
     }
 
-    public static function fetch($id){
+    // public static function fetch($id){
 
-        $event = Event::join('locations', 'events.location_id', '=', 'locations.id')
-               ->find($id);
+    //     $event = Event::join('locations', 'events.location_id', '=', 'locations.id')
+    //            ->find($id);
 
-        $result = [
-            "id" => $event->id,
-            "name" => $event->name,
-            "lat" => $event->lat,
-            "lng" => $event->lng,
-            "public" => $event->public
-        ];
+    //     $result = [
+    //         "id" => $event->id,
+    //         "name" => $event->name,
+    //         "lat" => $event->lat,
+    //         "lng" => $event->lng,
+    //         "public" => $event->public
+    //     ];
 
-        return $result;
+    //     return $result;
 
-    }
+    // }
 
 }
