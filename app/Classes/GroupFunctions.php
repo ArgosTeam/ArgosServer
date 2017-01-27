@@ -26,11 +26,11 @@ class GroupFunctions
             $group->save();
 
 
-            $user->groups()->attach($group->id);
-            $user->groups()->updateExistingPivot($group->id, [
+            $user->groups()->attach($group->id, [
                 'status' => 'accepted',
                 'admin' => true
             ]);
+            $user->groups()->updateExistingPivot($group->id);
 
         } else {
             return response('User not found', 404);
