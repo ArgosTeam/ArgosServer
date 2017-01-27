@@ -14,15 +14,15 @@ class SearchFunctions {
         $users = [];
         if (!$knownOnly) {
             $users = User::leftJoin('user_users', 'users.id', '=', 'user_users.user_id')
-                   ->where('users.firstname', 'like', $nameBegin . '%')
-                   ->orWhere('users.lastname', 'like', $nameBegin . '%')
+                   ->where('users.firstName', 'like', $nameBegin . '%')
+                   ->orWhere('users.lastName', 'like', $nameBegin . '%')
                    ->limit(13)
                    ->get();
         } else {
             $users = User::leftJoin('user_users', 'users.id', '=', 'user_users.user_id')
-                   ->where('users.firstname', 'like', $nameBegin . '%')
+                   ->where('users.firstName', 'like', $nameBegin . '%')
                    ->where('user_users.friend_id', '=', $user->id)
-                   ->orWhere('users.lastname', 'like', $nameBegin . '%')
+                   ->orWhere('users.lastName', 'like', $nameBegin . '%')
                    ->where('user_users.friend_id', '=', $user->id)
                    ->limit(13)
                    ->get();
