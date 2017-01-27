@@ -18,9 +18,9 @@ class EventController extends Controller
 
     }
 
-    public function create(Requests\SubmitEventCreate $request){
+    public function add(Request $request){
 
-        return EventFunctions::create($request);
+        return EventFunctions::add($request);
 
     }
 }

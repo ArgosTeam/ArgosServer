@@ -35,7 +35,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     ** Routes regarding events actions
     */
     Route::get('/event/{id}',       "EventController@fetch");
-    Route::post('/event',           "EventController@create");
+    Route::post('/event/add',           "EventController@create");
 
     Route::get('/search',           "SearchController@selectData");
 

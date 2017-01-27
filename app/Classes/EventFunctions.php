@@ -23,44 +23,37 @@ use Intervention\Image\Facades\Image;
 class EventFunctions
 {
 
-    public static function create(SubmitEventCreate $request){
+    public static function add(Request $request){
 
         $data = $request->all();
 
-        if(array_key_exists('location_id', $data)){
-            $locationId = $data["location_id"];
-        }else{
-            $location = Location::create([
-                "name" => $data["location_name"],
-                "public" => $data["public"],
-                "lat" => $data["location_name"],
-                "lng" => $data["location_name"],
-            ]);
-            $locationId = $location->id;
-        }
+        $location = Location::create([
+            "lat" => $data["lat"],
+            "lng" => $data["lng"],
+        ]);
+        $locationId = $location->id;
 
-        $create = [
-            "name" => $data["name"],
-            "user_id" => Auth::user()->id,
-            "location_id" => $locationId,
-            "public" => $data["public"],
-            "type" => $data["type"]
-        ];
+        $event = new Event();
+        $event->name = $data["name"];
+        $event->user_id = Auth::user()->id;
+        $event->location_id = $locationId;
+        $event->public = $data["public"];
 
         if(array_key_exists("expires", $data)) {
-            $create["expires"] = $data["expires"];
+            $event->expires = $data["expires"];
         }
 
-        //Create record
-        $event = Event::create($create);
-
-        return (["status" => "created", "event_id" => $event->id]);
-
+        if ($event->save()) {
+            return (["status" => "created", "event_id" => $event->id]);
+        } else {
+            return (["status" => "error while saving event"]);
+        }
     }
 
     public static function fetch($id){
 
-        $event = Event::find($id);
+        $event = Event::join('locations', 'events.location_id', '=', 'locations.id')
+               ->find($id);
 
         $result = [
             "id" => $event->id,
