@@ -90,10 +90,10 @@ class fetchFunctions
                 $poly = $col;
 
 
-                $photo = Photo::query();
-                $photo = $photo->whereRaw("ST_CONTAINS(PolygonFromText('POLYGON((" . implode(',', $poly) . "))'), GeomFromText(CONCAT('Point(',`lat`, ' ', `lng`,')')))");
-                $photo = $photo->latest()->first();
-                $location = Location::find($photo->location_id);
+                $location = Location::query()
+                          ->whereRaw("ST_CONTAINS(PolygonFromText('POLYGON((" . implode(',', $poly) . "))'), GeomFromText(CONCAT('Point(',`lat`, ' ', `lng`,')')))");
+                $location = $location->latest()->first();
+                $photo = Photo::where('location_id', '=', $location->id);
                 
                 if(is_object($photo)) {
                     
