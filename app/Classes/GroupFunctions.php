@@ -16,7 +16,7 @@ class GroupFunctions
 {
 
 
-    public static function create($name, $adminId){
+    public static function add($name, $adminId){
 
 
         $user = User::find($adminId);

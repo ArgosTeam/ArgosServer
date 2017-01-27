@@ -24,11 +24,11 @@ class GroupController extends Controller
 
     }
 
-    public function add(Requests\GroupCreateRequest $request){
+    public function add(Request $request){
 
 
         $data = $request->all();
-        return GroupFunctions::create($data["name"], $data["userId"]);
+        return GroupFunctions::add($data["name"], $data["userId"]);
 
     }
 
