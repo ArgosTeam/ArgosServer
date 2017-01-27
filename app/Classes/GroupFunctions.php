@@ -55,7 +55,11 @@ class GroupFunctions
     }
 
     public static function accept($currentUser, $user_id, $group_id) {
-        $group = Group::find($group_id);
+        $group = Group::leftJoin('group_user', function ($join) {
+            $join->on('groups.id', '=', 'group_user.group_id')
+                ->where('group_user.user_id', '=', $currentUser->id)
+                })
+               ->find($group_id);
         $userToAccept = User::find($user_id);
 
         Log::info(print_r($group, true));
