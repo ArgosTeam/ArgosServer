@@ -25,7 +25,6 @@ class PhotoFunctions
 
         $data = $request->all();
 
-
         $decode = base64_decode($data["image"]);
         $md5 = md5($decode);
 
@@ -36,14 +35,17 @@ class PhotoFunctions
 
         $path =  'images/' . time() . ".jpg";
 
+        $location = new Location();
+        $location->lat = $data["latitude"];
+        $location->lng = $data["longitude"];
+        $location->save();
         //Create record
         $photo = Photo::create([
             "name" => $data["name"],
             "description" => "",
             "path" => $path,
             "user_id" => Auth::user()->id,
-            "lat" => $data["latitude"],
-            "lng" => $data["longitude"],
+            "location_id" => $location->id,
             "md5" => $md5
         ]);
         
@@ -85,9 +87,10 @@ class PhotoFunctions
 
     }
 
-    public static function fetchPhoto($id){
+    public static function fetchPhoto($id) {
 
-        $photo = Photo::find($id);
+        $photo = Photo::join('locations', 'photos.location_id', '=', 'locations.id')
+               ->find($id);
 
         $result = [
             "id" => $photo->id,
@@ -97,8 +100,6 @@ class PhotoFunctions
             "lng" => $photo->lng,
             "likes" => 0,
         ];
-
-
 
         return $result;
 

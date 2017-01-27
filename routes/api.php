@@ -31,13 +31,17 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/photo/upload',    "PhotoController@uploadPhoto");
 
 
+    /*
+    ** Routes regarding events actions
+    */
     Route::get('/event/{id}',       "EventController@fetch");
     Route::post('/event',           "EventController@create");
 
-    Route::post('/searchhash',           "SearchController@process");
-
     Route::get('/search',           "SearchController@selectData");
-    
+
+    /*
+    ** Routes regarding search actions
+    */
     Route::get('/search/contacts', "SearchController@contacts");
 
 

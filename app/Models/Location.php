@@ -6,11 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Location extends Model
 {
-    protected $fillable = ["name", "user_id", "public", "lat", "lng"];
+    protected $fillable = ["lat", "lng"];
 
 
-    public function events(){
-        return $this->hasMany(Event::class);
+    public function events() {
+        return $this->hasOne(Event::class);
     }
 
+    public function photos() {
+        return $this->hasOne(Photo::class);
+    }
+    
 }

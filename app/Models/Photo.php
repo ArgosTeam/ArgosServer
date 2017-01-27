@@ -10,12 +10,15 @@ class Photo extends Model
     //
     use SoftDeletes;
 
-    protected $fillable = ["name", "description", "path", "user_id", "lat", "lng", "md5"];
+    protected $fillable = ["name", "description", "path", "user_id", "location_id", "md5"];
 
     public function user(){
         return $this->belongsTo(User::class);
     }
 
+    public function photos() {
+        return $this->belongsTo(Photo::class);
+    }
 
     public function groups(){
         return $this->belongsToMany(Group::class);

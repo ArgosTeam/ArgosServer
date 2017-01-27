@@ -90,18 +90,19 @@ class fetchFunctions
                 $poly = $col;
 
 
-                $photos = Photo::query();
-                $photos = $photos->whereRaw("ST_CONTAINS(PolygonFromText('POLYGON((" . implode(',', $poly) . "))'), GeomFromText(CONCAT('Point(',`lat`, ' ', `lng`,')')))");
-                $photos = $photos->latest()->first();
-
-
-                if(is_object($photos)) {
+                $photo = Photo::query();
+                $photo = $photo->whereRaw("ST_CONTAINS(PolygonFromText('POLYGON((" . implode(',', $poly) . "))'), GeomFromText(CONCAT('Point(',`lat`, ' ', `lng`,')')))");
+                $photo = $photo->latest()->first();
+                $location = Location::find($photo->location_id);
+                
+                if(is_object($photo)) {
+                    
                     $results[] = [
-                        "id" => $photos->id,
-                        "name" => $photos->name,
-                        "path" => env('S3_URL') . env('S3_BUCKET') . "/avatar-" . $photos->path,
-                        "lat" => $photos->lat,
-                        "lng" => $photos->lng,
+                        "id" => $photo->id,
+                        "name" => $photo->name,
+                        "path" => env('S3_URL') . env('S3_BUCKET') . "/avatar-" . $photo->path,
+                        "lat" => $location->lat,
+                        "lng" => $location->lng,
                     ];
                 }
 
@@ -146,35 +147,5 @@ class fetchFunctions
         return $results;
     }
 
-    private function fetchLocations($cells)
-    {
-
-
-        $results = [];
-
-        foreach ($cells AS $row) {
-            foreach ($row AS $col) {
-
-                $poly = $col;
-
-                $locations = Location::query();
-                $locations = $locations->whereRaw("ST_CONTAINS(PolygonFromText('POLYGON((" . implode(',', $poly) . "))'), GeomFromText(CONCAT('Point(',`lat`, ' ', `lng`,')')))");
-                $locations = $locations->latest()->first();
-
-                if(is_object($locations)) {
-                    $results[] = [
-                        "id" => $locations->id,
-                        "name" => $locations->name,
-                        "lat" => $locations->lat,
-                        "lng" => $locations->lng,
-                    ];
-                }
-
-
-            }
-        }
-
-        return $results;
-
-    }
+    
 }
