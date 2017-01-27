@@ -25,7 +25,7 @@ class EventTest extends TestCase
                                          'scope' => '*'
                                      ]);
         $token = json_decode($tokenResponse->getContent(), true);
-        $response = $this->call('GET',
+        $response = $this->call('POST',
                                 '/api/event/add',[
                                     'lat' => 49.5746472,
                                     'lng' => 50.456738,
