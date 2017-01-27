@@ -53,8 +53,7 @@ class EventFunctions
     public static function fetch($id){
 
         $event = Event::leftJoin('locations', 'events.location_id', '=', 'locations.id')
-               ->find($id)
-               ->first();
+               ->find($id);;
 
         $result = [
             "id" => $event->id,
