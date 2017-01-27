@@ -93,7 +93,8 @@ class fetchFunctions
                 $location = Location::query()
                           ->whereRaw("ST_CONTAINS(PolygonFromText('POLYGON((" . implode(',', $poly) . "))'), GeomFromText(CONCAT('Point(',`lat`, ' ', `lng`,')')))");
                 $location = $location->latest()->first();
-                $photo = Photo::where('location_id', '=', $location->id);
+                $photo = Photo::where('location_id', '=', $location->id)
+                       ->first();
                 
                 if(is_object($photo)) {
                     
