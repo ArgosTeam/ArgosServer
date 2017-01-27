@@ -30,7 +30,7 @@ class EventTest extends TestCase
                                     'lat' => 49.5746472,
                                     'lng' => 50.456738,
                                     'name' => "event_test",
-                                    'expires' => strtotime('+7 days', time()),
+                                    'expires' => strtotime('+7 days', (new Datetime())->getTimestamp()),
                                     'public' => true
                                 ],[],[], ['HTTP_Authorization' => 'Bearer ' . $token['access_token']]);
         $this->assertEquals(200, $response->status());
