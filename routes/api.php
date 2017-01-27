@@ -55,7 +55,7 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::get('/group/{groupId}', "GroupController@fetchGroups");
     Route::get('/group/user/{userId}', "GroupController@fetchUsersGroups");
-    Route::post('/group/create', "GroupController@createGroup");
+    Route::post('/group/add', "GroupController@add");
     Route::post('/group/request/create', "GroupController@inviteCreate");
     Route::post('/group/request/accept', "GroupController@inviteAccept");
     Route::post('/group/request/decline', "GroupController@inviteDecline");

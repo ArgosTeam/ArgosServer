@@ -16,21 +16,25 @@ class GroupFunctions
 {
 
 
-    public function create($name, $adminId){
+    public static function create($name, $adminId){
 
 
         $user = User::find($adminId);
 
-        if(is_object($user)){
+        if(is_object($user)) {
 
-            $group = new Group;
+            $group = new Group();
             $group->name = $name;
             $group->save();
 
 
-            $user->groups()->attach($group->id, ["status" => "accepted"]);
+            $user->groups()->attach($group->id);
+            $user->groups()->updateExistingPivot($group->id, [
+                'status' => 'accepted',
+                'admin' => true
+            ]);
 
-        }else{
+        } else {
             return response('User not found', 404);
         }
 
@@ -54,7 +58,6 @@ class GroupFunctions
                     "id" => $user->id,
                     "firstName" => $user->firstName,
                     "lastName" => $user->lastName,
-                    "status" => $user->pivot->status,
                 ];
             }
         }
@@ -93,7 +96,7 @@ class GroupFunctions
         $group = Group::find($groupId);
         if(is_object($user)){
             if(is_object($group)){
-                $user->groups()->attach($groupId, ["status" => "pending"]);
+                $user->groups()->attach($groupId);
             }else{
                 return response('Group not found', 404);
             }
@@ -111,7 +114,7 @@ class GroupFunctions
         $group = Group::find($groupId);
         if(is_object($user)){
             if(is_object($group)){
-                $user->groups()->updateExistingPivot($groupId, ["status" => "accepted"]);
+                $user->groups()->updateExistingPivot($groupId);
             }else{
                 return response('Group not found', 404);
             }
@@ -129,7 +132,7 @@ class GroupFunctions
         $group = Group::find($groupId);
         if(is_object($user)){
             if(is_object($group)){
-                $user->groups()->updateExistingPivot($groupId, ["status" => "declined"]);
+                $user->groups()->updateExistingPivot($groupId);
             }else{
                 return response('Group not found', 404);
             }
