@@ -22,7 +22,7 @@ class SearchFunctions {
             ->where('firstName', 'like', $nameBegin . '%')
             ->orWhere('lastName', 'like', $nameBegin . '%')
             ->whereIn('id', $ids)
-            ->limit($limit)
+            ->limit(15)
             ->get();
     }
 
