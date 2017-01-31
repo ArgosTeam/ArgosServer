@@ -6,6 +6,7 @@ use App\Classes\FriendFunctions;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use App\Models\User;
 use App\Models\Friend;
 
@@ -16,6 +17,7 @@ class FriendController extends Controller
         $user = User::find(Auth::user()->id);
         $friendId = $request->input("user_id");
         $friend = User::find($friendId);
+        Log::info('userId :' . $friendId);
         FriendFunctions::add($friend, $user->id);
         return FriendFunctions::add($user, $friendId, true);
      }
