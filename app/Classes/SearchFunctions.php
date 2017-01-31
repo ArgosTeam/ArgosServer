@@ -128,7 +128,7 @@ class SearchFunctions {
     //         $data[] = $newEntry;
     //     }
     //     return response($data, 200);
-    }
+    //}
 
     
 }
