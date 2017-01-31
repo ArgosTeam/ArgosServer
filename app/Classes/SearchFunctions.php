@@ -68,6 +68,7 @@ class SearchFunctions {
             $newEntry['pending'] = false;
             $data[] = $newEntry;
         }
+        Log::info(print_r($data, true));
         return response($data, 200);
     }
 
