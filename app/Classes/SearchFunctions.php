@@ -16,25 +16,13 @@ class SearchFunctions {
     ** Search Users
     */
     private static function getKnownUsers($user, $nameBegin) {
-        return User::leftJoin('user_users', 'users.id', '=', 'user_users.user_id')
-            ->where('users.firstName', 'like', $nameBegin . '%')
-            ->where('user_users.friend_id', '=', $user->id)
-            ->orWhere('users.lastName', 'like', $nameBegin . '%')
-            ->where('user_users.friend_id', '=', $user->id)
+        return $user->friends()
             ->limit(15)
             ->get();
     }
 
     private static function getUnknownUsers($user, $nameBegin, $limit) {
-        return User::leftJoin('user_users', 'users.id', '=', 'user_users.user_id')
-            ->where('users.firstName', 'like', $nameBegin . '%')
-            ->where('users.id', '!=', $user->id)
-            ->where('user_users.friend_id', '!=', $user->id)
-            ->where('user_users.user_id', '!=', $user->id)
-            ->orWhere('users.lastName', 'like', $nameBegin . '%')
-            ->where('users.id', '!=', $user->id)
-            ->where('user_users.friend_id', '!=', $user->id)
-            ->where('user_users.user_id', '!=', $user->id)
+        return Event::where('id', '!=', $user->friends->pluck('id'))
             ->limit($limit)
             ->get();
     }
@@ -93,8 +81,8 @@ class SearchFunctions {
     }
 
     private static function getUnknownEvents($user, $nameBegin, $limit) {
-        Log::info('DEBUG : ' . print_r($user->events->pluck('id'), true));
-        return [];
+        return Event::where('id', '!=', $user->events->pluck('id'))
+            ->get();
     }
     
     private static function getEvents($user, $nameBegin, $knownOnly) {
@@ -107,7 +95,7 @@ class SearchFunctions {
     
     public static function  events($currentUser, $nameBegin, $knownOnly) {
         $events = SearchFunctions::getEvents($currentUser, $nameBegin, $knownOnly);
-        Log::info('EVENTS : ' . print_r($events, true));
+        //Log::info('EVENTS : ' . print_r($events, true));
         $data = [];
         // foreach ($events as $user) {
         //     $newEntry = [];
