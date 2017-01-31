@@ -40,7 +40,6 @@ class SearchController extends Controller
         $user = User::find(Auth::user()->id);
         $nameBegin = $request->input("name_begin");
         $knownOnly = $request->input("known_only");
-        Log::info('REQUEST : ' . $nameBegin . ' ' . $knownOnly);
         return SearchFunctions::getContacts($user, $nameBegin, $knownOnly);
     }
 }

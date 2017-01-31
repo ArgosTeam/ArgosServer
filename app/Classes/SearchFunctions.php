@@ -32,9 +32,7 @@ class SearchFunctions {
     
     private static function getUsers($user, $nameBegin, $knownOnly) {
         $users = SearchFunctions::getknownUsers($user, $nameBegin);
-        Log::info('SIZE : ' . $limit = 30 - $users->count());
         if (!$knownOnly && ($limit = 30 - $users->count()) > 0) {
-            Log::info('TRY UNKNOWN');
             $users = $users->merge(SearchFunctions::getUnknownUsers($user, $nameBegin, $limit));
         }
         return $users;
