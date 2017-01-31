@@ -18,7 +18,6 @@ class SearchFunctions {
     */
     private static function getKnownUsers($user, $nameBegin) {
         return $user->friends()
-            ->leftJoin('user_users', 'users.id', '=', 'user_users.user_id')
             ->limit(15)
             ->get();
     }
