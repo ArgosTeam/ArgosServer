@@ -35,7 +35,7 @@ class GroupFunctions
 
             $location = Location::create([
                 'lat' => $request->input('lat'),
-                'lng' => $request->input('lng');
+                'lng' => $request->input('lng')
             ]);
 
             $group->locations()->associate($location);
