@@ -24,9 +24,9 @@ class SearchFunctions {
     }
 
     private static function getUnknownUsers($user, $nameBegin, $limit) {
-        return User::where('id', '!=',
-                           is_object($user->friends) ? $user->friends->pluck('friend_id') : [])
-            ->join('user_users', 'users.id', '=', 'user_users.user_id')
+        return User::leftJoin('user_users', 'users.id', '=', 'user_users.user_id')
+            ->where('id', '!=',
+                    is_object($user->friends) ? $user->friends->pluck('friend_id') : [])
             ->limit($limit)
             ->get();
     }
