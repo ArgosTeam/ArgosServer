@@ -32,7 +32,7 @@ class SearchFunctions {
     
     private static function getUsers($user, $nameBegin, $knownOnly) {
         $users = [];
-        return getUnknownUsers($user, $nameBegin);
+        return SearchFunctions::getUnknownUsers($user, $nameBegin);
     }
     
     public static function  getContacts($currentUser, $nameBegin, $knownOnly) {
