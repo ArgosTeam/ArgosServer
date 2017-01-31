@@ -31,7 +31,7 @@ class SearchFunctions {
     private static function getUnknownUsers($user, $nameBegin, $limit) {
         $ids = is_object($user->friends) ? $user->friends->pluck('friend_id') : [];
         return User::select(['users.*'])
-            leftJoin('user_users', 'users.id', '=', 'user_users.user_id')
+            ->leftJoin('user_users', 'users.id', '=', 'user_users.user_id')
             ->whereNotIn('users.id', $ids)
             ->where('firstName', 'like', $nameBegin . '%')
             ->orWhere('lastName', 'like', $nameBegin . '%')
