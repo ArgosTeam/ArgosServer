@@ -18,13 +18,14 @@ class SearchFunctions {
     */
     private static function getKnownUsers($user, $nameBegin) {
         $ids = is_object($user->friends) ? $user->friends->pluck('friend_id') : [];
-        return User::leftJoin('user_users', 'users.id', '=', 'user_users.user_id')
+        return User::
+            ->select('users.id as users_user_id')
+            ->leftJoin('user_users', 'users.id', '=', 'user_users.user_id')
             ->whereIn('users.id', $ids)
             ->where('firstName', 'like', $nameBegin . '%')
             ->orWhere('lastName', 'like', $nameBegin . '%')
             ->whereIn('id', $ids)
             ->limit(15)
-            ->select('users.id as users_user_id')
             ->get();
     }
 
