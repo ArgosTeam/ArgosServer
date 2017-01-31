@@ -92,7 +92,11 @@ class SearchFunctions {
     }
 
     private static function getUnknownEvents($user, $nameBegin, $limit) {
-        Log::info('DEBUG : ' . print_r($user->events()->select('events.id')->get(), true));
+        Log::info('DEBUG :  ' . print_r(Event::leftJoin('event_user', 'event_id',
+                                                        '=', 'event_user.event_id')
+                                        ->where('event_user.user_id', '!=', $user->id)
+                                        ->where('events.name', 'like', $nameBegin . '%')
+                                        ->get(), true));
         return [];
     }
     
