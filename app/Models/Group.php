@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Group extends Model
 {
     protected $fillable = [
-        'name', 'public'
+        'name', 'public', 'description', 'address'
     ];
 
     
@@ -23,7 +23,7 @@ class Group extends Model
             ->withPivot('admin');
     }
 
-    public function locations() {
+    public function location() {
         return $this->belongsTo(Location::class);
     }
 }
