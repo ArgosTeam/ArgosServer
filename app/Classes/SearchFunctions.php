@@ -18,8 +18,8 @@ class SearchFunctions {
     */
     private static function getKnownUsers($user, $nameBegin) {
         return $user->friends()
-            // ->where('users.firstName', 'like', $nameBegin . '%')
-            // ->orWhere('users.lastName', 'like', $nameBegin . '%')
+            ->where('users.firstName', 'like', $nameBegin . '%')
+            ->orWhere('users.lastName', 'like', $nameBegin . '%')
             ->limit(15)
             ->get();
     }
