@@ -27,9 +27,11 @@ class SearchFunctions {
     private static function getUnknownUsers($user, $nameBegin, $limit) {
         return User::leftJoin('user_users', 'users.id', '=', 'user_users.user_id')
             ->where('users.firstName', 'like', $nameBegin . '%')
-            //->where('user_users.friend_id', '=', null)
+            ->where('user_users.friend_id', '!=', $user->id)
+            ->where('user_users.user_id', '!=', $user->id)
             ->orWhere('users.lastName', 'like', $nameBegin . '%')
-            //->where('user_users.friend_id', '=', null)
+            ->where('user_users.friend_id', '!=', $user->id)
+            ->where('user_users.user_id', '!=', $user->id)
             ->limit($limit)
             ->get();
     }
