@@ -16,8 +16,6 @@ use App\Models\Location;
 
 class GroupFunctions
 {
-
-
     public static function add($user, $request) {
         $group = Group::where('name', '=', $request->input('name'))
                ->first();
@@ -33,7 +31,7 @@ class GroupFunctions
             $group->description = $request->input('description');
             $group->address = $request->input('address');
 
-            $location = Location::create([
+            $location = new Location([
                 'lat' => $request->input('lat'),
                 'lng' => $request->input('lng')
             ]);
