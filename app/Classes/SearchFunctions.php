@@ -18,6 +18,7 @@ class SearchFunctions {
     */
     private static function getKnownUsers($user, $nameBegin) {
         return $user->friends()
+            ->leftJoin('user_users', 'users.id', '=', 'user_users.user_id')
             ->limit(15)
             ->get();
     }
@@ -25,6 +26,7 @@ class SearchFunctions {
     private static function getUnknownUsers($user, $nameBegin, $limit) {
         return User::where('id', '!=',
                            is_object($user->friends) ? $user->friends->pluck('friend_id') : [])
+            ->leftJoin('user_users', 'users.id', '=', 'user_users.user_id')
             ->limit($limit)
             ->get();
     }
@@ -50,7 +52,6 @@ class SearchFunctions {
             $newEntry['name'] = $user->firstName . ' ' . $user->lastName;
             $newEntry['type'] = 'user';
             if (is_object($currentUser->friends()->where('friend_id', '=', $user->id)->first())) {
-                Log::info(print_r($currentUser->friends()->where('friend_id', '=', $user->id)->first(), true));
                 $newEntry['friend'] = $user->friends()->where('friend_id', '=', $user->id)
                                     ->first()->active;
                 $newEntry['pending'] = $newEntry['friend'] ? false : true;
