@@ -59,7 +59,7 @@ class EventFunctions
         }
     }
 
-    public function join($user, $event_id) {
+    public static function join($user, $event_id) {
         $event = Event::find($event_id);
         if (is_object($event)
             && !$user->events->contains($event_id)) {
@@ -72,7 +72,7 @@ class EventFunctions
         return response('Event does not exist or invite already exists', 404);
     }
 
-    public function accept($currentUser, $user_id, $event_id) {
+    public static function accept($currentUser, $user_id, $event_id) {
         $event = Event::join('event_user', function ($join) {
             $join->on('events.id', '=', 'event_user.event_id');
         })
