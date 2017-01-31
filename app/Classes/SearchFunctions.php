@@ -10,24 +10,29 @@ use Illuminate\Support\Facades\Log;
 
 class SearchFunctions {
 
+    private static function getKnownUsers($user, $nameBegin) {
+        return User::leftJoin('user_users', 'users.id', '=', 'user_users.user_id')
+            ->where('users.firstName', 'like', $nameBegin . '%')
+            ->where('user_users.friend_id', '=', $user->id)
+            ->orWhere('users.lastName', 'like', $nameBegin . '%')
+            ->where('user_users.friend_id', '=', $user->id)
+            ->limit(30)
+            ->get();
+    }
+
+    private static function getUnknownUsers($user, $nameBegin) {
+        return User::leftJoin('user_users', 'users.id', '=', 'user_users.user_id')
+            ->where('users.firstName', 'like', $nameBegin . '%')
+            ->where('user_users.friend_id', '=', null)
+            ->orWhere('users.lastName', 'like', $nameBegin . '%')
+            ->where('user_users.friend_id', '=', null)
+            ->limit(30)
+            ->get();
+    }
+    
     private static function getUsers($user, $nameBegin, $knownOnly) {
         $users = [];
-        if (!$knownOnly) {
-            $users = User::leftJoin('user_users', 'users.id', '=', 'user_users.user_id')
-                   ->where('users.firstName', 'like', $nameBegin . '%')
-                   ->orWhere('users.lastName', 'like', $nameBegin . '%')
-                   ->limit(13)
-                   ->get();
-        } else {
-            $users = User::leftJoin('user_users', 'users.id', '=', 'user_users.user_id')
-                   ->where('users.firstName', 'like', $nameBegin . '%')
-                   ->where('user_users.friend_id', '=', $user->id)
-                   ->orWhere('users.lastName', 'like', $nameBegin . '%')
-                   ->where('user_users.friend_id', '=', $user->id)
-                   ->limit(13)
-                   ->get();
-        }
-        return $users ? $users : [];
+        return getUnknownUsers($user, $nameBegin);
     }
     
     public static function  getContacts($currentUser, $nameBegin, $knownOnly) {
