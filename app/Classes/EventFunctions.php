@@ -33,12 +33,14 @@ class EventFunctions
         }
 
         $event = new Event();
-        $event->name = $data["name"];
+        $event->name = $data['name'];
+        $event->description = $data['description'];
         $event->user_id = $user->id;
-        $event->public = $data["public"];
+        $event->public = $data['public'];
+        $event->start = $data['start'];
 
         if(array_key_exists("expires", $data)) {
-            $event->expires = $data["expires"];
+            $event->expires = $data['expires'];
         }
 
         $location = new Location([
