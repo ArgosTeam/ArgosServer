@@ -98,6 +98,7 @@ class fetchFunctions
                     $photo = Photo::where('location_id', '=', $location->id)
                            ->first();
 
+                    // Get signed url from s3
                     $s3 = Storage::disk('s3');
                     $client = $s3->getDriver()->getAdapter()->getClient();
                     $expiry = "+10 minutes";
@@ -106,21 +107,14 @@ class fetchFunctions
                         'Bucket' => env('S3_BUCKET'),
                         'Key'    => "avatar-" . $photo->path,
                     ]);
-
-                    Log::info('Command : ' . print_r([
-                        'Bucket' => Config::get(env('S3_BUCKET')),
-                        'Key'    => "avatar-" . $photo->path,
-                    ], true));
                     $request = $client->createPresignedRequest($command, $expiry);
-
-                    Log::info('DEBUG_URL = ' . $request->getUri());
                     
                     if(is_object($photo)) {
                         
                         $results[] = [
                             "id" => $photo->id,
                             "name" => $photo->name,
-                            "path" => Storage::disk('s3')->url("avatar-" . $photo->path),
+                            "path" => $request->getUri();
                             "lat" => $location->lat,
                             "lng" => $location->lng,
                         ];
