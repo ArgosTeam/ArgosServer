@@ -102,7 +102,7 @@ class fetchFunctions
                     $expiry = "+10 minutes";
                     
                     $command = $client->getCommand('GetObject', [
-                        'Bucket' => Config::get('filesystems.disks.s3.' . env('S3_BUCKET')),
+                        'Bucket' => Config::get(env('S3_BUCKET')),
                         'Key'    => "avatar-" . $photo->path,
                     ]);
 
