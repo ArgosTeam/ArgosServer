@@ -19,11 +19,10 @@ use App\Models\User;
  * Time: 6:56 AM
  */
 
-
 class EventFunctions
 {
 
-    public static function add($user, Request $request){
+    public static function add($user, Request $request) {
 
         $data = $request->all();
 
