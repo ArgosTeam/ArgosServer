@@ -63,7 +63,7 @@ class GroupFunctions
         $userToAccept = User::find($user_id);
         
         if ($group->admin) {
-            $userToAccept->groups()->attach($group_id, [
+            $userToAccept->groups()->updateExistingPivot($group_id, [
                 'status' => 'accepted',
                 'admin' => false
             ]);
