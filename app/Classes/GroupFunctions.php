@@ -33,10 +33,10 @@ class GroupFunctions
             $group->description = $request->input('description');
             $group->address = $request->input('address');
 
-            $location = Location::create(
+            $location = Location::create([
                 'lat' => $request->input('lat'),
                 'lng' => $request->input('lng');
-            );
+            ]);
 
             $group->locations()->associate($location);
             $group->save();
