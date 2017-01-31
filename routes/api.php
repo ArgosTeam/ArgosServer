@@ -36,8 +36,8 @@ Route::group(['middleware' => 'auth:api'], function () {
     */
     //Route::get('/event/{id}',       'EventController@fetch');
     Route::post('/event/add',           'EventController@add');
-    Route::post'/event/join', 'EventController@join');
-    Route::post'/event/accept', 'EventController@accept');
+    Route::post('/event/join', 'EventController@join');
+    Route::post('/event/accept', 'EventController@accept');
 //Route::post'/event/refuse', 'EventController@refuse');
 
     Route::get('/search',           'SearchController@selectData');
