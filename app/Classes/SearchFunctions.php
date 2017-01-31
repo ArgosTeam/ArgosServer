@@ -87,10 +87,12 @@ class SearchFunctions {
     private static function getKnownEvents($user, $nameBegin) {
         return $user->events()
             ->where('events.name', 'like', $nameBegin . '%')
+            ->limit(30)
             ->get();
     }
 
     private static function getUnknownEvents($user, $nameBegin, $limit) {
+        Log::info($user->events()->id);
         return [];
     }
     
