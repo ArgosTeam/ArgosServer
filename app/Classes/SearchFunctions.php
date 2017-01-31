@@ -17,10 +17,12 @@ class SearchFunctions {
     ** Search Users
     */
     private static function getKnownUsers($user, $nameBegin) {
-        return $user->friends()
-            // ->where('firstName', 'like', $nameBegin . '%')
-            // ->orWhere('lastName', 'like', $nameBegin . '%')
-            ->limit(15)
+        $ids = is_object($user->friends) ? $user->friends->pluck('friend_id') : [];
+        return User::whereIn('id', $ids)
+            ->where('firstName', 'like', $nameBegin . '%')
+            ->orWhere('lastName', 'like', $nameBegin . '%')
+            ->whereIn('id', $ids)
+            ->limit($limit)
             ->get();
     }
 
@@ -29,6 +31,7 @@ class SearchFunctions {
         return User::whereNotIn('id', $ids)
             ->where('firstName', 'like', $nameBegin . '%')
             ->orWhere('lastName', 'like', $nameBegin . '%')
+            ->whereNotIn('id', $ids)
             ->limit($limit)
             ->get();
     }
