@@ -57,7 +57,7 @@ class SearchFunctions {
         $data = [];
         foreach ($users as $user) {
             $newEntry = [];
-            $newEntry['id'] = $user->user_id;
+            $newEntry['id'] = $user->id;
             $newEntry['url'] = null;
             $newEntry['name'] = $user->firstName . ' ' . $user->lastName;
             $newEntry['type'] = 'user';
