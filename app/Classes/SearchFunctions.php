@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Group;
 use App\Models\Event;
+use App\Models\Friend;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Log;
 
