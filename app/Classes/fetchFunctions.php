@@ -95,6 +95,19 @@ class fetchFunctions
                 if (is_object($location)) {
                     $photo = Photo::where('location_id', '=', $location->id)
                            ->first();
+
+                    $s3 = Storage::disk('s3');
+                    $client = $s3->getDriver()->getAdapter()->getClient();
+                    $expiry = "+10 minutes";
+                    
+                    $command = $client->getCommand('GetObject', [
+                        'Bucket' => Config::get('filesystems.disks.s3.' . env('S3_BUCKET')),
+                        'Key'    => "avatar-" . $photo->path,
+                    ]);
+
+                    $request = $client->createPresignedRequest($command, $expiry);
+
+                    Log::info('DEBUG_URL = ' . $request->getUri());
                     
                     if(is_object($photo)) {
                         
