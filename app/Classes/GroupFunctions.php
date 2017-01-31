@@ -38,7 +38,7 @@ class GroupFunctions
                 'lng' => $request->input('lng')
             ]);
 
-            $group->locations()->associate($location);
+            $group->location()->associate($location);
             $group->save();
 
             $user->groups()->attach($group->id, [
