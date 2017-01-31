@@ -44,6 +44,6 @@ class User extends Authenticatable
     }
 
     public function friends() {
-        return $this->belongsTo(Friend::class, 'user_users');
+        return $this->belongsTo(Friend::class);
     }
 }
