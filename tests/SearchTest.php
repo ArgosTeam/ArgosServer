@@ -21,7 +21,7 @@ class SearchTest extends TestCase
                                     'grant_type' => 'password',
                                     'client_id' => '1',
                                     'client_secret' => '8KD1qlhGoguCBCTZDgWsRtV1cU6OZtRrsOJT0cjb',
-                                    'username' => 'aure.girardeau@gmail.com',
+                                    'username' => 'aure.girard@gmail.com',
                                     'password' => 'toto',
                                     'scope' => '*'
                                 ]);
@@ -29,7 +29,7 @@ class SearchTest extends TestCase
         $response = $this->call('GET',
                                 '/api/search/contacts',[
                                     'name_begin' => '',
-                                    'known_only' => true
+                                    'known_only' => false
                                 ],[],[], ['HTTP_Authorization' => 'Bearer ' . $token['access_token']]);
         print_r($response->getContent());
         $this->assertEquals(200, $response->status());

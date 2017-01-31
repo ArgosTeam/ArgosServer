@@ -10,6 +10,10 @@ use Illuminate\Support\Facades\Log;
 
 class SearchFunctions {
 
+
+    /*
+    ** Search Users
+    */
     private static function getKnownUsers($user, $nameBegin) {
         return User::leftJoin('user_users', 'users.id', '=', 'user_users.user_id')
             ->where('users.firstName', 'like', $nameBegin . '%')
@@ -69,7 +73,62 @@ class SearchFunctions {
             $newEntry['pending'] = false;
             $data[] = $newEntry;
         }
-        Log::info('DATAAAAA : ' . print_r($data, true));
         return response($data, 200);
     }
+
+    /*
+    ** Search Events
+    // */
+    
+    // private static function getKnownEvents($user, $nameBegin) {
+    //     return [];
+    // }
+
+    // private static function getUnknownEvents($user, $nameBegin, $limit) {
+    //     return [];
+    // }
+    
+    // private static function getEvents($user, $nameBegin, $knownOnly) {
+    //     $events = SearchFunctions::getknownEvents($user, $nameBegin);
+    //     if (!$knownOnly && ($limit = 30 - $events->count()) > 0) {
+    //         $events = $events->merge(SearchFunctions::getUnknownEvents($user, $nameBegin, $limit));
+    //     }
+    //     return $events;
+    // }
+    
+    // public static function  getEvents($currentUser, $nameBegin, $knownOnly) {
+    //     $events = SearchFunctions::getEvents($currentUser, $nameBegin, $knownOnly);
+    //     $groups =  Group::where('name', 'like', $nameBegin . '%')
+    //             ->limit(12)
+    //             ->get();
+    //     $data = [];
+    //     foreach ($events as $user) {
+    //         $newEntry = [];
+    //         $newEntry['id'] = $user->id;
+    //         $newEntry['url'] = null;
+    //         $newEntry['name'] = $user->firstName . ' ' . $user->lastName;
+    //         $newEntry['type'] = 'user';
+    //         if ($currentUser->id == $user->friend_id) {
+    //             $newEntry['friend'] = $user->active;
+    //             $newEntry['pending'] = $user->active == null ? false : true;
+    //         } else {
+    //             $newEntry['friend'] = false;
+    //             $newEntry['pending'] = false;
+    //         }
+    //         $data[] = $newEntry;
+    //     }
+    //     foreach ($groups as $group) {
+    //         $newEntry = [];
+    //         $newEntry['id'] = $group->id;
+    //         $newEntry['url'] = null;
+    //         $newEntry['name'] = $group->name;
+    //         $newEntry['public'] = $group->public;
+    //         $newEntry['type'] = 'group';
+    //         $newEntry['pending'] = false;
+    //         $data[] = $newEntry;
+    //     }
+    //     return response($data, 200);
+    }
+
+    
 }
