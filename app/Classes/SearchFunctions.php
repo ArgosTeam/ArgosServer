@@ -50,6 +50,7 @@ class SearchFunctions {
             $newEntry['name'] = $user->firstName . ' ' . $user->lastName;
             $newEntry['type'] = 'user';
             if (is_object($currentUser->friends()->where('friend_id', '=', $user->id)->first())) {
+                Log::info(print_r($currentUser->friends()->where('friend_id', '=', $user->id)->first(), true));
                 $newEntry['friend'] = $user->friends()->where('friend_id', '=', $user->id)
                                     ->first()->active;
                 $newEntry['pending'] = $newEntry['friend'] ? false : true;
