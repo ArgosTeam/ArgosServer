@@ -101,7 +101,7 @@ class fetchFunctions
                         $results[] = [
                             "id" => $photo->id,
                             "name" => $photo->name,
-                            "path" => Storage::url("avatar-" . $photo->path),
+                            "path" => Storage::disk('s3')->url("avatar-" . $photo->path),
                             "lat" => $location->lat,
                             "lng" => $location->lng,
                         ];
