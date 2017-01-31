@@ -23,7 +23,8 @@ class SearchFunctions {
     }
 
     private static function getUnknownUsers($user, $nameBegin, $limit) {
-        return Event::where('id', '!=', $user->friends->pluck('id'))
+        return Event::where('id', '!=',
+                            is_object($user->friends) ? $user->friends->pluck('id') : [])
             ->limit($limit)
             ->get();
     }
