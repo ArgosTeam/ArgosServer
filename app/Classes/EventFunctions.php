@@ -27,17 +27,11 @@ class EventFunctions
 
         $data = $request->all();
 
-
         $event = Event::where('name', '=', $data['name'])
                ->first();
         if (is_object($event)) {
             return response('Event alreay exists', 404);
         }
-        
-        $location = new Location([
-            "lat" => $data["lat"],
-            "lng" => $data["lng"],
-        ]);
 
         $event = new Event();
         $event->name = $data["name"];
@@ -48,6 +42,10 @@ class EventFunctions
             $event->expires = $data["expires"];
         }
 
+        $location = new Location([
+            "lat" => $data["lat"],
+            "lng" => $data["lng"],
+        ]);
         $event->location()->associate($location);
         
         if ($event->save()) {
