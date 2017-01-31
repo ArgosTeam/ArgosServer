@@ -50,7 +50,6 @@ class GroupFunctions
         }
 
         return response('Accepted', 200);
-
     }
 
     public static function join($user, $group_id) {
@@ -74,14 +73,14 @@ class GroupFunctions
                ->find($group_id);
         $userToAccept = User::find($user_id);
         
-        if ($group->admin) {
+        if (is_object($group) && $group->admin) {
             $userToAccept->groups()->updateExistingPivot($group_id, [
                 'status' => 'accepted',
                 'admin' => false
             ]);
             return response('Join request sent', 200);
         } else {
-            return response('Access refused, need to be admin', 404);
+            return response('Access refused, need to be admin, or group does not exist', 404);
         }
     }
     

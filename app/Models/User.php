@@ -34,11 +34,13 @@ class User extends Authenticatable
     }
 
     public function groups() {
-        return $this->belongsToMany(Group::class);
+        return $this->belongsToMany(Group::class)
+            ->withTimestamps();
     }
 
     public function events() {
-        return $this->belongsToMany(Event::class);
+        return $this->belongsToMany(Event::class)
+            ->withTimestamps();
     }
 
     public function friends() {
