@@ -6,8 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Event extends Model
 {
-    //
-    protected $fillable = ["name", "user_id", "location_id", "public", "type", "expires"];
+    protected $fillable = ["name", "user_id", "public", "type", "expires"];
 
     public function location(){
         return $this->belongsTo(Location::class);

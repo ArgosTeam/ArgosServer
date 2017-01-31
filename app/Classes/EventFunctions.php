@@ -27,16 +27,21 @@ class EventFunctions
 
         $data = $request->all();
 
-        $location = Location::create([
+
+        $event = Event::where('name', '=', $data['name'])
+               ->first();
+        if (is_object($event)) {
+            return response('Event alreay exists', 404);
+        }
+        
+        $location = new Location([
             "lat" => $data["lat"],
             "lng" => $data["lng"],
         ]);
-        $locationId = $location->id;
 
         $event = new Event();
         $event->name = $data["name"];
         $event->user_id = Auth::user()->id;
-        $event->location_id = $locationId;
         $event->public = $data["public"];
 
         if(array_key_exists("expires", $data)) {
@@ -44,27 +49,11 @@ class EventFunctions
         }
 
         if ($event->save()) {
+            $event->location()->associate($location);
             return (["status" => "created", "event_id" => $event->id]);
         } else {
             return (["status" => "error while saving event"]);
         }
     }
-
-    // public static function fetch($id){
-
-    //     $event = Event::join('locations', 'events.location_id', '=', 'locations.id')
-    //            ->find($id);
-
-    //     $result = [
-    //         "id" => $event->id,
-    //         "name" => $event->name,
-    //         "lat" => $event->lat,
-    //         "lng" => $event->lng,
-    //         "public" => $event->public
-    //     ];
-
-    //     return $result;
-
-    // }
 
 }
