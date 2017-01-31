@@ -114,7 +114,7 @@ class fetchFunctions
                         $results[] = [
                             "id" => $photo->id,
                             "name" => $photo->name,
-                            "path" => $request->getUri();
+                            "path" => $request->getUri(),
                             "lat" => $location->lat,
                             "lng" => $location->lng,
                         ];
