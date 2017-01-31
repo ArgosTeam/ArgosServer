@@ -27,9 +27,9 @@ class SearchFunctions {
     private static function getUnknownUsers($user, $nameBegin, $limit) {
         return User::leftJoin('user_users', 'users.id', '=', 'user_users.user_id')
             ->where('users.firstName', 'like', $nameBegin . '%')
-            ->where('user_users.friend_id', '=', null)
+            //->where('user_users.friend_id', '=', null)
             ->orWhere('users.lastName', 'like', $nameBegin . '%')
-            ->where('user_users.friend_id', '=', null)
+            //->where('user_users.friend_id', '=', null)
             ->limit($limit)
             ->get();
     }
@@ -44,6 +44,7 @@ class SearchFunctions {
     
     public static function  getContacts($currentUser, $nameBegin, $knownOnly) {
         $users = SearchFunctions::getUsers($currentUser, $nameBegin, $knownOnly);
+        Log::info('USERS : ' . print_r($users, true));
         $groups =  Group::where('name', 'like', $nameBegin . '%')
                 ->limit(12)
                 ->get();
