@@ -101,7 +101,7 @@ class fetchFunctions
                         $results[] = [
                             "id" => $photo->id,
                             "name" => $photo->name,
-                            "path" => env('S3_URL') . env('S3_BUCKET') . "/avatar-" . $photo->path,
+                            "path" => Storage::url("avatar-" . $photo->path),
                             "lat" => $location->lat,
                             "lng" => $location->lng,
                         ];
