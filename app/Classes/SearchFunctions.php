@@ -28,8 +28,8 @@ class SearchFunctions {
         return User::where('id', '!=',
                            is_object($user->friends) ? $user->friends->pluck('friend_id') : [])
             
-            ->where('firstName', 'like', $nameBegin . '%')
-            ->orWhere('lastName', 'like', $nameBegin . '%')
+            // ->where('firstName', 'like', $nameBegin . '%')
+            // ->orWhere('lastName', 'like', $nameBegin . '%')
             ->limit($limit)
             ->get();
     }
