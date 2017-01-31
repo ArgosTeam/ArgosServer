@@ -64,7 +64,7 @@ class GroupFunctions
             ]);
             return response('Join request sent', 200);
         }
-        return response('Group does not exist', 404);
+        return response('Group does not exist or invite already exists', 404);
     }
 
     public static function accept($currentUser, $user_id, $group_id) {
