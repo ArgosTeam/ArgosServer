@@ -36,6 +36,7 @@ class GroupFunctions
                 'lng' => $request->input('lng')
             ]);
 
+            $location->save();
             $group->location()->associate($location);
             $group->save();
 

@@ -46,6 +46,7 @@ class EventFunctions
             "lat" => $data["lat"],
             "lng" => $data["lng"],
         ]);
+        $location->save();
         $event->location()->associate($location);
         
         if ($event->save()) {
