@@ -20,19 +20,22 @@ class SearchFunctions {
             ->get();
     }
 
-    private static function getUnknownUsers($user, $nameBegin) {
+    private static function getUnknownUsers($user, $nameBegin, $limit) {
         return User::leftJoin('user_users', 'users.id', '=', 'user_users.user_id')
             ->where('users.firstName', 'like', $nameBegin . '%')
             ->where('user_users.friend_id', '=', null)
             ->orWhere('users.lastName', 'like', $nameBegin . '%')
             ->where('user_users.friend_id', '=', null)
-            ->limit(30)
+            ->limit($limit)
             ->get();
     }
     
     private static function getUsers($user, $nameBegin, $knownOnly) {
-        $users = [];
-        return SearchFunctions::getUnknownUsers($user, $nameBegin);
+        $users = SearchFunctions::getknownUsers($user, $nameBegin);
+        if (!$knowOnly && ($limit = 30 - $known_users->count()) > 0) {
+            $users = array_merge($users, SearchFunctions::getUnknownUsers($user, $namebegin, $limit));
+        }
+        return $users;
     }
     
     public static function  getContacts($currentUser, $nameBegin, $knownOnly) {
