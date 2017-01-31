@@ -19,7 +19,7 @@ class GroupFunctions
 
 
     public static function add($user, $request) {
-        $group = Group::where('name', '=', $name)
+        $group = Group::where('name', '=', $request->input('name'))
                ->first();
         if (is_object($group)) {
             return response('This group name already exists', 404);
