@@ -18,8 +18,8 @@ class SearchFunctions {
     */
     private static function getKnownUsers($user, $nameBegin) {
         return $user->friends()
-            ->where('firstName', 'like', $nameBegin . '%')
-            ->orWhere('lastName', 'like', $nameBegin . '%')
+            // ->where('firstName', 'like', $nameBegin . '%')
+            // ->orWhere('lastName', 'like', $nameBegin . '%')
             ->limit(15)
             ->get();
     }
@@ -27,9 +27,8 @@ class SearchFunctions {
     private static function getUnknownUsers($user, $nameBegin, $limit) {
         return User::where('id', '!=',
                            is_object($user->friends) ? $user->friends->pluck('friend_id') : [])
-            
-            // ->where('firstName', 'like', $nameBegin . '%')
-            // ->orWhere('lastName', 'like', $nameBegin . '%')
+            ->where('firstName', 'like', $nameBegin . '%')
+            ->orWhere('lastName', 'like', $nameBegin . '%')
             ->limit($limit)
             ->get();
     }
