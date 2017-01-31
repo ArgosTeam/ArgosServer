@@ -18,7 +18,7 @@ class SearchFunctions {
     */
     private static function getKnownUsers($user, $nameBegin) {
         $ids = is_object($user->friends) ? $user->friends->pluck('friend_id') : [];
-        return User::select(['users.*', 'user_users.friend_id', 'user_users.active'])
+        return User::select(['users.*', 'user_users.friend_id', 'user_users.active', 'user_users.own'])
             ->leftJoin('user_users', 'users.id', '=', 'user_users.user_id')
             ->whereIn('users.id', $ids)
             ->where('firstName', 'like', $nameBegin . '%')
@@ -30,7 +30,7 @@ class SearchFunctions {
 
     private static function getUnknownUsers($user, $nameBegin, $limit) {
         $ids = is_object($user->friends) ? $user->friends->pluck('friend_id') : [];
-        return User::select(['users.*', 'user_users.friend_id', 'user_users.active'])
+        return User::select(['users.*', 'user_users.friend_id', 'user_users.active', 'user_users.own'])
             ->leftJoin('user_users', 'users.id', '=', 'user_users.user_id')
             ->whereNotIn('users.id', $ids)
             ->where('firstName', 'like', $nameBegin . '%')
@@ -45,7 +45,6 @@ class SearchFunctions {
         if (!$knownOnly && ($limit = 15 - $users->count()) > 0) {
             $users = $users->merge(SearchFunctions::getUnknownUsers($user, $nameBegin, $limit));
         }
-        Log::info(print_r($users, true));
         return $users;
     }
     
@@ -61,6 +60,7 @@ class SearchFunctions {
             $newEntry['url'] = null;
             $newEntry['name'] = $user->firstName . ' ' . $user->lastName;
             $newEntry['type'] = 'user';
+            $newEntry['own'] = $user->own;
             if ($user->active != null) {
                 $newEntry['friend'] = $user->active;
                 $newEntry['pending'] = $newEntry['friend'] ? false : true;
@@ -80,7 +80,6 @@ class SearchFunctions {
             $newEntry['pending'] = false;
             $data[] = $newEntry;
         }
-        Log::info(print_r($data, true));
         return response($data, 200);
     }
 
