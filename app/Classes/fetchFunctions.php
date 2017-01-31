@@ -106,6 +106,10 @@ class fetchFunctions
                         'Key'    => "avatar-" . $photo->path,
                     ]);
 
+                    Log::info('Command : ' . print_r([
+                        'Bucket' => Config::get(env('S3_BUCKET')),
+                        'Key'    => "avatar-" . $photo->path,
+                    ]), true);
                     $request = $client->createPresignedRequest($command, $expiry);
 
                     Log::info('DEBUG_URL = ' . $request->getUri());
