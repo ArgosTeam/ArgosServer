@@ -92,7 +92,7 @@ class SearchFunctions {
     }
 
     private static function getUnknownEvents($user, $nameBegin, $limit) {
-        Log::info($user->events()->id);
+        Log::info('DEBUG : ' . print_r($user->events('id')));
         return [];
     }
     
