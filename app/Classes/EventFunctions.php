@@ -48,8 +48,9 @@ class EventFunctions
             $event->expires = $data["expires"];
         }
 
+        $event->location()->associate($location);
+        
         if ($event->save()) {
-            $event->location()->associate($location);
             return (["status" => "created", "event_id" => $event->id]);
         } else {
             return (["status" => "error while saving event"]);
