@@ -44,6 +44,7 @@ class SearchFunctions {
         if (!$knownOnly && ($limit = 15 - $users->count()) > 0) {
             $users = $users->merge(SearchFunctions::getUnknownUsers($user, $nameBegin, $limit));
         }
+        Log::info(print_r($users, true));
         return $users;
     }
     
