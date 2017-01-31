@@ -18,7 +18,8 @@ class SearchFunctions {
     */
     private static function getKnownUsers($user, $nameBegin) {
         $ids = is_object($user->friends) ? $user->friends->pluck('friend_id') : [];
-        return User::whereIn('id', $ids)
+        return User::leftJoin('user_users', 'users.id', '=', 'user_users.user_id')
+            ->whereIn('id', $ids)
             ->where('firstName', 'like', $nameBegin . '%')
             ->orWhere('lastName', 'like', $nameBegin . '%')
             ->whereIn('id', $ids)
@@ -28,7 +29,8 @@ class SearchFunctions {
 
     private static function getUnknownUsers($user, $nameBegin, $limit) {
         $ids = is_object($user->friends) ? $user->friends->pluck('friend_id') : [];
-        return User::whereNotIn('id', $ids)
+        return User::leftJoin('user_users', 'users.id', '=', 'user_users.user_id')
+            ->whereNotIn('id', $ids)
             ->where('firstName', 'like', $nameBegin . '%')
             ->orWhere('lastName', 'like', $nameBegin . '%')
             ->whereNotIn('id', $ids)
