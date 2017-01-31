@@ -37,4 +37,55 @@ class EventTest extends TestCase
         $this->assertEquals(200, $response->status());
 
     }
+
+        public function testJoin() {
+        
+        $tokenResponse = $this->call('POST',
+                                     '/oauth/token',
+                                     [
+                                         'grant_type' => 'password',
+                                         'client_id' => '1',
+                                         'client_secret' => '8KD1qlhGoguCBCTZDgWsRtV1cU6OZtRrsOJT0cjb',
+                                         'username' => 'aure.giardeau@gmail.com',
+                                         'password' => 'toto',
+                                         'scope' => '*'
+                                     ]);
+        $token = json_decode($tokenResponse->getContent(), true);
+
+        
+        $response = $this->call('POST',
+                                '/api/event/join',
+                                [
+                                    'event_id' => 1
+                                ], [], [],
+                                ['HTTP_Authorization' => 'Bearer ' . $token['access_token']]);
+        
+        $this->assertEquals(200, $response->status());
+    }
+
+    public function testAccept() {
+        
+        $tokenResponse = $this->call('POST',
+                                     '/oauth/token',
+                                     [
+                                         'grant_type' => 'password',
+                                         'client_id' => '1',
+                                         'client_secret' => '8KD1qlhGoguCBCTZDgWsRtV1cU6OZtRrsOJT0cjb',
+                                         'username' => 'aure.girardeau@gmail.com',
+                                         'password' => 'toto',
+                                         'scope' => '*'
+                                     ]);
+        $token = json_decode($tokenResponse->getContent(), true);
+
+        
+        $response = $this->call('POST',
+                                '/api/event/accept',
+                                [
+                                    'user_id' => 1,
+                                    'event_id' => 1
+                                ], [], [],
+                                ['HTTP_Authorization' => 'Bearer ' . $token['access_token']]);
+        
+        $this->assertEquals(200, $response->status());
+    }
 }

@@ -8,7 +8,6 @@ use App\Models\Hashtag;
 use App\Models\Location;
 use App\Models\Photo;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 
@@ -23,7 +22,7 @@ use Intervention\Image\Facades\Image;
 class EventFunctions
 {
 
-    public static function add(Request $request){
+    public static function add($user, Request $request){
 
         $data = $request->all();
 
@@ -35,7 +34,7 @@ class EventFunctions
 
         $event = new Event();
         $event->name = $data["name"];
-        $event->user_id = Auth::user()->id;
+        $event->user_id = $user->id;
         $event->public = $data["public"];
 
         if(array_key_exists("expires", $data)) {
@@ -50,9 +49,45 @@ class EventFunctions
         $event->location()->associate($location);
         
         if ($event->save()) {
+            $user->events()->attach($event->id, [
+                'status' => 'accepted',
+                'admin' => true
+            ]);
             return (["status" => "created", "event_id" => $event->id]);
         } else {
             return (["status" => "error while saving event"]);
+        }
+    }
+
+    public function join($user, $event_id) {
+        $event = Event::find($event_id);
+        if (is_object($event)
+            && !$user->events->contains($event_id)) {
+            $user->events()->attach($event_id, [
+                'status' => 'pending',
+                'admin' => false
+            ]);
+            return response('Join request sent', 200);
+        }
+        return response('Event does not exist or invite already exists', 404);
+    }
+
+    public function accept($currentUser, $user_id, $event_id) {
+        $event = Event::join('event_user', function ($join) {
+            $join->on('events.id', '=', 'event_user.event_id');
+        })
+               ->where('event_user.user_id', '=', $currentUser->id)
+               ->find($event_id);
+        $userToAccept = User::find($user_id);
+        
+        if ($event->admin) {
+            $userToAccept->events()->updateExistingPivot($event_id, [
+                'status' => 'accepted',
+                'admin' => false
+            ]);
+            return response('Event join request sent', 200);
+        } else {
+            return response('Access refused, need to be admin', 404);
         }
     }
 
