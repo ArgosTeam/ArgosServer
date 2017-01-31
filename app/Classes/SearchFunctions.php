@@ -39,7 +39,6 @@ class SearchFunctions {
     
     public static function  getContacts($currentUser, $nameBegin, $knownOnly) {
         $users = SearchFunctions::getUsers($currentUser, $nameBegin, $knownOnly);
-        Log::info('users    : ' . print_r($users, true));
         $groups =  Group::where('name', 'like', $nameBegin . '%')
                 ->limit(15)
                 ->get();
