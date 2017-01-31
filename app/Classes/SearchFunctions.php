@@ -49,7 +49,7 @@ class SearchFunctions {
             $newEntry['url'] = null;
             $newEntry['name'] = $user->firstName . ' ' . $user->lastName;
             $newEntry['type'] = 'user';
-            if (is_object($currentUser->friends()->where('friend_id', '=', $user->id)->get())) {
+            if (is_object($currentUser->friends()->where('friend_id', '=', $user->id)->first())) {
                 $newEntry['friend'] = $user->friends()->where('friend_id', '=', $user->id)
                                     ->first()->active;
                 $newEntry['pending'] = $newEntry['friend'] ? false : true;
