@@ -4,6 +4,7 @@ use App\Http\Requests\SubmitUploadPhoto;
 use App\Models\Group;
 use App\Models\Hashtag;
 use App\Models\Photo;
+use App\Models\Location;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
