@@ -16,5 +16,9 @@ class Location extends Model
     public function photos() {
         return $this->hasOne(Photo::class);
     }
+
+    public function groups() {
+        return $this->hasOne(Group::class);
+    }
     
 }

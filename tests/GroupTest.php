@@ -28,7 +28,11 @@ class GroupTest extends TestCase
                                 '/api/group/add',
                                 [
                                     'name' => 'group_test',
-                                    'public' => true
+                                    'public' => true,
+                                    'description' => 'Ceci est un groupe test',
+                                    'address' => 'yollo',
+                                    'lat' => 48.98765,
+                                    'lng' => 50.47689
                                 ], [], [],
                                 ['HTTP_Authorization' => 'Bearer ' . $token['access_token']]);
         

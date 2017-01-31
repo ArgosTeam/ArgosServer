@@ -22,4 +22,8 @@ class Group extends Model
             ->withTimestamps()
             ->withPivot('admin');
     }
+
+    public function locations() {
+        return $this->belongsTo(Location::class);
+    }
 }

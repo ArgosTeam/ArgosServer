@@ -12,12 +12,13 @@ namespace App\Classes;
 use App\Models\Group;
 use App\Models\User;
 use Illuminate\Support\Facades\Log;
+use App\Models\Location;
 
 class GroupFunctions
 {
 
 
-    public static function add($user, $public, $name) {
+    public static function add($user, $request) {
         $group = Group::where('name', '=', $name)
                ->first();
         if (is_object($group)) {
@@ -27,10 +28,18 @@ class GroupFunctions
         if(is_object($user)) {
 
             $group = new Group();
-            $group->name = $name;
-            $group->public = $public;
-            $group->save();
+            $group->name = $request->input('name');
+            $group->public = $request->input('public');
+            $group->description = $request->input('description');
+            $group->address = $request->input('address');
 
+            $location = Location::create(
+                'lat' => $request->input('lat'),
+                'lng' => $request->input('lng');
+            );
+
+            $group->locations()->associate($location);
+            $group->save();
 
             $user->groups()->attach($group->id, [
                 'status' => 'accepted',
@@ -47,11 +56,14 @@ class GroupFunctions
 
     public static function join($user, $group_id) {
         $group = Group::find($group_id);
-        $user->groups()->attach($group_id, [
-            'status' => 'pending',
-            'admin' => false
-        ]);
-        return response('Join request sent', 200);
+        if (is_object($group)) {
+            $user->groups()->attach($group_id, [
+                'status' => 'pending',
+                'admin' => false
+            ]);
+            return response('Join request sent', 200);
+        }
+        return response('Group does not exist', 404);
     }
 
     public static function accept($currentUser, $user_id, $group_id) {
