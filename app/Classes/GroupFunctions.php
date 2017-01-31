@@ -57,7 +57,7 @@ class GroupFunctions
     public static function join($user, $group_id) {
         $group = Group::find($group_id);
         if (is_object($group)
-            && !$user->groups()->contains($group_id)) {
+            && !$user->groups->contains($group_id)) {
             $user->groups()->attach($group_id, [
                 'status' => 'pending',
                 'admin' => false
