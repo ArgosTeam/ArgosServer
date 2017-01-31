@@ -10,6 +10,7 @@ use App\Models\Photo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
+use App\Models\User;
 
 /**
  * Created by PhpStorm.
