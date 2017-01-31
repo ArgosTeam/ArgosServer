@@ -46,6 +46,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     ** Routes regarding search actions
     */
     Route::get('/search/contacts', 'SearchController@contacts');
+    Route::get('/search/events', 'SearchController@events');
 
 
     /*

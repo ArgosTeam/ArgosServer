@@ -20,7 +20,7 @@ class SearchFunctions {
             ->where('user_users.friend_id', '=', $user->id)
             ->orWhere('users.lastName', 'like', $nameBegin . '%')
             ->where('user_users.friend_id', '=', $user->id)
-            ->limit(30)
+            ->limit(15)
             ->get();
     }
 
@@ -40,7 +40,7 @@ class SearchFunctions {
     
     private static function getUsers($user, $nameBegin, $knownOnly) {
         $users = SearchFunctions::getknownUsers($user, $nameBegin);
-        if (!$knownOnly && ($limit = 30 - $users->count()) > 0) {
+        if (!$knownOnly && ($limit = 15 - $users->count()) > 0) {
             $users = $users->merge(SearchFunctions::getUnknownUsers($user, $nameBegin, $limit));
         }
         return $users;
@@ -49,7 +49,7 @@ class SearchFunctions {
     public static function  getContacts($currentUser, $nameBegin, $knownOnly) {
         $users = SearchFunctions::getUsers($currentUser, $nameBegin, $knownOnly);
         $groups =  Group::where('name', 'like', $nameBegin . '%')
-                ->limit(12)
+                ->limit(15)
                 ->get();
         $data = [];
         foreach ($users as $user) {
@@ -82,57 +82,57 @@ class SearchFunctions {
 
     /*
     ** Search Events
-    // */
+    */
     
-    // private static function getKnownEvents($user, $nameBegin) {
-    //     return [];
-    // }
+    private static function getKnownEvents($user, $nameBegin) {
+        return $user->events()
+            ->where('events.name', 'like', $nameBegin . '%')
+            ->get();
+    }
 
-    // private static function getUnknownEvents($user, $nameBegin, $limit) {
-    //     return [];
-    // }
+    private static function getUnknownEvents($user, $nameBegin, $limit) {
+        return [];
+    }
     
-    // private static function getEvents($user, $nameBegin, $knownOnly) {
-    //     $events = SearchFunctions::getknownEvents($user, $nameBegin);
-    //     if (!$knownOnly && ($limit = 30 - $events->count()) > 0) {
-    //         $events = $events->merge(SearchFunctions::getUnknownEvents($user, $nameBegin, $limit));
-    //     }
-    //     return $events;
-    // }
+    private static function getEvents($user, $nameBegin, $knownOnly) {
+        $events = SearchFunctions::getknownEvents($user, $nameBegin);
+        if (!$knownOnly && ($limit = 30 - $events->count()) > 0) {
+            $events = $events->merge(SearchFunctions::getUnknownEvents($user, $nameBegin, $limit));
+        }
+        return $events;
+    }
     
-    // public static function  getEvents($currentUser, $nameBegin, $knownOnly) {
-    //     $events = SearchFunctions::getEvents($currentUser, $nameBegin, $knownOnly);
-    //     $groups =  Group::where('name', 'like', $nameBegin . '%')
-    //             ->limit(12)
-    //             ->get();
-    //     $data = [];
-    //     foreach ($events as $user) {
-    //         $newEntry = [];
-    //         $newEntry['id'] = $user->id;
-    //         $newEntry['url'] = null;
-    //         $newEntry['name'] = $user->firstName . ' ' . $user->lastName;
-    //         $newEntry['type'] = 'user';
-    //         if ($currentUser->id == $user->friend_id) {
-    //             $newEntry['friend'] = $user->active;
-    //             $newEntry['pending'] = $user->active == null ? false : true;
-    //         } else {
-    //             $newEntry['friend'] = false;
-    //             $newEntry['pending'] = false;
-    //         }
-    //         $data[] = $newEntry;
-    //     }
-    //     foreach ($groups as $group) {
-    //         $newEntry = [];
-    //         $newEntry['id'] = $group->id;
-    //         $newEntry['url'] = null;
-    //         $newEntry['name'] = $group->name;
-    //         $newEntry['public'] = $group->public;
-    //         $newEntry['type'] = 'group';
-    //         $newEntry['pending'] = false;
-    //         $data[] = $newEntry;
-    //     }
-    //     return response($data, 200);
-    //}
+    public static function  getEvents($currentUser, $nameBegin, $knownOnly) {
+        $events = SearchFunctions::getEvents($currentUser, $nameBegin, $knownOnly);
+        Log::info($events);
+        $data = [];
+        // foreach ($events as $user) {
+        //     $newEntry = [];
+        //     $newEntry['id'] = $user->id;
+        //     $newEntry['url'] = null;
+        //     $newEntry['name'] = $user->firstName . ' ' . $user->lastName;
+        //     $newEntry['type'] = 'user';
+        //     if ($currentUser->id == $user->friend_id) {
+        //         $newEntry['friend'] = $user->active;
+        //         $newEntry['pending'] = $user->active == null ? false : true;
+        //     } else {
+        //         $newEntry['friend'] = false;
+        //         $newEntry['pending'] = false;
+        //     }
+        //     $data[] = $newEntry;
+        // }
+        // foreach ($groups as $group) {
+        //     $newEntry = [];
+        //     $newEntry['id'] = $group->id;
+        //     $newEntry['url'] = null;
+        //     $newEntry['name'] = $group->name;
+        //     $newEntry['public'] = $group->public;
+        //     $newEntry['type'] = 'group';
+        //     $newEntry['pending'] = false;
+        //     $data[] = $newEntry;
+        // }
+        return response($data, 200);
+    }
 
     
 }

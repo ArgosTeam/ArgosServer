@@ -43,10 +43,10 @@ class SearchController extends Controller
         return SearchFunctions::getContacts($user, $nameBegin, $knownOnly);
     }
 
-    // public function events(Request $request) {
-    //     $user = User::find(Auth::user()->id);
-    //     $nameBegin = $request->input("name_begin");
-    //     $knownOnly = $request->input("known_only");
-    //     return SearchFunctions::getEvents($user, $nameBegin, $knownOnly);
-    // }
+    public function events(Request $request) {
+        $user = User::find(Auth::user()->id);
+        $nameBegin = $request->input("name_begin");
+        $knownOnly = $request->input("known_only");
+        return SearchFunctions::getEvents($user, $nameBegin, $knownOnly);
+    }
 }
