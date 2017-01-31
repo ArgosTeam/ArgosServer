@@ -33,7 +33,7 @@ class SearchFunctions {
     private static function getUsers($user, $nameBegin, $knownOnly) {
         $users = SearchFunctions::getknownUsers($user, $nameBegin);
         if (!$knownOnly && ($limit = 30 - $users->count()) > 0) {
-            $users = array_merge($users, SearchFunctions::getUnknownUsers($user, $nameBegin, $limit));
+            $users = $users->merge(SearchFunctions::getUnknownUsers($user, $nameBegin, $limit));
         }
         return $users;
     }
