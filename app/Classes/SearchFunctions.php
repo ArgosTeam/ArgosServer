@@ -120,7 +120,7 @@ class SearchFunctions {
             $newEntry['pending'] = ($event->status == "pending" ? true : false);            
             $data[] = $newEntry;
         }
-        Log::info('EVENTS : ' . $data);
+        Log::info('EVENTS : ' . print_r($data,true));
         return response($data, 200);
     }
 
