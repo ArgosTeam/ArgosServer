@@ -42,7 +42,7 @@ class SearchTest extends TestCase
                                     'grant_type' => 'password',
                                     'client_id' => '1',
                                     'client_secret' => '8KD1qlhGoguCBCTZDgWsRtV1cU6OZtRrsOJT0cjb',
-                                    'username' => 'aure.girardeau@gmail.com',
+                                    'username' => 'aure.girard@gmail.com',
                                     'password' => 'toto',
                                     'scope' => '*'
                                 ]);
