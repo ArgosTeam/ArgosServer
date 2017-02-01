@@ -116,8 +116,8 @@ class SearchFunctions {
             $newEntry['id'] = $event->id;
             $newEntry['url'] = null;
             $newEntry['name'] = $event->name;
-            $newEntry['accepted'] = ($event->status == "accepted" ? true : false);
-            $newEntry['pending'] = ($event->status == "pending" ? true : false);            
+            $newEntry['accepted'] = ($event->pivot->status == "accepted" ? true : false);
+            $newEntry['pending'] = ($event->pivot->status == "pending" ? true : false);            
             $data[] = $newEntry;
         }
         Log::info('EVENTS : ' . print_r($data,true));
