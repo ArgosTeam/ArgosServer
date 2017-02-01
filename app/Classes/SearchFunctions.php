@@ -110,32 +110,17 @@ class SearchFunctions {
     public static function  events($currentUser, $nameBegin, $knownOnly) {
         $events = SearchFunctions::getEvents($currentUser, $nameBegin, $knownOnly);
         $data = [];
-        Log::info('EVENTS : ' . $events);
+        
         foreach ($events as $event) {
             $newEntry = [];
             $newEntry['id'] = $event->id;
             $newEntry['url'] = null;
-            $newEntry['name'] = $event->firstName . ' ' . $event->lastName;
-            $newEntry['type'] = 'event';
-            if ($currentEvent->id == $event->friend_id) {
-                $newEntry['friend'] = $event->active;
-                $newEntry['pending'] = $event->active == null ? false : true;
-            } else {
-                $newEntry['friend'] = false;
-                $newEntry['pending'] = false;
-            }
+            $newEntry['name'] = $event->name;
+            $newEntry['accepted'] = ($event->status == "accepted" ? true : false);
+            $newEntry['pending'] = ($event->status == "pending" ? true : false);            
             $data[] = $newEntry;
         }
-        foreach ($groups as $group) {
-            $newEntry = [];
-            $newEntry['id'] = $group->id;
-            $newEntry['url'] = null;
-            $newEntry['name'] = $group->name;
-            $newEntry['public'] = $group->public;
-            $newEntry['type'] = 'group';
-            $newEntry['pending'] = false;
-            $data[] = $newEntry;
-        }
+        Log::info('EVENTS : ' . $data);
         return response($data, 200);
     }
 
