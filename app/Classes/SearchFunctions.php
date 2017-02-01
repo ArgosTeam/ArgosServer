@@ -109,8 +109,8 @@ class SearchFunctions {
     
     public static function  events($currentUser, $nameBegin, $knownOnly) {
         $events = SearchFunctions::getEvents($currentUser, $nameBegin, $knownOnly);
-        //Log::info('EVENTS : ' . print_r($events, true));
         $data = [];
+        Log::info('EVENTS : ' . $events);
         // foreach ($events as $user) {
         //     $newEntry = [];
         //     $newEntry['id'] = $user->id;
