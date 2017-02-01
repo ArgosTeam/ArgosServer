@@ -40,7 +40,8 @@ class User extends Authenticatable
 
     public function events() {
         return $this->belongsToMany(Event::class)
-            ->withTimestamps();
+            ->withTimestamps()
+            ->withPivot('status', 'admin');
     }
 
     public function friends() {
