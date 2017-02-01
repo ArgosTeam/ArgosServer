@@ -108,7 +108,9 @@ class fetchFunctions
                         'Key'    => "avatar-" . $photo->path,
                     ]);
                     $request = $client->createPresignedRequest($command, $expiry);
-                    
+
+
+                    Log::info('URI : ' . $request->getUri());
                     if(is_object($photo)) {
                         
                         $results[] = [
