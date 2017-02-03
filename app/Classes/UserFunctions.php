@@ -55,8 +55,8 @@ class UserFunctions
     public static function getInfos($user, $id) {
         $idToSearch = ($id == -1 ? $user->id : $id);
 
-        $user = User::select('users.*', 'user_users.own', 'user_users.active')
-              ->leftJoin('user_users', 'users.id', '=', 'user_users')
+        $user = User::leftJoin('user_users', 'users.id', '=', 'user_users')
+              ->select('users.*', 'user_users.own', 'user_users.active')
               ->where('user_users.friend_id', '=', $user->id)
               ->where('users.id', '=', $id)
               ->first();
