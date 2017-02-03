@@ -60,6 +60,7 @@ class UserFunctions
               ->where('user_users.friend_id', '=', $user->id)
               ->where('users.id', '=', $id)
               ->first();
+        Log::info('DEBUG : ' . print_r($user, true));
         $response = [];
         $response['id'] = $user->id;
         $response['nickname'] = '';
