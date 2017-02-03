@@ -62,7 +62,6 @@ class UserFunctions
         $friendShip = Friend::where('user_id', '=', $user->id)
                     ->where('friend_id', '=', $userProfile->id)
                     ->first();
-        Log::info('DEBUG : ' . print_r($userProfile,  true));
         $response = [];
         $response['id'] = $userProfile->id;
         $response['nickname'] = '';
@@ -81,7 +80,8 @@ class UserFunctions
             $response['pending'] = false;
             $response['own'] = false;
         }
-
+        
+        Log::info('DEBUG : ' . print_r($response,  true));
         return response($response, 200);
     }
 
