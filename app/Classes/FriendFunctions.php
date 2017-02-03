@@ -28,6 +28,7 @@ class FriendFunctions
         $friend->user_id = $user->id;
         $friend->friend_id = $friendId;
         $friend->active = $active;
+        $friend->own = $own;
         if ($friend->save()) {
             return ["status" => "success", "http" => 200];
         } else {
