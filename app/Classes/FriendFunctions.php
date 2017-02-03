@@ -52,61 +52,17 @@ class FriendFunctions
         $friend = Friend::where("friend_id", $user->id)
                 ->where("user_id", $friendId)
                 ->first();
+        if (!is_object($friend)) {
+            return response('Friendship does not exist', 404);
+        }
+        if ($friend->active) {
+            return response('Not possible', 404);
+        }
         if ($friend->delete()) {
-            return ["status" => "success", "http" => 200];
+            return response('Success', 200);
         } else {
-            return ["status" => "refused", "http" => 404];
+            return response('Error while deleting', 404);
         }
-    }
-    
-    public function fetch($userId, $includePending = false){
-
-        $rtn = [];
-        if ($userId != -1) {
-            $user = User::find($userId);
-        }
-        else {
-            $user = User::find(Auth::user()->id);
-        }
-
-        if(is_object($user)){
-
-            //Loop through own friends
-            foreach($user->friends AS $friend){
-                if($friend->pivot->status == "accepted" || ($friend->pivot->status == "pending" && $includePending)) {
-                    $rtn[] = [
-                        "id" => $user->id,
-                        "firstName" => $friend->firstName,
-                        "lastName" => $friend->lastName,
-                        "status" => $friend->pivot->status,
-                        "canAccept" => false,
-                        // to add to db
-                        "profile_pic_url" => "https://organicthemes.com/demo/profile/files/2012/12/profile_img.png",
-                    ];
-                }
-            }
-
-            //Loop through requested friends
-            foreach($user->friends2 AS $friend){
-                if($friend->pivot->status == "pending"){
-                    $rtn[] = [
-                        "id" => $user->id,
-                        "firstName" => $friend->firstName,
-                        "lastName" => $friend->lastName,
-                        "status" => $friend->pivot->status,
-                        "canAccept" => true,
-                        // to add to db
-                        "profile_pic_url" => "https://organicthemes.com/demo/profile/files/2012/12/profile_img.png",
-                    ];
-                }
-            }
-
-        }
-        else {
-            return (["status" => "refused", "http" => 404]);
-        }
-        return $rtn;
-
     }
 
 }
