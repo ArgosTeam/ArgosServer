@@ -30,7 +30,7 @@ class   UserTest extends TestCase
                                     'id' => -1
                                 ], [], [],
                                 ['HTTP_Authorization' => 'Bearer ' . $token['access_token']]);
-        print_r($response->getContent());
+        print_r($response->getContent(), true);
         $this->assertEquals(200, $response->status());
 
     }
