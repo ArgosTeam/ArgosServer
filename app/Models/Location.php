@@ -9,16 +9,17 @@ class Location extends Model
     protected $fillable = ["lat", "lng"];
 
 
-    public function events() {
+    public function event() {
         return $this->hasOne(Event::class);
     }
 
-    public function photos() {
+    public function photo() {
         return $this->hasOne(Photo::class);
     }
 
-    public function groups() {
+    public function group() {
         return $this->hasOne(Group::class);
     }
+
     
 }

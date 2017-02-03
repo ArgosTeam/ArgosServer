@@ -10,16 +10,7 @@ use App\Http\Requests;
 
 class PhotoController extends Controller
 {
-    //
-
-    public function uploadPhoto(Requests\SubmitUploadPhoto $request){
-
-        return PhotoFunctions::uploadImage($request);
-    }
-
-    public function fetchPhotos($id){
-
-        return PhotoFunctions::fetchPhoto($id);
-
+    public function upload(Request $request){
+        return PhotoFunctions::upload($request);
     }
 }

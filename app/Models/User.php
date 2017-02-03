@@ -30,7 +30,9 @@ class User extends Authenticatable
 
 
     public function photos(){
-        return $this->hasMany(Photo::class);
+        return $this->belongsToMany(Photo::class)
+            ->withTimestamps()
+            ->withPivot('admin');
     }
 
     public function groups() {

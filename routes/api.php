@@ -27,10 +27,15 @@ Route::group(['middleware' => 'auth:api'], function () {
 
 
     Route::get('/photo/{id}',       'PhotoController@fetchPhotos');
-    Route::post('/photo/upload',    'PhotoController@uploadPhoto');
     Route::get('/search',           'SearchController@selectData');
 
 
+    /*
+    ** Routes regarding photos functions
+    */
+    Route::post('/photo/upload',    'PhotoController@upload');
+
+    
     /*
     ** Routes regarding users functions
     */

@@ -22,32 +22,40 @@ use Illuminate\Support\Facades\Log;
 class PhotoFunctions
 {
 
-    public static function uploadImage(SubmitUploadPhoto $request){
+    public static function upload(SubmitUploadPhoto $request){
 
         $data = $request->all();
-
-        $decode = base64_decode($data["image"]);
+        $user = Auth::user();
+        $decode = base64_decode($data['image']);
         $md5 = md5($decode);
 
         $photo = Photo::where('md5', $md5)->first();
         if(is_object($photo)){
-            return (["status" => "duplicate", "photo_id" => $photo->id]);
+            return response('Photo already exists', 404);
         }
 
-        $path =  'images/' . time() . ".jpg";
+        $path =  'images/' . time() . '.jpg';
 
         $location = new Location();
-        $location->lat = $data["latitude"];
-        $location->lng = $data["longitude"];
+        $location->lat = $data['latitude'];
+        $location->lng = $data['longitude'];
         $location->save();
-        //Create record
-        $photo = Photo::create([
-            "name" => $data["name"],
-            "description" => "",
-            "path" => $path,
-            "user_id" => Auth::user()->id,
-            "location_id" => $location->id,
-            "md5" => $md5
+
+        
+        $photo = new Photo();
+        $photo->name = $data['name'];
+        $photo->description = $data['description'];
+        $photo->path = $path;
+        $photo->public = $data['public'];
+        $photo->hashtags = '';
+        $photo->mode = $data['mode'];
+        $photo->origin_user_id = $user->id;
+        $photo->md5 = $md5;
+        $photo->location()->associate($location);
+        $photo->save();
+
+        $user->photos()->attach($photo->id, [
+            'admin' => true
         ]);
         
         $full = Image::make($decode)->rotate(-90);
@@ -59,51 +67,9 @@ class PhotoFunctions
         Storage::disk('s3')->put($path, $full, 'public');
 
         //Upload avatar
-        Storage::disk('s3')->put("avatar-" . $path, $avatar, 'public');
+        Storage::disk('s3')->put('avatar-' . $path, $avatar, 'public');
 
-
-
-//        //Attach groups
-//        $groups = explode(',', rtrim(ltrim("[",$data["rights"]), "]"));
-//
-//        foreach($groups AS $group){
-//
-//            $grp = Group::find($group);
-//
-//            if(is_object($grp)) {
-//                $photo->groups()->attach($group);
-//            }
-//        }
-//
-//        //Attach hashtags
-//        $hashTags = explode(',', rtrim(ltrim("[",$data["hashtag"]), "]"));
-//
-//        foreach($hashTags AS $hashTag){
-//            $tag = Hashtag::firstOrCreate(["tag" => $hashTag]);
-//            $photo->hashTags()->attach($tag);
-//        }
-
-
-        return (["status" => "created", "photo_id" => $photo->id]);
-
-    }
-
-    public static function fetchPhoto($id) {
-
-        $photo = Photo::join('locations', 'photos.location_id', '=', 'locations.id')
-               ->find($id);
-
-        $result = [
-            "id" => $photo->id,
-            "path" => env('S3_URL') . env('S3_BUCKET') . "/" . $photo->path,
-            "name" => $photo->name,
-            "lat" => $photo->lat,
-            "lng" => $photo->lng,
-            "likes" => 0,
-        ];
-
-        return $result;
-
+        return (response(['photo_id' => $photo->id], 200);
     }
 
 }
