@@ -69,7 +69,7 @@ class PhotoFunctions
         //Upload avatar
         Storage::disk('s3')->put('avatar-' . $path, $avatar, 'public');
 
-        return (response(['photo_id' => $photo->id], 200);
+        return (response(['photo_id' => $photo->id], 200));
     }
 
 }
