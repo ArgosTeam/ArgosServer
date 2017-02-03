@@ -60,7 +60,7 @@ class UserFunctions
         $userProfile = User::select(['users.*', 'user_users.friend_id', 'user_users.active', 'user_users.own'])
                      ->leftJoin('user_users', 'users.id', '=', 'user_users.user_id')
                      ->where('users.id', '=', $idToSearch)
-                     ->WhereNull('user_users.friend_id')
+                     ->whereNull('user_users.friend_id')
                      ->orWhere('users.id', '=', $idToSearch)
                      ->where('user_users.friend_id', '=', $user->id)
                      ->get();
