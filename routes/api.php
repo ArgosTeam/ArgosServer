@@ -66,4 +66,5 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/group/add', 'GroupController@add');
     Route::post('/group/join', 'GroupController@join');
     Route::post('/group/accept', 'GroupController@accept');
+    Route::get('/group/infos', 'GroupController@infos');
 });

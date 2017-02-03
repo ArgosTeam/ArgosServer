@@ -83,5 +83,17 @@ class GroupFunctions
             return response('Access refused, need to be admin, or group does not exist', 404);
         }
     }
+
+    public static function infos($user, $group_id) {
+        $group = Group::find($group_id);
+        if (is_object($group)) {
+            $belong =$group->users()
+                    ->where('users.id', '=', $user->id)
+                    ->first();
+            Log::info('DEBUUUUG : ' . print_r($belong, true));
+            return response('toto', 200);
+        }
+        return response('Group does not exist', 404);
+    }
     
 }
