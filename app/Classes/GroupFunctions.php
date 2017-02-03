@@ -90,8 +90,23 @@ class GroupFunctions
             $belong =$group->users()
                     ->where('users.id', '=', $user->id)
                     ->first();
-            Log::info('DEBUUUUG : ' . print_r($belong->pivot, true));
-            return response('toto', 200);
+
+            $data = [];
+            $data['id'] = $group_id;
+            $data['profile_pic'] = '';
+            $data['name'] = $group->name;
+            $data['hashtags'] = '';
+            $data['address'] = $group->address;
+            $data['date'] = $group->created_at;
+            if (is_object($belong)) {
+                $data['belong'] = true;
+                $data['admin'] = $belong->pivot->admin;
+            } else {
+                $data['belong'] = false;
+                $data['admin'] = false;
+            }
+            
+            return response($data, 200);
         }
         return response('Group does not exist', 404);
     }
