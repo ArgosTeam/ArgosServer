@@ -11,6 +11,7 @@ namespace App\Classes;
 
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\Friend;
 use Illuminate\Support\Facades\Log;
 
 class UserFunctions
@@ -57,14 +58,11 @@ class UserFunctions
         $idToSearch = ($id == -1 ? $user->id : $id);
 
         
-        $userProfile = User::select(['users.*', 'user_users.friend_id', 'user_users.active', 'user_users.own'])
-                     ->leftJoin('user_users', 'users.id', '=', 'user_users.user_id')
-                     ->where('users.id', '=', $idToSearch)
-                     //->whereNull('user_users.user_id')
-                     //->orWhere('users.id', '=', $idToSearch)
-                     //->where('user_users.friend_id', '=', $user->id)
-                     ->get();
-        Log::info('DEBUG : ' . print_r($userProfile, true));
+        $userProfile = User::find($idToSearch);
+        $friendShip = Friend::where('user_id', '=', $user->id)
+                    ->where('friend_id', '=', $userProfile->id)
+                    ->first();
+        Log::info('DEBUG : ' . print_r($userProfile,  true));
         $response = [];
         $response['id'] = $userProfile->id;
         $response['nickname'] = '';
@@ -74,10 +72,10 @@ class UserFunctions
         $response['university'] = '';
         $response['master'] = '';
         $response['stats'] = '';
-        if ($userProfile->active !== null) {
-            $response['friend'] = $userProfile->active;
-            $response['pending'] = !$userProfile->active;
-            $response['own'] = $userProfile->own;
+        if (is_object($friendShip)) {
+            $response['friend'] = $friendShip->active;
+            $response['pending'] = !$friendShip->active;
+            $response['own'] = $friendShip->own;
         } else {
             $response['friend'] = false;
             $response['pending'] = false;
