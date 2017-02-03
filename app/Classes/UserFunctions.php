@@ -56,27 +56,28 @@ class UserFunctions
     public static function getInfos($user, $id) {
         $idToSearch = ($id == -1 ? $user->id : $id);
 
-        $user = User::select('users.*', 'user_users.own', 'user_users.active')
-              ->leftJoin('user_users', 'users.id', '=', 'user_users.user_id')
-              ->where('user_users.friend_id', '=', $user->id)
-              ->where('users.id', '=', $idToSearch)
-              ->orWhere('users.id', '=', $idToSearch)
-              ->whereNull('user_users.user_id')
-              ->first();
-        Log::info('DEBUG : ' . print_r($user, true));
+        
+        $userProfile = User::select(['users.*', 'user_users.friend_id', 'user_users.active', 'user_users.own'])
+                     ->leftJoin('user_users', 'users.id', '=', 'user_users.user_id')
+                     ->where('users.id', '=', $idToSearch)
+                     ->WhereNull('user_users.friend_id')
+                     ->where('users.id', '=', $idToSearch)
+                     ->orWhere('user_users.friend_id', '=', $user->id)
+                     ->get();
+        Log::info('DEBUG : ' . print_r($userProfile, true));
         $response = [];
-        $response['id'] = $user->id;
+        $response['id'] = $userProfile->id;
         $response['nickname'] = '';
         $response['profile_pic'] = '';
-        $response['name'] = $user->firstName;
-        $response['surname'] = $user->lastName;
+        $response['name'] = $userProfile->firstName;
+        $response['surname'] = $userProfile->lastName;
         $response['university'] = '';
         $response['master'] = '';
         $response['stats'] = '';
-        if ($user->active !== null) {
-            $response['friend'] = $user->active;
-            $response['pending'] = !$user->active;
-            $response['own'] = $user->own;
+        if ($userProfile->active !== null) {
+            $response['friend'] = $userProfile->active;
+            $response['pending'] = !$userProfile->active;
+            $response['own'] = $userProfile->own;
         } else {
             $response['friend'] = false;
             $response['pending'] = false;
