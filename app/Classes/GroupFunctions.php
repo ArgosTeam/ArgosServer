@@ -90,7 +90,7 @@ class GroupFunctions
             $belong =$group->users()
                     ->where('users.id', '=', $user->id)
                     ->first();
-            Log::info('DEBUUUUG : ' . print_r($belong, true));
+            Log::info('DEBUUUUG : ' . print_r($belong->pivot(), true));
             return response('toto', 200);
         }
         return response('Group does not exist', 404);
