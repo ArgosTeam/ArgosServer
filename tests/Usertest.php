@@ -27,7 +27,7 @@ class   UserTest extends TestCase
         $response = $this->call('GET',
                                 '/api/user/infos',
                                 [
-                                    'id' => -1
+                                    'id' => 1
                                 ], [], [],
                                 ['HTTP_Authorization' => 'Bearer ' . $token['access_token']]);
         print_r($response->getContent(), true);
