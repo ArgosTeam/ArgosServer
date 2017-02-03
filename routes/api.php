@@ -21,7 +21,6 @@ use Illuminate\Http\Request;
 Route::group(['middleware' => 'auth:api'], function () {
 
     Route::get('/fetch',            'FetchController@fetch');
-    Route::get('/user/{userId}', 'UserController@profileRequests');
 
     // TEMPORARY SINCE I DONT HAVE ACCESS TO DB
     Route::get('/user/setemail', 'UserController@setEmailRequests');
