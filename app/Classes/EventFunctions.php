@@ -93,4 +93,34 @@ class EventFunctions
         }
     }
 
+    public static function infos($user, $event_id) {
+        $event = Event::find($event_id);
+
+        if (!is_object($event)) {
+            return response('Event does not exist', 404);
+        }
+        $belong = $user->events()
+                ->where('events.id', '=', $event_id)
+                ->first();
+
+        $data = [];
+        $data['name'] = $event->name;
+        $data['profile_pic'] = '';
+        $data['description'] = $event->description;
+        $data['hashtags'] = '';
+        $data['date'] = $event->start;
+        $data['expires'] = $event->expires;
+        $data['address'] = '';
+        if (is_object($belong)) {
+            $data['participate'] = ($belong->pivot->status === 'accepted' ? true : false);
+            $data['pending'] = ($belong->pivot->status === 'pending' ? true : false);
+            $data['admin'] = $belong->pivot->admin;
+        } else {
+            $data['participate'] = false;
+            $data['pending'] = false;
+            $data['admin'] = false;
+        }
+
+        return response($data, 200);
+    }
 }

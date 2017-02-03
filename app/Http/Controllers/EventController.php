@@ -35,4 +35,10 @@ class EventController extends Controller
         $event_id = $request->input('event_id');
         return EventFunctions::refuse($user, $user_id, $event_id);
     }
+
+    public function infos(Request $request) {
+        $user = Auth::user();
+        $event_id = $request->input('id');
+        return EventFunctions::infos($user, $event_id);
+    }
 }
