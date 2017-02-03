@@ -52,4 +52,34 @@ class UserFunctions
         return $users;
     }
 
+    public static function getInfos($user, $id) {
+        $idToSearch = ($id == -1 ? $user->id : $id);
+
+        $user = User::select('users.*', 'user_users.own', 'user_users.active')
+              ->leftJoin('user_users', 'users.id', '=', 'user_users')
+              ->where('user_users.friend_id', '=', $user->id)
+              ->where('users.id', '=', $id)
+              ->first();
+        $response = [];
+        $response['id'] = $user->id;
+        $response['nickname'] = '';
+        $response['profile_pic'] = '';
+        $response['name'] = $user->firstName;
+        $response['surname'] = $user->lastName;
+        $response['university'] = '';
+        $response['master'] = '';
+        $response['stats'] = '';
+        if ($user->active !== null) {
+            $response['friend'] = $user->active;
+            $response['pending'] = !$user->active;
+            $response['own'] = $user->own;
+        } else {
+            $response['friend'] = false;
+            $response['pending'] = false;
+            $response['own'] = false;
+        }
+
+        return response($response, 200);
+    }
+
 }

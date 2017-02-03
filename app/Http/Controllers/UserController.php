@@ -23,4 +23,10 @@ class UserController extends Controller
         return $func->setEmail();
 
     }
+
+    public function infos(Request $request) {
+        $user = Auth::user();
+        $id = $request->input('id');
+        UserFunctions::getInfos($user, $id);
+    }
 }

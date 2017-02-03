@@ -29,18 +29,21 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::get('/photo/{id}',       'PhotoController@fetchPhotos');
     Route::post('/photo/upload',    'PhotoController@uploadPhoto');
+    Route::get('/search',           'SearchController@selectData');
 
+
+    /*
+    ** Routes regarding users functions
+    */
+    Route::get('/user/infos', 'UserController@infos');
 
     /*
     ** Routes regarding events actions
     */
-    //Route::get('/event/{id}',       'EventController@fetch');
     Route::post('/event/add',           'EventController@add');
     Route::post('/event/join', 'EventController@join');
     Route::post('/event/accept', 'EventController@accept');
 //Route::post'/event/refuse', 'EventController@refuse');
-
-    Route::get('/search',           'SearchController@selectData');
 
     /*
     ** Routes regarding search actions

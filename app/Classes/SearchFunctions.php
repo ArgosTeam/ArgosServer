@@ -61,7 +61,7 @@ class SearchFunctions {
             $newEntry['name'] = $user->firstName . ' ' . $user->lastName;
             $newEntry['type'] = 'user';
             $newEntry['own'] = $user->own;
-            if ($user->active != null) {
+            if ($user->active !== null) {
                 $newEntry['friend'] = $user->active;
                 $newEntry['pending'] = $newEntry['friend'] ? false : true;
             } else {
