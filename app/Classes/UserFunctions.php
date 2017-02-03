@@ -61,8 +61,8 @@ class UserFunctions
                      ->leftJoin('user_users', 'users.id', '=', 'user_users.user_id')
                      ->where('users.id', '=', $idToSearch)
                      ->WhereNull('user_users.friend_id')
-                     ->where('users.id', '=', $idToSearch)
-                     ->orWhere('user_users.friend_id', '=', $user->id)
+                     ->orWhere('users.id', '=', $idToSearch)
+                     ->where('user_users.friend_id', '=', $user->id)
                      ->get();
         Log::info('DEBUG : ' . print_r($userProfile, true));
         $response = [];
