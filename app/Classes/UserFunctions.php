@@ -58,8 +58,8 @@ class UserFunctions
 
         $user = User::select('users.*', 'user_users.own', 'user_users.active')
               ->leftJoin('user_users', 'users.id', '=', 'user_users.user_id')
-              //->where('user_users.friend_id', '=', [$user->id, null])
-              ->where('users.id', '=', $id)
+              ->where('user_users.friend_id', '=', [$user->id, null])
+              ->where('users.id', '=', $idToSearch)
               ->first();
         Log::info('DEBUG : ' . print_r($user, true));
         $response = [];
