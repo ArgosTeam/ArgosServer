@@ -31,7 +31,6 @@ class SearchTest extends TestCase
                                     'name_begin' => '',
                                     'known_only' => false
                                 ],[],[], ['HTTP_Authorization' => 'Bearer ' . $token['access_token']]);
-        print_r($response->getContent());
         $this->assertEquals(200, $response->status());
     }
 
@@ -52,7 +51,6 @@ class SearchTest extends TestCase
                                     'name_begin' => '',
                                     'known_only' => true
                                 ],[],[], ['HTTP_Authorization' => 'Bearer ' . $token['access_token']]);
-        print_r($response->getContent());
         $this->assertEquals(200, $response->status());
     }
 }
