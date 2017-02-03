@@ -32,7 +32,7 @@ class GroupController extends Controller
     public function infos(Request $request) {
         $user = Auth::user();
         $group_id = $request->input('id');
-        return GroupFunctions::getInfos($user, $group_id);
+        return GroupFunctions::infos($user, $group_id);
     }
 
 }
