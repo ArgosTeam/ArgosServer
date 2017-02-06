@@ -115,7 +115,13 @@ class EventFunctions
         $data['name'] = $event->name;
         $data['profile_pic'] = '';
         $data['description'] = $event->description;
-        $data['hashtags'] = '';
+        $data['hashtags'] = [];
+        foreach ($event->hashtags()->get() as $hashtag) {
+            $data['hashtags'][] = [
+                'id' => $hashtag->id,
+                'name' => $hashtag->name
+            ];
+        }
         $data['date'] = $event->start;
         $data['expires'] = $event->expires;
         $data['address'] = '';
