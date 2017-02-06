@@ -28,7 +28,7 @@ class Group extends Model
     }
 
     public function hashtags() {
-        return $this->belongsToMany(Group::class)
+        return $this->belongsToMany(Hashtag::class)
             ->withTimestamps();
     }
 }

@@ -18,4 +18,9 @@ class Hashtag extends Model
         return $this->belongsToMany(Group::class)
             ->withTimestamps();
     }
+
+    public function events() {
+        return $this->belongsToMany(Event::class)
+            ->withTimestamps();
+    }
 }

@@ -17,4 +17,9 @@ class Event extends Model
             ->withTimestamps()
             ->withPivot('admin'. 'status');
     }
+
+    public function hashtags() {
+        return $this->belongsToMany(Hashtag::class)
+            ->withTimestamps();
+    }
 }
