@@ -36,7 +36,7 @@ class GroupFunctions
             
             /*
             ** Create hashtag if not exist
-            ** Associate hashtag to photo
+            ** Associate hashtag to group
             */
             foreach ($request->input('hashtags') as $name) {
                 $hashtag = Hashtag::where('name', '=', $name)

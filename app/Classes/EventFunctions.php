@@ -44,13 +44,28 @@ class EventFunctions
         $event->location()->associate($location);
         
         if ($event->save()) {
+            /*
+            ** Create hashtag if not exist
+            ** Associate hashtag to event
+            */
+            foreach ($request->input('hashtags') as $name) {
+                $hashtag = Hashtag::where('name', '=', $name)
+                         ->first();
+                if (!is_object($hashtag)) {
+                    $hashtag = Hashtag::create([
+                        'name' => $name
+                    ]);
+                }
+                $hashtag->events()->attach($event);
+            }
+            
             $user->events()->attach($event->id, [
                 'status' => 'accepted',
                 'admin' => true
             ]);
-            return (["status" => "created", "event_id" => $event->id]);
+            return response(['event_id' => $event->id], 200);
         } else {
-            return (["status" => "error while saving event"]);
+            return response('error while saving event', 404);
         }
     }
 
