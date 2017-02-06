@@ -26,4 +26,9 @@ class Group extends Model
     public function location() {
         return $this->belongsTo(Location::class);
     }
+
+    public function hashtags() {
+        return $this->belongsToMany(Group::class)
+            ->withTimestamps();
+    }
 }
