@@ -21,6 +21,9 @@ class PhotoFunctions
         $decode = base64_decode($data['image']);
         $md5 = md5($decode);
 
+        /*
+        ** Check photo already exists
+        */
         $photo = Photo::where('md5', $md5)->first();
         if(is_object($photo)){
             return response('Photo already exists', 404);
@@ -28,24 +31,50 @@ class PhotoFunctions
 
         $path =  'images/' . time() . '.jpg';
 
+        /*
+        ** Create new location
+        */
         $location = new Location();
         $location->lat = $data['latitude'];
         $location->lng = $data['longitude'];
         $location->save();
 
-        
+        /*
+        ** Create new Photo
+        */
         $photo = new Photo();
         $photo->name = $data['name'];
         $photo->description = $data['description'];
         $photo->path = $path;
         $photo->public = $data['public'];
-        $photo->hashtags = '';
         $photo->mode = $data['mode'];
         $photo->origin_user_id = $user->id;
         $photo->md5 = $md5;
+        
+        /*
+        ** Associate location to photo
+        */
         $photo->location()->associate($location);
         $photo->save();
 
+        /*
+        ** Create hashtag if not exist
+        ** Associate hashtag to photo
+        */
+        foreach ($data['hashtags'] as $name) {
+            $hashtag = Hashtag::where('name', '=', $name)
+                     ->first();
+            if (!is_object($hashtag)) {
+                $hashtag = Hashtag::create([
+                    'name' => $name
+                ]);
+            }
+            $hashtag->photos()->attach($photo);
+        }
+
+        /*
+        ** Link user to photo
+        */
         $user->photos()->attach($photo->id, [
             'admin' => true
         ]);
