@@ -4,6 +4,7 @@ namespace App\Classes;
 
 use App\Models\Group;
 use App\Models\User;
+use App\Models\Hashtag;
 use Illuminate\Support\Facades\Log;
 use App\Models\Location;
 
@@ -23,7 +24,7 @@ class GroupFunctions
             $group->public = $request->input('public');
             $group->description = $request->input('description');
             $group->address = $request->input('address');
-
+            
             $location = new Location([
                 'lat' => $request->input('lat'),
                 'lng' => $request->input('lng')
@@ -32,6 +33,21 @@ class GroupFunctions
             $location->save();
             $group->location()->associate($location);
             $group->save();
+            
+            /*
+            ** Create hashtag if not exist
+            ** Associate hashtag to photo
+            */
+            foreach ($request->input('hashtags') as $name) {
+                $hashtag = Hashtag::where('name', '=', $name)
+                         ->first();
+                if (!is_object($hashtag)) {
+                    $hashtag = Hashtag::create([
+                        'name' => $name
+                    ]);
+                }
+                $hashtag->groups()->attach($group);
+            }
 
             $user->groups()->attach($group->id, [
                 'status' => 'accepted',
@@ -88,7 +104,14 @@ class GroupFunctions
             $data['id'] = $group_id;
             $data['profile_pic'] = '';
             $data['name'] = $group->name;
-            $data['hashtags'] = '';
+            $data['hashtags'] = [];
+            $hashtags = $group->hashtags()->get();
+            foreach ($hashtags as $hashtag) {
+                $data['hashtags'] = [
+                    'id' => $hashtag->id,
+                    'name' => $hashtag->name
+                ];
+            }
             $data['address'] = $group->address;
             $data['date'] = $group->created_at;
             if (is_object($belong)) {
