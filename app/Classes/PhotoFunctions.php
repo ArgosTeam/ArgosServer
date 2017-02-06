@@ -109,12 +109,20 @@ class PhotoFunctions
             'Key'    => $photo->path,
         ]);
         $request = $client->createPresignedRequest($command, $expiry);
+
+        $hashtags = [];
+        foreach ($photo->hashtags()->get() as $hashtag) {
+            $hashtags[] = [
+                'id' => $hashtag->id,
+                'name' => $hashtag->name
+            ];
+        }
         
         $data = [
             'id' => $photo->id,
             'url' => '' . $request->getUri() . '',
             'description' => $photo->description,
-            'hashtags' => [],
+            'hashtags' => $hashtags,
             'comments' => [],
             'rights' => []
         ];
