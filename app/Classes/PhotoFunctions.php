@@ -11,14 +11,6 @@ use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Log;
 
-/**
- * Created by PhpStorm.
- * User: Neville
- * Date: 26/09/2016
- * Time: 6:56 AM
- */
-
-
 class PhotoFunctions
 {
 
@@ -70,6 +62,35 @@ class PhotoFunctions
         Storage::disk('s3')->put('avatar-' . $path, $avatar, 'public');
 
         return (response(['photo_id' => $photo->id], 200));
+    }
+
+    public static function getMacro($user, $photo_id) {
+        $photo = Photo::find($photo_id);
+        if (!is_object($photo)) {
+            return response('Photo not found', 404);
+        }
+
+        // Get signed url from s3
+        $s3 = Storage::disk('s3');
+        $client = $s3->getDriver()->getAdapter()->getClient();
+        $expiry = "+10 minutes";
+        
+        $command = $client->getCommand('GetObject', [
+            'Bucket' => env('S3_BUCKET'),
+            'Key'    => $photo->path,
+        ]);
+        $request = $client->createPresignedRequest($command, $expiry);
+        
+        $data = [
+            'id' => $photo->id,
+            'url' => '' . $request->getUri() . '',
+            'description' => $photo->description,
+            'hashtags' => [],
+            'comments' => [],
+            'rights' => []
+        ];
+
+        return response($data, 200);
     }
 
 }

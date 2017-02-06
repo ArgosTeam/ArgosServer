@@ -5,13 +5,6 @@ use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use App\Models\Group;
 
-/**
- * Created by PhpStorm.
- * User: Neville
- * Date: 1/12/2016
- * Time: 7:42 AM
- */
-
 class DropdownFunctions{
 
     public static function generalSelect()

@@ -13,14 +13,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 
-/**
- * Created by PhpStorm.
- * User: Neville
- * Date: 26/09/2016
- * Time: 6:56 AM
- */
-
-
 class LocationFunctions
 {
 

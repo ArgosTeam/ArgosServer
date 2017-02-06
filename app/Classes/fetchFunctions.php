@@ -14,13 +14,6 @@ use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Log;
 
-/**
- * Created by PhpStorm.
- * User: Neville
- * Date: 26/09/2016
- * Time: 6:56 AM
- */
-
 //http://gis.stackexchange.com/questions/31628/find-points-within-a-distance-using-mysql
 class fetchFunctions
 {
