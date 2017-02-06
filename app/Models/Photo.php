@@ -26,7 +26,8 @@ class Photo extends Model
     }
        
     
-    public function hashtags(){
-        return $this->belongsToMany(Hashtag::class);
+    public function hashtags() {
+        return $this->belongsToMany(Hashtag::class)
+            ->withTimestamps();
     }
 }
