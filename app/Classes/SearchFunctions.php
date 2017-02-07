@@ -35,7 +35,6 @@ class SearchFunctions {
     
     private static function getUsers($user, $nameBegin, $knownOnly) {
         $users = SearchFunctions::getknownUsers($user, $nameBegin);
-        Log::info('USERS : ' . print_r($users[0]->pivot, true));
         if (!$knownOnly && ($limit = 15 - $users->count()) > 0) {
             $users = $users->merge(SearchFunctions::getUnknownUsers($user, $nameBegin, $limit));
         }
@@ -54,9 +53,9 @@ class SearchFunctions {
             $newEntry['url'] = null;
             $newEntry['name'] = $user->firstName . ' ' . $user->lastName;
             $newEntry['type'] = 'user';
-            $newEntry['own'] = !$user->friends()->find($currentUser->id)->own;
-            if ($user->active !== null) {
-                $newEntry['friend'] = $user->active;
+            $newEntry['own'] = $user->pivot->own;
+            if (is_object($user->pivot)) {
+                $newEntry['friend'] = $user->pivot->active;
                 $newEntry['pending'] = $newEntry['friend'] ? false : true;
             } else {
                 $newEntry['friend'] = false;
