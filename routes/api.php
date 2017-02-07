@@ -28,6 +28,11 @@ Route::group(['middleware' => 'auth:api'], function () {
 
 
     /*
+    ** Route regarding Followers functions
+    */
+    Route::post('/follow', 'UserController@follow');
+    
+    /*
     ** Routes regarding photos functions
     */
     Route::post('/photo/upload',    'PhotoController@upload');

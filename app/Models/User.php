@@ -49,4 +49,22 @@ class User extends Authenticatable
     public function friends() {
         return $this->belongsTo(Friend::class);
     }
+
+    /*
+    ** Define Followers, Many-To-Many self relation
+    ** followers -> set the relationship in order to get followers of user
+    **              Used to attach followers to an user
+    ** followed -> set the relationship in order to get elements that user is following
+    **             Used to attach followers to the current user
+    */
+    public function followers() {
+        return $this->belongsToMany(User::class, 'followers', 'follow_id', 'user_id')
+            ->withTimestamps();
+    }
+
+    public function followed() {
+        return $this->belongsToMany(User::class, 'followers', 'user_id', 'follow_id')
+            ->withTimestamps();
+    }
+    
 }
