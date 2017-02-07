@@ -20,11 +20,11 @@ class fetchFunctions
     
     public static function fetch($data) {
         
-        $poly[0] = explode(",",str_replace(["lat/lng: (", ")"], " ", $data["farLeft"]));
-        $poly[1] = explode(",",str_replace(["lat/lng: (", ")"], " ", $data["farRight"]));
-        $poly[2] = explode(",",str_replace(["lat/lng: (", ")"], " ", $data["nearLeft"]));
-        $poly[3] = explode(",",str_replace(["lat/lng: (", ")"], " ", $data["nearRight"]));
-        $poly[4] = explode(",",str_replace(["lat/lng: (", ")"], " ", $data["farLeft"]));
+        $poly[0] = explode(",",str_replace(["LatLng(", ")"], " ", $data["farLeft"]));
+        $poly[1] = explode(",",str_replace(["LatLng(", ")"], " ", $data["farRight"]));
+        $poly[2] = explode(",",str_replace(["LatLng(", ")"], " ", $data["nearLeft"]));
+        $poly[3] = explode(",",str_replace(["LatLng(", ")"], " ", $data["nearRight"]));
+        $poly[4] = explode(",",str_replace(["LatLng(", ")"], " ", $data["farLeft"]));
 
 
         $cells = [
