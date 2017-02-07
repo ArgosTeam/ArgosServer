@@ -18,9 +18,7 @@ use Illuminate\Support\Facades\Log;
 class fetchFunctions
 {
     
-    public function fetch(){
-
-        $data = \Illuminate\Support\Facades\Input::get();
+    public static function fetch($data) {
         
         $poly[0] = explode(",",str_replace(["lat/lng: (", ")"], " ", $data["farLeft"]));
         $poly[1] = explode(",",str_replace(["lat/lng: (", ")"], " ", $data["farRight"]));
@@ -60,9 +58,6 @@ class fetchFunctions
                 $cells[$i][$a] = [$leftTop, $rightTop, $rightBttm, $leftBttm, $leftTop];
             }
         }
-
-//        SELECT  * FROM `photos` WHERE ST_CONTAINS( PolygonFromText('POLYGON((53.36854460722273 -6.272425912320615, 53.36854460722273 -6.2569767236709595, 53.35276852530885 -6.2569767236709595, 53.35276852530885 -6.272425912320615, 53.36854460722273 -6.272425912320615))'), GeomFromText(CONCAT('Point(',`lat`, ' ', `lng`,')')));
-
 
         $results = [];
         $results["photos"] = $this->fetchPhotos($cells);

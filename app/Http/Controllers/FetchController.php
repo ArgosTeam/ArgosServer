@@ -9,12 +9,9 @@ use App\Http\Requests;
 
 class FetchController extends Controller
 {
-    //
 
-    public function fetch(){
-
-        $f = new fetchFunctions();
-        return response($f->fetch());
-
+    public function fetch(Request $request) {
+        $data = $request->input();;
+        return response(fetchFunctions::fetch($data));
     }
 }

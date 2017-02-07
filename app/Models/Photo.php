@@ -7,8 +7,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Photo extends Model
 {
-    use SoftDeletes;
-
     protected $fillable = ["name", "description", "path", "origin_user_id", "location_id", "md5"];
 
     public function groups(){
