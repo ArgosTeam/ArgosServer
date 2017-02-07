@@ -61,7 +61,7 @@ class PhotoFunctions
         /*
         ** Create hashtag if not exist
         ** Associate hashtag to photo
-        */
+        */xx
         foreach ($data['hashtags'] as $name) {
             $hashtag = Hashtag::where('name', '=', $name)
                      ->first();

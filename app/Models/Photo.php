@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Photo extends Model
 {
-    protected $fillable = ["name", "description", "path", "origin_user_id", "location_id", "md5"];
+    protected $fillable = ['name', 'description', 'path', 'origin_user_id', 'location_id', 'md5', 'public'];
 
     public function groups(){
         return $this->belongsToMany(Group::class);
