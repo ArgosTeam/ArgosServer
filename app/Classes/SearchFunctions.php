@@ -17,32 +17,26 @@ class SearchFunctions {
     ** Search Users
     */
     private static function getKnownUsers($user, $nameBegin) {
-        $ids = is_object($user->friends) ? $user->friends->pluck('friend_id') : [];
-        Log::info('Known users: ' .  print_r($user->friends->pluck('friend_id'), true));
-        return User::select(['users.*', 'user_users.friend_id', 'user_users.active', 'user_users.own'])
-            ->leftJoin('user_users', 'users.id', '=', 'user_users.user_id')
-            ->whereIn('users.id', $ids)
+        return $user->select('users.*', 'user_users.active', 'user_users.own')
+            ->getFriends()
             ->where('firstName', 'like', $nameBegin . '%')
-            ->orWhere('lastName', 'like', $nameBegin . '%')
-            ->whereIn('id', $ids)
-            ->limit(15)
+            ->where('lastName', 'like', $nameBegin . '%')
             ->get();
     }
 
     private static function getUnknownUsers($user, $nameBegin, $limit) {
-        $ids = is_object($user->friends) ? $user->friends->pluck('friend_id') : [];
-        return User::select(['users.*', 'user_users.friend_id', 'user_users.active', 'user_users.own'])
-            ->leftJoin('user_users', 'users.id', '=', 'user_users.user_id')
-            ->whereNotIn('users.id', $ids)
+        $ids = $user->getFriends()->get()->pluck('id');
+        return User::select('users.*', 'user_users.active', 'user_users.own')
+            ->whereNotIn('id', $ids)
             ->where('firstName', 'like', $nameBegin . '%')
-            ->orWhere('lastName', 'like', $nameBegin . '%')
-            ->whereNotIn('users.id', $ids)
-            ->limit($limit)
+            ->where('lastName', 'like', $nameBegin . '%')
+            ->limit(15)
             ->get();
     }
     
     private static function getUsers($user, $nameBegin, $knownOnly) {
         $users = SearchFunctions::getknownUsers($user, $nameBegin);
+        Log::info('USERS : ' . print_r($users, true));
         if (!$knownOnly && ($limit = 15 - $users->count()) > 0) {
             $users = $users->merge(SearchFunctions::getUnknownUsers($user, $nameBegin, $limit));
         }
@@ -61,7 +55,7 @@ class SearchFunctions {
             $newEntry['url'] = null;
             $newEntry['name'] = $user->firstName . ' ' . $user->lastName;
             $newEntry['type'] = 'user';
-            $newEntry['own'] = $user->own;
+            $newEntry['own'] = !$user->friends()->find($currentUser->id)->own;
             if ($user->active !== null) {
                 $newEntry['friend'] = $user->active;
                 $newEntry['pending'] = $newEntry['friend'] ? false : true;

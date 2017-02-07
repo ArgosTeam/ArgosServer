@@ -47,7 +47,9 @@ class User extends Authenticatable
     }
 
     public function friends() {
-        return $this->belongsTo(Friend::class);
+        return $this->belongsToMany(User::class, 'user_users', 'user_id', 'friend_id')
+            ->withPivot('active', 'status')
+            ->withTimestamps();
     }
 
     /*
@@ -65,6 +67,11 @@ class User extends Authenticatable
     public function followed() {
         return $this->belongsToMany(User::class, 'followers', 'user_id', 'follow_id')
             ->withTimestamps();
+    }
+
+    public function getFriends() {
+        return $this->friends()
+            ->where('active', true);
     }
     
 }

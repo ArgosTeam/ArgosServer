@@ -5,58 +5,30 @@ namespace App\Classes;
 
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
-use App\Models\Friend;
 
 class FriendFunctions
 {
-    public static function add($user, $friendId, $own = false, $active = false) {
-        $friend = Friend::where("friend_id", $friendId)
-                ->where("user_id", $user->id)
-                ->first();
-        if ($friend) {
-            return ["status" => "refused",
-                    "reason" => "friendship already exists",
-                    "http" => 404];
+    public static function add($user, $friend, $own = false, $active = false) {
+        if ($user->friends->contains($friend->id)) {
+            return response('Friendship already exists', 404);
         }
-        $friend = new Friend();
-        $friend->user_id = $user->id;
-        $friend->friend_id = $friendId;
-        $friend->active = $active;
-        $friend->own = $own;
-        if ($friend->save()) {
-            return ["status" => "success", "http" => 200];
-        } else {
-            return ["status" => "refused", "http" => 404];
-        }
+        $user->friends()->attach($friend->id, [
+            'own' => $own,
+            'active' =>$active
+        ]);
+        return response('success', 200);
     }
 
-    public static function accept($user, $friendId) {
-        $friend = Friend::where("friend_id", $user->id)
-                ->where("user_id", $friendId)
-                ->first();
-        $friend->active = true;
-        if ($friend->save()) {
-            return ["status" => "success", "http" => 200];
-        } else {
-            return ["status" => "refused", "http" => 404];
-        }
+    public static function accept($user, $friend) {
+        $user->friends()->updateExistingPivot($friend->id, [
+            'active' => true
+        ]);
+        return response('success', 200);
     }
 
-    public static function refuse($user, $friendId) {
-        $friend = Friend::where("friend_id", $user->id)
-                ->where("user_id", $friendId)
-                ->first();
-        if (!is_object($friend)) {
-            return response('Friendship does not exist', 404);
-        }
-        if ($friend->active) {
-            return response('Not possible', 404);
-        }
-        if ($friend->delete()) {
-            return response('Success', 200);
-        } else {
-            return response('Error while deleting', 404);
-        }
+    public static function refuse($user, $friend) {
+        $user->friends()->detach($friend->id);
+        return response('success', 200);
     }
 
 }
