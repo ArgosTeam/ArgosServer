@@ -81,7 +81,7 @@ class fetchFunctions
 
                 $main = true;
                 foreach ($locations as $index => $location) {
-                    if (is_object($location->photo)) {
+                    if (is_object($location->photo()->get())) {
                         Log::info('photo');
                         $photo = $location->photo()->get();
                         // Get signed url from s3
