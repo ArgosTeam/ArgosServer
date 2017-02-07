@@ -35,7 +35,7 @@ class SearchFunctions {
             ->whereNotIn('users.id', $ids)
             ->where('firstName', 'like', $nameBegin . '%')
             ->orWhere('lastName', 'like', $nameBegin . '%')
-            ->whereNotIn('id', $ids)
+            ->whereNotIn('users.id', $ids)
             ->limit($limit)
             ->get();
     }
