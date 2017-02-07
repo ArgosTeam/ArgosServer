@@ -17,8 +17,7 @@ class SearchFunctions {
     ** Search Users
     */
     private static function getKnownUsers($user, $nameBegin) {
-        return $user->select('users.*', 'user_users.active', 'user_users.own')
-            ->getFriends()
+        return $user->getFriends()
             ->where('firstName', 'like', $nameBegin . '%')
             ->where('lastName', 'like', $nameBegin . '%')
             ->get();
