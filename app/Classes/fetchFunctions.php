@@ -111,7 +111,7 @@ class fetchFunctions
                                 'path' => '' . $request->getUri() . '',
                                 'lat' => $location->lat,
                                 'lng' => $location->lng,
-                            ]
+                            ];
                         }
                         $main = false;
                     }
