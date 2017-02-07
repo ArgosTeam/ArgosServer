@@ -59,16 +59,12 @@ class fetchFunctions
             }
         }
 
-        $results = [];
-        $results["photos"] = $this->fetchPhotos($cells);
-        $results["events"] = $this->fetchEvents($cells);
-
+        $results = $this->fetchAll($cells);
         return ($results);
-
     }
 
 
-    private function fetchPhotos($cells)
+    private function fetchAll($cells)
     {
 
         $results = [];
@@ -77,38 +73,50 @@ class fetchFunctions
             foreach ($row AS $col) {
 
                 $poly = $col;
+                $locations = Location::query()
+                           ->whereRaw("ST_CONTAINS(PolygonFromText('POLYGON((" . implode(',', $poly) . "))'), GeomFromText(CONCAT('Point(',`lat`, ' ', `lng`,')')))")
+                           ->latest()
+                           ->limit(10)
+                           ->get();
 
-
-                $location = Location::query()
-                          ->whereRaw("ST_CONTAINS(PolygonFromText('POLYGON((" . implode(',', $poly) . "))'), GeomFromText(CONCAT('Point(',`lat`, ' ', `lng`,')')))");
-                $location = $location->latest()->first();
-                if (is_object($location)) {
-                    $photo = Photo::where('location_id', '=', $location->id)
-                           ->first();
-
-                    // Get signed url from s3
-                    $s3 = Storage::disk('s3');
-                    $client = $s3->getDriver()->getAdapter()->getClient();
-                    $expiry = "+10 minutes";
-                    
-                    $command = $client->getCommand('GetObject', [
-                        'Bucket' => env('S3_BUCKET'),
-                        'Key'    => "avatar-" . $photo->path,
-                    ]);
-                    $request = $client->createPresignedRequest($command, $expiry);
-                    
-                    if(is_object($photo)) {
+                $main = true;
+                foreach ($locations as $index => $location) {
+                    if (is_object($location->photo)) {
+                        $photo = $location->photo()->get();
+                        // Get signed url from s3
+                        $s3 = Storage::disk('s3');
+                        $client = $s3->getDriver()->getAdapter()->getClient();
+                        $expiry = "+10 minutes";
                         
-                        $results[] = [
-                            "id" => $photo->id,
-                            "name" => $photo->name,
-                            "path" => '' . $request->getUri() . '',
-                            "lat" => $location->lat,
-                            "lng" => $location->lng,
-                        ];
+                        $command = $client->getCommand('GetObject', [
+                            'Bucket' => env('S3_BUCKET'),
+                            'Key'    => "avatar-" . $photo->path,
+                        ]);
+                        $request = $client->createPresignedRequest($command, $expiry);
+                        
+                        if ($main) {
+                            $results[] = [
+                                'type' => 'photo',
+                                'id' => $photo->id,
+                                'name' => $photo->name,
+                                'path' => '' . $request->getUri() . '',
+                                'lat' => $location->lat,
+                                'lng' => $location->lng,
+                                'photos' => []
+                            ];
+                        } else {
+                            $results[$index]['photos'][] = [
+                                'id' => $photo->id,
+                                'name' => $photo->name,
+                                'path' => '' . $request->getUri() . '',
+                                'lat' => $location->lat,
+                                'lng' => $location->lng,
+                            ]
+                        }
+                        $main = false;
                     }
                 }
-
+                
             }
         }
 
@@ -116,39 +124,5 @@ class fetchFunctions
         return $results;
 
     }
-
-    private function fetchEvents($cells)
-    {
-
-        $results = [];
-
-        foreach ($cells AS $row) {
-            foreach ($row AS $col) {
-
-                $poly = $col;
-
-                $events = Event::query();
-                $events = $events->whereHas('location', function ($q) use ($poly) {
-                    $q->whereRaw("ST_CONTAINS(PolygonFromText('POLYGON((" . implode(',', $poly) . "))'), GeomFromText(CONCAT('Point(',`lat`, ' ', `lng`,')')))");
-                });
-                $events = $events->latest()->first();
-
-                if(is_object($events)) {
-                    $results[] = [
-                        "id" => $events->id,
-                        "name" => $events->name,
-                        "lat" => $events->lat,
-                        "lng" => $events->lng,
-                    ];
-                }
-
-
-
-            }
-        }
-
-        return $results;
-    }
-
     
 }
