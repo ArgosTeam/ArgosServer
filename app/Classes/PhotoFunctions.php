@@ -100,7 +100,9 @@ class PhotoFunctions
             return response('Photo not found', 404);
         }
 
-        // Get signed url from s3
+        /*
+        ** Get signed url from s3
+        */
         $s3 = Storage::disk('s3');
         $client = $s3->getDriver()->getAdapter()->getClient();
         $expiry = "+10 minutes";
@@ -118,13 +120,27 @@ class PhotoFunctions
                 'name' => $hashtag->name
             ];
         }
-        
+
+        /*
+        ** Get Comments related to Photo
+        */
+        $comments = [];
+        foreach($photo->comments()->get() as $comment) {
+            $comments[] = [
+                'content' => $comment->content,
+                'user_id' => $comment->user_id
+            ];
+        }
+
+        /*
+        ** Return Data with requested parameters
+        */
         $data = [
             'id' => $photo->id,
             'url' => '' . $request->getUri() . '',
             'description' => $photo->description,
             'hashtags' => $hashtags,
-            'comments' => [],
+            'comments' => $comments,
             'rights' => []
         ];
 
