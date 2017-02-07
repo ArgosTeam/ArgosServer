@@ -78,10 +78,8 @@ class fetchFunctions
                            ->latest()
                            ->limit(10)
                            ->get();
-                Log::info(print_r($locations, true));
                 $main = true;
                 foreach ($locations as $index => $location) {
-                    Log::info('LOCATION INFO : ' . print_r($location, true) . ' PHOTO : ' . print_r($location->photo()->get()));
                     if (is_object($location->photo()->first())) {
                         Log::info('photo');
                         $photo = $location->photo()->first();
