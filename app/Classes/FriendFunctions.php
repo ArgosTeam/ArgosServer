@@ -16,19 +16,19 @@ class FriendFunctions
             'own' => $own,
             'active' =>$active
         ]);
-        return response('success', 200);
+        return response(['status' => 'success'], 200);
     }
 
     public static function accept($user, $friend) {
         $user->friends()->updateExistingPivot($friend->id, [
             'active' => true
         ]);
-        return response('success', 200);
+        return response(['status' => 'success'], 200);
     }
 
     public static function refuse($user, $friend) {
         $user->friends()->detach($friend->id);
-        return response('success', 200);
+        return response(['status' => 'success'], 200);
     }
 
 }
