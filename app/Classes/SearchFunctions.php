@@ -18,6 +18,7 @@ class SearchFunctions {
     */
     private static function getKnownUsers($user, $nameBegin) {
         $ids = is_object($user->friends) ? $user->friends->pluck('friend_id') : [];
+        Log::info('Known users: ' .  print_r($user->friends->pluck('friend_id'), true));
         return User::select(['users.*', 'user_users.friend_id', 'user_users.active', 'user_users.own'])
             ->leftJoin('user_users', 'users.id', '=', 'user_users.user_id')
             ->whereIn('users.id', $ids)

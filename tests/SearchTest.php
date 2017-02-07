@@ -29,7 +29,7 @@ class SearchTest extends TestCase
         $response = $this->call('GET',
                                 '/api/search/contacts',[
                                     'name_begin' => '',
-                                    'known_only' => false
+                                    'known_only' => true
                                 ],[],[], ['HTTP_Authorization' => 'Bearer ' . $token['access_token']]);
         $this->assertEquals(200, $response->status());
     }
