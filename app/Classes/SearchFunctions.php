@@ -25,8 +25,7 @@ class SearchFunctions {
 
     private static function getUnknownUsers($user, $nameBegin, $limit) {
         $ids = $user->getFriends()->get()->pluck('id');
-        return User::select('users.*', 'user_users.active', 'user_users.own')
-            ->whereNotIn('id', $ids)
+        return User::whereNotIn('id', $ids)
             ->where('firstName', 'like', $nameBegin . '%')
             ->where('lastName', 'like', $nameBegin . '%')
             ->limit(15)
@@ -53,11 +52,12 @@ class SearchFunctions {
             $newEntry['url'] = null;
             $newEntry['name'] = $user->firstName . ' ' . $user->lastName;
             $newEntry['type'] = 'user';
-            $newEntry['own'] = $user->pivot->own;
             if (is_object($user->pivot)) {
+                $newEntry['own'] = $user->pivot->own;
                 $newEntry['friend'] = $user->pivot->active;
                 $newEntry['pending'] = $newEntry['friend'] ? false : true;
             } else {
+                $newEntry['own'] = false;
                 $newEntry['friend'] = false;
                 $newEntry['pending'] = false;
             }
