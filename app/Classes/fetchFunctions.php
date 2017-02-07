@@ -82,9 +82,9 @@ class fetchFunctions
                 $main = true;
                 foreach ($locations as $index => $location) {
                     Log::info('LOCATION INFO : ' . print_r($location, true) . ' PHOTO : ' . print_r($location->photo()->get()));
-                    if (is_object($location->photo()->get())) {
+                    if (is_object($location->photo()->first())) {
                         Log::info('photo');
-                        $photo = $location->photo()->get();
+                        $photo = $location->photo()->first();
                         // Get signed url from s3
                         $s3 = Storage::disk('s3');
                         $client = $s3->getDriver()->getAdapter()->getClient();
