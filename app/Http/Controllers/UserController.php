@@ -29,4 +29,10 @@ class UserController extends Controller
         $id = $request->input('id');
         return UserFunctions::getInfos($user, $id);
     }
+
+    public function follow(Request $request) {
+        $user = Auth::user();
+        $user_id = $request->input('user_id');
+        UserFunctions::follow($user, $user_id);
+    }
 }

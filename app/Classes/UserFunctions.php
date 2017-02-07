@@ -75,8 +75,16 @@ class UserFunctions
             $response['own'] = false;
         }
         
-        Log::info('DEBUG : ' . print_r($response,  true));
         return response($response, 200);
+    }
+
+    public static function follow($user, $user_id) {
+        if (is_object(User::find($user_id))) {
+            $user->followed()->attach($user_id);
+            return response('Succes', 200);
+        } else {
+            return response('User does not exist', 404);
+        }
     }
 
 }
