@@ -29,10 +29,10 @@ class   PhotoTest extends TestCase
         $response = $this->call('GET',
                     '/api/fetch',
                     [
-                        'farRight' => 'lat/lng: (54.38655404338235, -5.277385468750026)',
-                        'farLeft' => 'lat/lng: (54.38655404338235, -7.254924531250026)',
-                        'nearLeft' => 'lat/lng: (52.2879010895274, -7.254924531250026)',
-                        'nearRight' => 'lat/lng: (52.2879010895274, -5.277385468750026)',
+                        'farRight' => 'LatLng(54.38655404338235, -5.277385468750026)',
+                        'farLeft' => 'LatLng(54.38655404338235, -7.254924531250026)',
+                        'nearLeft' => 'LatLng(52.2879010895274, -7.254924531250026)',
+                        'nearRight' => 'LatLng(52.2879010895274, -5.277385468750026)',
                         'hashtag' => null,
                         'userId' => null,
                         'groupId' => null
