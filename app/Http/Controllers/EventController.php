@@ -41,4 +41,11 @@ class EventController extends Controller
         $event_id = $request->input('id');
         return EventFunctions::infos($user, $event_id);
     }
+
+    public function comment(Request $request) {
+        $user = Auth::user();
+        $photo_id = $request->input('photo_id');
+        $content = $request->input('content');
+        return EventFunctions::comment($user, $photo_id, $content);
+    }
 }

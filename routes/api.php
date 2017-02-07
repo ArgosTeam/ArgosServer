@@ -24,9 +24,6 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     // TEMPORARY SINCE I DONT HAVE ACCESS TO DB
     Route::get('/user/setemail', 'UserController@setEmailRequests');
-
-
-    Route::get('/photo/{id}',       'PhotoController@fetchPhotos');
     Route::get('/search',           'SearchController@selectData');
 
 
@@ -51,6 +48,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/event/accept', 'EventController@accept');
     //Route::post'/event/refuse', 'EventController@refuse');
     Route::get('/event/infos', 'EventController@infos');
+    Route::post('/event/comment', 'EventController@comment');
 
     /*
     ** Routes regarding search actions

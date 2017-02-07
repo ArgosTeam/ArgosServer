@@ -137,4 +137,20 @@ class EventFunctions
 
         return response($data, 200);
     }
+
+    public static function comment($user, $event_id, $content) {
+        $event = Event::find($event_id);
+        if (!is_object($event)) {
+            return response('Event does not exist', 404);
+        }
+        $comment = new Comment();
+        $comment->content = $content;
+        $comment->user()->associate($user->id);
+        if ($comment->save()) {
+            $comment->events()->attach($event->id);
+            return response(['comment_id' => $comment->id], 200);
+        } else {
+            return response('Error while saving', 404);
+        }
+    }
 }
