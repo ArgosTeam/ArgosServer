@@ -6,9 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Event extends Model
 {
-    protected $fillable = ["name", "description", "public", "start", "expires"];
+    protected $fillable = ['name',
+                           'description',
+                           'public',
+                           'start',
+                           'expires',
+                           'created_at',
+                           'updated_at'];
 
-    public function location(){
+    public function location() {
         return $this->belongsTo(Location::class);
     }
 
@@ -21,5 +27,10 @@ class Event extends Model
     public function hashtags() {
         return $this->belongsToMany(Hashtag::class)
             ->withTimestamps();
+    }
+
+    public function comments() {
+        return $this->belongsToMany(Comment::class)
+            ->withTimestamps();;
     }
 }

@@ -30,4 +30,9 @@ class Photo extends Model
         return $this->belongsToMany(Hashtag::class)
             ->withTimestamps();
     }
+
+    public function comments() {
+        return $this->belongsToMany(Event::class)
+            ->withTimestamps();
+    }
 }
