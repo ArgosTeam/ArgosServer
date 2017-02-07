@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Log;
 class PhotoFunctions
 {
 
-    public static function upload(SubmitUploadPhoto $request){
+    public static function upload(Request $request){
 
         $data = $request->all();
         $user = Auth::user();
