@@ -5,6 +5,7 @@ use App\Models\Group;
 use App\Models\Hashtag;
 use App\Models\Photo;
 use App\Models\Location;
+use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -128,6 +129,22 @@ class PhotoFunctions
         ];
 
         return response($data, 200);
+    }
+
+    public static function comment($user, $photo_id, $content) {
+        $photo = Photo::find($photo_id);
+        if (!is_object($photo)) {
+            return response('Photo does not exist', 404);
+        }
+        $comment = new Comment();
+        $comment->content = $content;
+        $comment->user()->associate($user->id);
+        if ($comment->save()) {
+            $comment->photos()->attach($photo->id);
+            return response(['comment_id' => $comment->id], 200);
+        } else {
+            return response('Error while saving', 404);
+        }
     }
 
 }

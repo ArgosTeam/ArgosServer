@@ -18,4 +18,11 @@ class PhotoController extends Controller
         $user = Auth::user();
         return PhotoFunctions::getMacro($user, $photo_id);
     }
+
+    public function comment(Request $request) {
+        $user = Auth::user();
+        $photo_id = $request->input('photo_id');
+        $content = $request->input('content');
+        PhotoFunctions::comment($user, $photo_id, $content);
+    }
 }
