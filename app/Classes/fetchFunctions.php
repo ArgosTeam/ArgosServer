@@ -59,12 +59,12 @@ class fetchFunctions
             }
         }
 
-        $results = $this->fetchAll($cells);
+        $results = fetchFunctions::fetchAll($cells);
         return ($results);
     }
 
 
-    private function fetchAll($cells)
+    public static function fetchAll($cells)
     {
 
         $results = [];
