@@ -35,7 +35,7 @@ class SearchFunctions {
     
     private static function getUsers($user, $nameBegin, $knownOnly) {
         $users = SearchFunctions::getknownUsers($user, $nameBegin);
-        Log::info('USERS : ' . print_r($users, true));
+        Log::info('USERS : ' . print_r($users[0]->pivot, true));
         if (!$knownOnly && ($limit = 15 - $users->count()) > 0) {
             $users = $users->merge(SearchFunctions::getUnknownUsers($user, $nameBegin, $limit));
         }
