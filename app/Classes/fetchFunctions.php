@@ -105,7 +105,7 @@ class fetchFunctions
                                 'photos' => []
                             ];
                         } else {
-                            $results[$index]['photos'][] = [
+                            $results[0]['photos'][] = [
                                 'id' => $photo->id,
                                 'name' => $photo->name,
                                 'path' => '' . $request->getUri() . '',
