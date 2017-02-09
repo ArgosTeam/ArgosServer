@@ -109,7 +109,7 @@ class EventTest extends TestCase
         $response = $this->call('GET',
                                 '/api/event/infos',
                                 [
-                                    'event_id' => 1
+                                    'id' => 1
                                 ], [], [],
                                 ['HTTP_Authorization' => 'Bearer ' . $token['access_token']]);
         print_r($response->getContent());
