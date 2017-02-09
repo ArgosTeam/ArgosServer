@@ -62,7 +62,6 @@ class FriendRequest extends Notification
 
     public function toSlack($notifiable) {
         return (new SlackMessage)
-            ->to('#developement')
             ->success()
             ->content('Test');
     }
