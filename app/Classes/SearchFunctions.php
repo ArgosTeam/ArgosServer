@@ -122,5 +122,55 @@ class SearchFunctions {
         return response($data, 200);
     }
 
-    
+
+    public static function photos($user, $nameBegin) {
+        $user_groups = $user->groups()
+                     ->where('name', 'like', $nameBegin . '%')
+                     ->get();
+        // TODO : handling of group_photo
+
+        $friends = $user->getFriends()
+                 ->where('firstName', 'like', $nameBegin . '%')
+                 ->orWhere('lastName', 'like', $nameBegin . '%')
+                 ->get();
+
+        $hashtags = Hashtag::where('name', 'like', $nameBegin . '%')
+                  ->get();
+
+        $friends_photos = $user->photos()
+                        ->whereIn('origin_user_id',
+                                  $friends->pluck('id'))
+                        ->get();
+        $hashtags_photos = $hashtags->photos()
+                         ->whereHas('users', function ($query) {
+                             $query->where('users.id', '=', $user->id);
+                         })->get();
+        $photos = $friends_photos->merge($hashtags_photos);
+
+        // Get signed url from s3
+        $s3 = Storage::disk('s3');
+        $client = $s3->getDriver()->getAdapter()->getClient();
+        $expiry = "+10 minutes";
+        
+        $command = $client->getCommand('GetObject', [
+            'Bucket' => env('S3_BUCKET'),
+            'Key'    => "avatar-" . $photo->path,
+        ]);
+        $request = $client->createPresignedRequest($command, $expiry);
+        
+        $response = [];
+        $location = $photo->location()->first();
+        foreach ($photos as $photo) {
+            $response[] = [
+                'id' => $photo->id,
+                'url' => '' . $request->getUri() . '',
+                'name' => $photo->name,
+                'description' => $photo->description,
+                'lat' => $location->lat,
+                'lng' => $location->lng
+            ];
+        }
+
+        return response($response, 200);
+    }
 }
