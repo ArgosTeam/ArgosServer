@@ -7,6 +7,7 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\SlackMessage;
+use App\Models\User;
 
 class FriendRequest extends Notification
 {
@@ -17,9 +18,10 @@ class FriendRequest extends Notification
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(User $user, User $friend)
     {
-        //
+        $this->user = $user;
+        $this->friend = $friend;
     }
 
     /**
@@ -63,14 +65,14 @@ class FriendRequest extends Notification
     public function toSlack($notifiable) {
         return (new SlackMessage)
             ->success()
-            ->content($notifiable->user->firstName . ' ' . $notifiable->user->firstName
+            ->content($this->user->firstName . ' ' . $this->user->firstName
                       . ' sent a friend request to '
-                      . $notifiable->friend->firstName . ' ' . $notifiable->friend->firstName)
-            ->attachment(function ($attachment) use ($notifiable) {
+                      . $this->friend->firstName . ' ' . $this->friend->firstName)
+            ->attachment(function ($attachment) use ($this) {
                     $attachment->title('Infos', $url)
                                ->fields([
-                                    'Userid' => $notifiable->$user->id,
-                                    'Friendid' => $notifiable->friend->id
+                                    'Userid' => $this->user->id,
+                                    'Friendid' => $this->friend->id
                                 ]);
             });
     }
