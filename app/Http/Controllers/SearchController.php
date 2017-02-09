@@ -37,7 +37,10 @@ class SearchController extends Controller
     }
 
     public function contacts(Request $request) {
-        $user = User::find(Auth::user()->id);
+        $user_id = $request->input('id') == -1
+                 ? Auth::user()->id
+                 : $request->input('id');
+        $user = User::find($user_id);
         $nameBegin = $request->input("name_begin");
         $knownOnly = $request->input("known_only");
         return SearchFunctions::getContacts($user, $nameBegin, $knownOnly);
