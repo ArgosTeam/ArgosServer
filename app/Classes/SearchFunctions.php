@@ -146,21 +146,23 @@ class SearchFunctions {
                              $query->where('users.id', '=', $user->id);
                          })->get();
         $photos = $friends_photos->merge($hashtags_photos);
-
-        // Get signed url from s3
-        $s3 = Storage::disk('s3');
-        $client = $s3->getDriver()->getAdapter()->getClient();
-        $expiry = "+10 minutes";
-        
-        $command = $client->getCommand('GetObject', [
-            'Bucket' => env('S3_BUCKET'),
-            'Key'    => "avatar-" . $photo->path,
-        ]);
-        $request = $client->createPresignedRequest($command, $expiry);
         
         $response = [];
-        $location = $photo->location()->first();
         foreach ($photos as $photo) {
+            $location = $photo->location()->first();
+            
+            // Get signed url from s3
+            $s3 = Storage::disk('s3');
+            $client = $s3->getDriver()->getAdapter()->getClient();
+            $expiry = "+10 minutes";
+            
+            $command = $client->getCommand('GetObject', [
+                'Bucket' => env('S3_BUCKET'),
+                'Key'    => "avatar-" . $photo->path,
+            ]);
+            $request = $client->createPresignedRequest($command, $expiry);
+
+            
             $response[] = [
                 'id' => $photo->id,
                 'url' => '' . $request->getUri() . '',
