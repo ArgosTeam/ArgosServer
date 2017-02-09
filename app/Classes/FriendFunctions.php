@@ -5,6 +5,7 @@ namespace App\Classes;
 
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Notifications\FriendRequest;
 
 class FriendFunctions
 {
@@ -16,6 +17,9 @@ class FriendFunctions
             'own' => $own,
             'active' =>$active
         ]);
+        if ($own) {
+            $user->notify(new FriendRequest($user, $friend));
+        }
         return response(['status' => 'success'], 200);
     }
 

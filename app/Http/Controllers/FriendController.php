@@ -8,8 +8,6 @@ use App\Http\Requests;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use App\Models\User;
-use App\Models\Friend;
-use App\Notifications\FriendRequest;
 
 class FriendController extends Controller
 {
@@ -20,7 +18,6 @@ class FriendController extends Controller
         $friend = User::find($friendId);
         FriendFunctions::add($friend, $user);
         $response = FriendFunctions::add($user, $friend, true);
-        $user->notify(new FriendRequest($user, $friend));
         return $response;
      }
 

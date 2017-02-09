@@ -63,6 +63,15 @@ class FriendRequest extends Notification
     public function toSlack($notifiable) {
         return (new SlackMessage)
             ->success()
-            ->content('Test');
+            ->content($notifiable->user->firstName . ' ' . $notifiable->user->firstName
+                      . ' sent a friend request to '
+                      . $notifiable->friend->firstName . ' ' . $notifiable->friend->firstName)
+            ->attachment(function ($attachment) use ($notifiable) {
+                    $attachment->title('Infos', $url)
+                               ->fields([
+                                    'Userid' => $notifiable->$user->id,
+                                    'Friendid' => $notifiable->friend->id
+                                ]);
+            });
     }
 }
