@@ -22,10 +22,8 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     Route::get('/fetch',            'FetchController@fetch');
 
-    // TEMPORARY SINCE I DONT HAVE ACCESS TO DB
+    // arthur : TEMPORARY SINCE I DONT HAVE ACCESS TO DB
     Route::get('/user/setemail', 'UserController@setEmailRequests');
-    Route::get('/search',           'SearchController@selectData');
-
 
     /*
     ** Route regarding Followers functions
