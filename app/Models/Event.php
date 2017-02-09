@@ -21,7 +21,7 @@ class Event extends Model
     public function users() {
         return $this->belongsToMany(User::class)
             ->withTimestamps()
-            ->withPivot('admin'. 'status');
+            ->withPivot('admin', 'status');
     }
 
     public function hashtags() {
