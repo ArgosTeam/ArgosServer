@@ -182,7 +182,11 @@ return [
 
         Laravel\Passport\PassportServiceProvider::class,
 
-        Intervention\Image\ImageServiceProvider::class
+        Intervention\Image\ImageServiceProvider::class,
+
+        // Generate migrations from existing db
+        Way\Generators\GeneratorsServiceProvider::class,
+        Xethron\MigrationsGenerator\MigrationsGeneratorServiceProvider::class,
     ],
 
     /*
