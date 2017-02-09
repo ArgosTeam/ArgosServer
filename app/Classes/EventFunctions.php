@@ -134,6 +134,9 @@ class EventFunctions
             $data['pending'] = false;
             $data['admin'] = false;
         }
+        $data['admin_id'] = $event->users()
+                          ->where('admin', '=', true)
+                          ->first()->id;;
 
         return response($data, 200);
     }
