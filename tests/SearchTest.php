@@ -51,7 +51,8 @@ class SearchTest extends TestCase
         $response = $this->call('GET',
                                 '/api/search/events',[
                                     'name_begin' => '',
-                                    'known_only' => true
+                                    'known_only' => true,
+                                    'id' => -1
                                 ],[],[], ['HTTP_Authorization' => 'Bearer ' . $token['access_token']]);
         $this->assertEquals(200, $response->status());
     }
