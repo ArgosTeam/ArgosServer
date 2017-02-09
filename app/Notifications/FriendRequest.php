@@ -67,9 +67,9 @@ class FriendRequest extends Notification
         $friend_id = $this->friend->id;
         return (new SlackMessage)
             ->success()
-            ->content($this->user->firstName . ' ' . $this->user->firstName
+            ->content($this->user->firstName . ' ' . $this->user->lastName
                       . ' sent a friend request to '
-                      . $this->friend->firstName . ' ' . $this->friend->firstName)
+                      . $this->friend->firstName . ' ' . $this->friend->lastName)
             ->attachment(function ($attachment) use ($user_id, $friend_id) {
                     $attachment->title('More info')
                                ->fields([
