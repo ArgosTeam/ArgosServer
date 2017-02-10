@@ -51,6 +51,7 @@ class SearchController extends Controller
                  ? Auth::user()->id
                  : $request->input('id');
         $user = User::find($user_id);
+        $nameBegin = $request->input("name_begin");
         $knownOnly = $request->input("known_only");
         return SearchFunctions::events($user, $nameBegin, $knownOnly);
     }
