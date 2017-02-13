@@ -159,8 +159,8 @@ class fetchFunctions
                 
                 
                 foreach($query_locations_photos_users as $location) {
-                    Log::info('Location found : ' . print_r($location));
-                })
+                    Log::info('Location found : ' . print_r($location, true));
+                }
                 $query_locations_photos_groups = clone $query_locations_photos_users;
 
                 $locations = $query_locations_photos_users->get();
