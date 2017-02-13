@@ -73,8 +73,8 @@ class fetchFunctions
                 $poly = $col;
                 $locations = Location::query()
                            ->whereRaw("ST_CONTAINS(PolygonFromText('POLYGON((" . implode(',', $poly) . "))'), GeomFromText(CONCAT('Point(',`lat`, ' ', `lng`,')')))")
-                           ->latest()
-                           ->limit(10)
+                           // ->latest()
+                           // ->limit(10)
                            ->get();
 
                 $main = true;
