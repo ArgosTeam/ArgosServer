@@ -157,7 +157,7 @@ class fetchFunctions
                                               ->get();
 
                 foreach ($query_locations_photos_users as $location) {
-                    Log::info('location');
+                    Log::info("location");
                 }
                 //$query_locations_photos_groups = clone $query_locations_photos_users;
 
