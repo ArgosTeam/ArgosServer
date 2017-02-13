@@ -159,7 +159,7 @@ class fetchFunctions
                 ** Base of groups request
                 */
                 $query_locations_groups = clone $query_locations_photos_users;
-
+                
                 /*
                 ** Add query filters dependencies
                 */
@@ -231,7 +231,7 @@ class fetchFunctions
         });
     }
 
-    private static function addJoinPhotoGroupFilter($query, $groups_id) {
+    private static function addJoinPhotoGroupFilter($query, $groups_id, $hashtags) {
         $query->whereHas('photo', function ($joinquery) use ($groups_id, $hashtags) {
             $joinquery->whereHas('groups', function ($joinQuery) use ($groups_id) {
                 if (!empty($groups_id)) {
