@@ -157,7 +157,6 @@ class fetchFunctions
                 
                 $query_locations_photos_groups = clone $query_locations_photos_users;
 
-                    
                 /*
                 ** Base of groups request
                 */
@@ -200,20 +199,64 @@ class fetchFunctions
                 $locations_groups = $query_locations_groups
                         ->latest()
                         ->get();
-
-                
-                //Log::info('Locations found with : ' . print_r($locations_photos_users, true));
                 
                 $locations = $locations_photos_users->merge($locations_photos_groups)
                            ->merge($locations_groups)
                            ->sortBy('created_at');
 
-                foreach ($locations as $location) {
-                    Log::info('location');
+                foreach ($locations as $index => $location) {
+
+                    Log::info('Location');
+                    /*
+                    ** Photo fetch
+                    */
+                    if (is_object($location->photo()->first())) {
+                        $photo = $location->photo()->first();
+                        // Get signed url from s3
+                        $s3 = Storage::disk('s3');
+                        $client = $s3->getDriver()->getAdapter()->getClient();
+                        $expiry = "+10 minutes";
+                        
+                        $command = $client->getCommand('GetObject', [
+                            'Bucket' => env('S3_BUCKET'),
+                            'Key'    => "avatar-" . $photo->path,
+                        ]);
+                        $request = $client->createPresignedRequest($command, $expiry);
+                        
+                        if ($main) {
+                            $results[] = [
+                                'type' => 'photo',
+                                'id' => $photo->id,
+                                'name' => $photo->name,
+                                'path' => '' . $request->getUri() . '',
+                                'lat' => $location->lat,
+                                'lng' => $location->lng,
+                                'photos' => []
+                            ];
+                        } else {
+                            $results[0]['photos'][] = [
+                                'id' => $photo->id,
+                                'name' => $photo->name,
+                                'path' => '' . $request->getUri() . '',
+                                'lat' => $location->lat,
+                                'lng' => $location->lng,
+                            ];
+                        }
+                        $main = false;
+                    }
+
+                    // // Group fetch
+                    // if (is_object($location->group()->first())) {
+                        
+                    // }
+
+                    // //  Event fetch
+                    // if (is_object($location->group()->first())) {
+                        
+                    // }
                 }
 
-                Log::info('Locations found with : ' . print_r($locations, true));
-                // Log::info('Latest location found : ' . print_r($locations->latest()->first(), true));
+                
 
             }
         }
