@@ -227,9 +227,9 @@ class fetchFunctions
     //     }
 
 
-        return $results;
+    //     return $results;
 
-    }
+    // }
 
     /*
     ** Generic Manipulations of queries on Location Model only
