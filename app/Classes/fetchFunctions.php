@@ -156,9 +156,12 @@ class fetchFunctions
                 $query_locations_photos_users = Location::whereRaw("ST_CONTAINS(PolygonFromText('POLYGON((" . implode(',', $poly) . "))'), GeomFromText(CONCAT('Point(',`lat`, ' ', `lng`,')')))")
                                               ->get();
 
+                Log::info('before');
                 foreach ($query_locations_photos_users as $location) {
                     Log::info("location");
                 }
+                
+                Log::info('after');
                 //$query_locations_photos_groups = clone $query_locations_photos_users;
 
                     
