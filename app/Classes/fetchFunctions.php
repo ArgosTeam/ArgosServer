@@ -153,8 +153,12 @@ class fetchFunctions
                 ** Group and User are 2 separated filters, for more clarity
                 ** 2 variables photos_users and photos_groups are used
                 */
-                $query_locations_photos_users = Location::whereRaw("ST_CONTAINS(PolygonFromText('POLYGON((" . implode(',', $poly) . "))'), GeomFromText(CONCAT('Point(',`lat`, ' ', `lng`,')')))");
-                
+                $query_locations_photos_users = Location::whereRaw("ST_CONTAINS(PolygonFromText('POLYGON((" . implode(',', $poly) . "))'), GeomFromText(CONCAT('Point(',`lat`, ' ', `lng`,')')))")
+                                              ->get();
+
+                foreach ($query_locations_photos_users as $location) {
+                    Log::info('location');
+                }
                 //$query_locations_photos_groups = clone $query_locations_photos_users;
 
                     
@@ -174,14 +178,12 @@ class fetchFunctions
                 ** Get Users picture, then flush ids to exclude them for next request
                 ** If users filter not applied, get all latest photos_users
                 */
-                $locations_photos_users = $query_locations_photos_users
-                                        ->latest()
-                                        ->limit(10)
-                                        ->get();
+                // $locations_photos_users = $query_locations_photos_users
+                //                         ->latest()
+                //                         ->limit(10)
+                //                         ->get();
 
-                foreach ($locations_photos_users as $location) {
-                    Log::info('location');
-                }
+                
                 
                 // // $exclude_ids = is_object($photos_users)
                 // //              ? $photos_users->pluck('id')
