@@ -197,6 +197,9 @@ class fetchFunctions
                         ->latest()
                         ->get();
 
+                
+                Log::info('Locations found with : ' . print_r($locations_photos_users, true));
+                
                 $locations = $locations_photos_users->merge($locations_photos_groups)
                            ->merge($locations_groups);
 
