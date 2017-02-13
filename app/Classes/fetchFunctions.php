@@ -157,7 +157,7 @@ class fetchFunctions
 
                 $main = true;
                 foreach ($locations as $index => $location) {
-
+                    $toto = 'a';
                     Log::info('Location');
                 }
                 
