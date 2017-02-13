@@ -195,7 +195,7 @@ class fetchFunctions
                 */
                 $locations_groups = $query_locations_groups
                         ->latest()
-                        ->first();
+                        ->get();
 
                 $locations = $locations_photos_users->merge($locations_photos_groups)
                            ->merge($locations_groups);
