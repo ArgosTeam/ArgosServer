@@ -142,7 +142,7 @@ class SearchFunctions {
                                   $friends->pluck('id'))
                         ->get();
         $hashtags_photos = $hashtags->photos()
-                         ->whereHas('users', function ($query) {
+                         ->whereHas('users', function ($query) use ($user) {
                              $query->where('users.id', '=', $user->id);
                          })->get();
         $photos = $friends_photos->merge($hashtags_photos);
