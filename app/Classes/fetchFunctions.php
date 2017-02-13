@@ -205,7 +205,8 @@ class fetchFunctions
                 //Log::info('Locations found with : ' . print_r($locations_photos_users, true));
                 
                 $locations = $locations_photos_users->merge($locations_photos_groups)
-                           ->merge($locations_groups);
+                           ->merge($locations_groups)
+                           ->sortBy('created_at');
 
                 foreach ($locations as $location) {
                     Log::info('location');
