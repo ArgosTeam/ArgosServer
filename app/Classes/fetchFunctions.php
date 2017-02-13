@@ -206,6 +206,10 @@ class fetchFunctions
                 $locations = $locations_photos_users->merge($locations_photos_groups)
                            ->merge($locations_groups);
 
+                foreach ($locations as $location) {
+                    Log::info('location');
+                }
+
                 //Log::info('Locations found with : ' . print_r($locations, true));
                 //Log::info('Latest location found : ' . print_r($locations->latest()->first(), true));
 
