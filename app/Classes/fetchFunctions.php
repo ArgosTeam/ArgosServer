@@ -204,6 +204,7 @@ class fetchFunctions
                            ->merge($locations_groups)
                            ->sortBy('created_at');
 
+                $main = true;
                 foreach ($locations as $index => $location) {
 
                     Log::info('Location');
