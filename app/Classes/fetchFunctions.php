@@ -166,7 +166,7 @@ class fetchFunctions
                 /*
                 ** Add query filters dependencies
                 */
-                fetchFunctions::addJoinPhotoUserFilter($query_locations_photos_users, $filter['users'], $filter['hashtags']);
+                //fetchFunctions::addJoinPhotoUserFilter($query_locations_photos_users, $filter['users'], $filter['hashtags']);
                 fetchFunctions::addJoinPhotoGroupFilter($query_locations_photos_groups, $filter['groups'], $filter['hashtags']);
                 fetchFunctions::addJoinGroupFilter($query_locations_groups, $filter['groups']);
            
