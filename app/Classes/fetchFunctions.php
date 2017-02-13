@@ -68,17 +68,17 @@ class fetchFunctions
     // {
     //     $results = [];
 
-        foreach ($cells AS $row) {
-            foreach ($row AS $col) {
-                $poly = $col;
-                $locations = Location::query()
-                           ->whereRaw("ST_CONTAINS(PolygonFromText('POLYGON((" . implode(',', $poly) . "))'), GeomFromText(CONCAT('Point(',`lat`, ' ', `lng`,')')))")
-                           ->latest()
-                           ->limit(10)
-                           ->get();
+        // foreach ($cells AS $row) {
+        //     foreach ($row AS $col) {
+        //         $poly = $col;
+        //         $locations = Location::query()
+        //                    ->whereRaw("ST_CONTAINS(PolygonFromText('POLYGON((" . implode(',', $poly) . "))'), GeomFromText(CONCAT('Point(',`lat`, ' ', `lng`,')')))")
+        //                    ->latest()
+        //                    ->limit(10)
+        //                    ->get();
 
-                $main = true;
-                foreach ($locations as $index => $location) {
+        //         $main = true;
+        //         foreach ($locations as $index => $location) {
 
     //                 Log::info('Location');
     //                 /*
