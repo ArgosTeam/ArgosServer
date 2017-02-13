@@ -148,6 +148,19 @@ class fetchFunctions
             foreach ($row AS $col) {
                 $poly = $col;
 
+                
+                $locations = Location::query()
+                           ->whereRaw("ST_CONTAINS(PolygonFromText('POLYGON((" . implode(',', $poly) . "))'), GeomFromText(CONCAT('Point(',`lat`, ' ', `lng`,')')))")
+                           ->latest()
+                           ->limit(10)
+                           ->get();
+
+                $main = true;
+                foreach ($locations as $index => $location) {
+
+                    Log::info('Location');
+                }
+                
                 /*
                 ** Base of photos request, add conditions on locations to be in the screen
                 ** Group and User are 2 separated filters, for more clarity
