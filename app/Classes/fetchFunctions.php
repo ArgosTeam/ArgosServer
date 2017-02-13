@@ -160,61 +160,61 @@ class fetchFunctions
                 foreach($query_locations_photos_users as $location) {
                     Log::info('Location found : ');
                 }
-                $query_locations_photos_groups = clone $query_locations_photos_users;
+                // $query_locations_photos_groups = clone $query_locations_photos_users;
 
                     
-                /*
-                ** Base of groups request
-                */
-                $query_locations_groups = clone $query_locations_photos_users;
+                // /*
+                // ** Base of groups request
+                // */
+                // $query_locations_groups = clone $query_locations_photos_users;
                 
-                /*
-                ** Add query filters dependencies
-                */
-                fetchFunctions::addJoinPhotoUserFilter($query_locations_photos_users, $filter['users'], $filter['hashtags']);
-                fetchFunctions::addJoinPhotoGroupFilter($query_locations_photos_groups, $filter['groups'], $filter['hashtags']);
-                fetchFunctions::addJoinGroupFilter($query_locations_groups, $filter['groups']);
+                // /*
+                // ** Add query filters dependencies
+                // */
+                // fetchFunctions::addJoinPhotoUserFilter($query_locations_photos_users, $filter['users'], $filter['hashtags']);
+                // fetchFunctions::addJoinPhotoGroupFilter($query_locations_photos_groups, $filter['groups'], $filter['hashtags']);
+                // fetchFunctions::addJoinGroupFilter($query_locations_groups, $filter['groups']);
            
-                /*
-                ** Get Users picture, then flush ids to exclude them for next request
-                ** If users filter not applied, get all latest photos_users
-                */
-                $locations_photos_users = $query_locations_photos_users
-                                        ->latest()
-                                        ->limit(10)
-                                        ->get();
+                // /*
+                // ** Get Users picture, then flush ids to exclude them for next request
+                // ** If users filter not applied, get all latest photos_users
+                // */
+                // $locations_photos_users = $query_locations_photos_users
+                //                         ->latest()
+                //                         ->limit(10)
+                //                         ->get();
                 
-                // $exclude_ids = is_object($photos_users)
-                //              ? $photos_users->pluck('id')
-                //              : [];
+                // // $exclude_ids = is_object($photos_users)
+                // //              ? $photos_users->pluck('id')
+                // //              : [];
                 
-                /*
-                ** Get Groups pictures
-                ** Same here, if groups filter not applied,
-                ** will get 10 more latest records
-                */
-                $locations_photos_groups = $query_locations_photos_groups
-                                         ->latest()
-                                         ->limit(10)
-                                         ->get();
+                // /*
+                // ** Get Groups pictures
+                // ** Same here, if groups filter not applied,
+                // ** will get 10 more latest records
+                // */
+                // $locations_photos_groups = $query_locations_photos_groups
+                //                          ->latest()
+                //                          ->limit(10)
+                //                          ->get();
 
-                /*
-                ** Get Groups -- TODO : check rights to display info
-                */
-                $locations_groups = $query_locations_groups
-                        ->latest()
-                        ->get();
+                // /*
+                // ** Get Groups -- TODO : check rights to display info
+                // */
+                // $locations_groups = $query_locations_groups
+                //         ->latest()
+                //         ->get();
 
                 
-                Log::info('Locations found with : ' . print_r($locations_photos_users, true));
+                // Log::info('Locations found with : ' . print_r($locations_photos_users, true));
                 
-                $locations = $locations_photos_users->merge($locations_photos_groups)
-                           ->merge($locations_groups);
+                // $locations = $locations_photos_users->merge($locations_photos_groups)
+                //            ->merge($locations_groups);
 
-                Log::info('Locations found with : ' . print_r($locations, true));
-                Log::info('Latest location found : ' . print_r($locations->latest()->first(), true));
+                // Log::info('Locations found with : ' . print_r($locations, true));
+                // Log::info('Latest location found : ' . print_r($locations->latest()->first(), true));
 
-                return [];
+                // return [];
             }
         }
 
