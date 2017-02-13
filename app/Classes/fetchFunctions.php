@@ -59,7 +59,17 @@ class fetchFunctions
             }
         }
 
-        $results = fetchFunctions::fetchAll($cells, $data['filter']);
+        $filter = array_key_exists('filter', $data) ? $data['filter'] : [];
+        $filter['users'] = array_key_exists('users', $filter)
+                         ? $filter['users']
+                         : [];
+        $filter['groups'] = array_key_exists('groups', $filter)
+                         ? $filter['groups']
+                         : [];
+        $filter['hashtags'] = array_key_exists('hashtags', $filter)
+                         ? $filter['hashtags']
+                         : [];
+        $results = fetchFunctions::fetchAll($cells, $filter);
         return ($results);
     }
 
