@@ -64,153 +64,72 @@ class fetchFunctions
     }
 
 
-    public static function fetchAll($cells, $filter)
-    {
+    // public static function fetchAll($cells, $filter)
+    // {
 
-        $results = [];
-
-        foreach ($cells AS $row) {
-            foreach ($row AS $col) {
-                $poly = $col;
-                $locations = Location::query()
-                           ->whereRaw("ST_CONTAINS(PolygonFromText('POLYGON((" . implode(',', $poly) . "))'), GeomFromText(CONCAT('Point(',`lat`, ' ', `lng`,')')))")
-                           ->latest()
-                           ->limit(10)
-                           ->get();
-                $main = true;
-                foreach ($locations as $index => $location) {
-
-                    /*
-                    ** Photo fetch
-                    */
-                    if (is_object($location->photo()->first())) {
-                        Log::info('photo');
-                        $photo = $location->photo()->first();
-                        // Get signed url from s3
-                        $s3 = Storage::disk('s3');
-                        $client = $s3->getDriver()->getAdapter()->getClient();
-                        $expiry = "+10 minutes";
-                        
-                        $command = $client->getCommand('GetObject', [
-                            'Bucket' => env('S3_BUCKET'),
-                            'Key'    => "avatar-" . $photo->path,
-                        ]);
-                        $request = $client->createPresignedRequest($command, $expiry);
-                        
-                        if ($main) {
-                            $results[] = [
-                                'type' => 'photo',
-                                'id' => $photo->id,
-                                'name' => $photo->name,
-                                'path' => '' . $request->getUri() . '',
-                                'lat' => $location->lat,
-                                'lng' => $location->lng,
-                                'photos' => []
-                            ];
-                        } else {
-                            $results[0]['photos'][] = [
-                                'id' => $photo->id,
-                                'name' => $photo->name,
-                                'path' => '' . $request->getUri() . '',
-                                'lat' => $location->lat,
-                                'lng' => $location->lng,
-                            ];
-                        }
-                        $main = false;
-                    }
-
-                    // Group fetch
-                    if (is_object($location->group()->first())) {
-                        
-                    }
-
-                    //  Event fetch
-                    if (is_object($location->group()->first())) {
-                        
-                    }
-                }
-                
-            }
-        }
-
-
-        return $results;
-
-    }
-
-    // public static function fetchAll($cells, $filter) {
     //     $results = [];
 
-    //     $filter_group = empty($filter['groups']) ? false : true;
-    //     $filter_user = empty($filter['users']) ? false : true;
     //     foreach ($cells AS $row) {
     //         foreach ($row AS $col) {
     //             $poly = $col;
+    //             $locations = Location::query()
+    //                        ->whereRaw("ST_CONTAINS(PolygonFromText('POLYGON((" . implode(',', $poly) . "))'), GeomFromText(CONCAT('Point(',`lat`, ' ', `lng`,')')))")
+    //                        ->latest()
+    //                        ->limit(10)
+    //                        ->get();
+    //             $main = true;
+    //             foreach ($locations as $index => $location) {
 
-    //             /*
-    //             ** Base of photos request, add conditions on locations to be in the screen
-    //             ** Group and User are 2 separated filters, for more clarity
-    //             ** 2 variables photos_users and photos_groups are used
-    //             */
-    //             $query_locations_photos_users = Location::whereRaw("ST_CONTAINS(PolygonFromText('POLYGON((" . implode(',', $poly) . "))'), GeomFromText(CONCAT('Point(',`lat`, ' ', `lng`,')')))");
-    //             $query_locations_photos_groups = clone $query_locations_photos_users;
+    //                 /*
+    //                 ** Photo fetch
+    //                 */
+    //                 if (is_object($location->photo()->first())) {
+    //                     Log::info('photo');
+    //                     $photo = $location->photo()->first();
+    //                     // Get signed url from s3
+    //                     $s3 = Storage::disk('s3');
+    //                     $client = $s3->getDriver()->getAdapter()->getClient();
+    //                     $expiry = "+10 minutes";
+                        
+    //                     $command = $client->getCommand('GetObject', [
+    //                         'Bucket' => env('S3_BUCKET'),
+    //                         'Key'    => "avatar-" . $photo->path,
+    //                     ]);
+    //                     $request = $client->createPresignedRequest($command, $expiry);
+                        
+    //                     if ($main) {
+    //                         $results[] = [
+    //                             'type' => 'photo',
+    //                             'id' => $photo->id,
+    //                             'name' => $photo->name,
+    //                             'path' => '' . $request->getUri() . '',
+    //                             'lat' => $location->lat,
+    //                             'lng' => $location->lng,
+    //                             'photos' => []
+    //                         ];
+    //                     } else {
+    //                         $results[0]['photos'][] = [
+    //                             'id' => $photo->id,
+    //                             'name' => $photo->name,
+    //                             'path' => '' . $request->getUri() . '',
+    //                             'lat' => $location->lat,
+    //                             'lng' => $location->lng,
+    //                         ];
+    //                     }
+    //                     $main = false;
+    //                 }
 
-    //             $locations = $query_locations_photos_users->get();
-                
-    //             Log::info('Locations found with : ' . print_r($locations, true));
-                
-    //             /*
-    //             ** Base of groups request
-    //             */
-    //             $query_locations_groups = clone $query_locations_photos_users;
-                
-    //             /*
-    //             ** Add query filters dependencies
-    //             */
-    //             fetchFunctions::addJoinPhotoUserFilter($query_locations_photos_users, $filter['users'], $filter['hashtags']);
-    //             fetchFunctions::addJoinPhotoGroupFilter($query_locations_photos_groups, $filter['groups'], $filter['hashtags']);
-    //             fetchFunctions::addJoinGroupFilter($query_locations_groups, $filter['groups']);
-           
-    //             /*
-    //             ** Get Users picture, then flush ids to exclude them for next request
-    //             ** If users filter not applied, get all latest photos_users
-    //             */
-    //             $locations_photos_users = $query_locations_photos_users
-    //                                     ->latest()
-    //                                     ->limit(10)
-    //                                     ->get();
-                
-    //             // $exclude_ids = is_object($photos_users)
-    //             //              ? $photos_users->pluck('id')
-    //             //              : [];
-                
-    //             /*
-    //             ** Get Groups pictures
-    //             ** Same here, if groups filter not applied,
-    //             ** will get 10 more latest records
-    //             */
-    //             $locations_photos_groups = $query_locations_photos_groups
-    //                                      ->latest()
-    //                                      ->limit(10)
-    //                                      ->get();
+    //                 // Group fetch
+    //                 if (is_object($location->group()->first())) {
+                        
+    //                 }
 
-    //             /*
-    //             ** Get Groups -- TODO : check rights to display info
-    //             */
-    //             $locations_groups = $query_locations_groups
-    //                     ->latest()
-    //                     ->get();
-
+    //                 //  Event fetch
+    //                 if (is_object($location->group()->first())) {
+                        
+    //                 }
+    //             }
                 
-    //             Log::info('Locations found with : ' . print_r($locations_photos_users, true));
-                
-    //             $locations = $locations_photos_users->merge($locations_photos_groups)
-    //                        ->merge($locations_groups);
-
-    //             Log::info('Locations found with : ' . print_r($locations, true));
-    //             Log::info('Latest location found : ' . print_r($locations->latest()->first(), true));
-
-    //             return [];
     //         }
     //     }
 
@@ -218,6 +137,89 @@ class fetchFunctions
     //     return $results;
 
     // }
+
+    public static function fetchAll($cells, $filter) {
+        $results = [];
+
+        $filter_group = empty($filter['groups']) ? false : true;
+        $filter_user = empty($filter['users']) ? false : true;
+        foreach ($cells AS $row) {
+            foreach ($row AS $col) {
+                $poly = $col;
+
+                /*
+                ** Base of photos request, add conditions on locations to be in the screen
+                ** Group and User are 2 separated filters, for more clarity
+                ** 2 variables photos_users and photos_groups are used
+                */
+                $query_locations_photos_users = Location::whereRaw("ST_CONTAINS(PolygonFromText('POLYGON((" . implode(',', $poly) . "))'), GeomFromText(CONCAT('Point(',`lat`, ' ', `lng`,')')))")
+                                              ->get();
+                
+                
+                Log::info('Locations found with : ' . print_r($query_locations_photos_users, true));
+                $query_locations_photos_groups = clone $query_locations_photos_users;
+
+                $locations = $query_locations_photos_users->get();
+                
+                /*
+                ** Base of groups request
+                */
+                $query_locations_groups = clone $query_locations_photos_users;
+                
+                /*
+                ** Add query filters dependencies
+                */
+                fetchFunctions::addJoinPhotoUserFilter($query_locations_photos_users, $filter['users'], $filter['hashtags']);
+                fetchFunctions::addJoinPhotoGroupFilter($query_locations_photos_groups, $filter['groups'], $filter['hashtags']);
+                fetchFunctions::addJoinGroupFilter($query_locations_groups, $filter['groups']);
+           
+                /*
+                ** Get Users picture, then flush ids to exclude them for next request
+                ** If users filter not applied, get all latest photos_users
+                */
+                $locations_photos_users = $query_locations_photos_users
+                                        ->latest()
+                                        ->limit(10)
+                                        ->get();
+                
+                // $exclude_ids = is_object($photos_users)
+                //              ? $photos_users->pluck('id')
+                //              : [];
+                
+                /*
+                ** Get Groups pictures
+                ** Same here, if groups filter not applied,
+                ** will get 10 more latest records
+                */
+                $locations_photos_groups = $query_locations_photos_groups
+                                         ->latest()
+                                         ->limit(10)
+                                         ->get();
+
+                /*
+                ** Get Groups -- TODO : check rights to display info
+                */
+                $locations_groups = $query_locations_groups
+                        ->latest()
+                        ->get();
+
+                
+                Log::info('Locations found with : ' . print_r($locations_photos_users, true));
+                
+                $locations = $locations_photos_users->merge($locations_photos_groups)
+                           ->merge($locations_groups);
+
+                Log::info('Locations found with : ' . print_r($locations, true));
+                Log::info('Latest location found : ' . print_r($locations->latest()->first(), true));
+
+                return [];
+            }
+        }
+
+
+        return $results;
+
+    }
 
     /*
     ** Generic Manipulations of queries on Location Model only
