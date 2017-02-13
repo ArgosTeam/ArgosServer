@@ -33,9 +33,11 @@ class   PhotoTest extends TestCase
                         'farLeft' => 'LatLng(54.38655404338235, -7.254924531250026)',
                         'nearLeft' => 'LatLng(52.2879010895274, -7.254924531250026)',
                         'nearRight' => 'LatLng(52.2879010895274, -5.277385468750026)',
-                        'users' => [],
-                        'hashtags' => [],
-                        'groups' => []
+                        'filter' => [
+                            'users' => [],
+                            'hashtags' => [],
+                            'groups' => []
+                        ]
                     ], [], [],
                     ['HTTP_Authorization' => 'Bearer ' . $token['access_token']]);
         print_r($response->getContent());
