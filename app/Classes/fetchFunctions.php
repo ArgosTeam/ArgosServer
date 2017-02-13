@@ -217,7 +217,7 @@ class fetchFunctions
     ** Generic Manipulations of queries on Location Model only
     */
     private static function addJoinPhotoUserFilter($query, $users_id, $hashtags) {
-        $query->whereHas('photos', function ($joinquery) use ($users_id, $hashtags) {
+        $query->whereHas('photo', function ($joinquery) use ($users_id, $hashtags) {
             $joinquery->whereHas('users', function ($joinQuery) use ($users_id) {
                 if (!empty($users_id)) {
                     $joinQuery->whereIn('users.id', $users_id);
@@ -232,7 +232,7 @@ class fetchFunctions
     }
 
     private static function addJoinPhotoGroupFilter($query, $groups_id) {
-        $query->whereHas('photos', function ($joinquery) use ($groups_id, $hashtags) {
+        $query->whereHas('photo', function ($joinquery) use ($groups_id, $hashtags) {
             $joinquery->whereHas('groups', function ($joinQuery) use ($groups_id) {
                 if (!empty($groups_id)) {
                     $joinQuery->whereIn('groups.id', $groups_id);
@@ -247,7 +247,7 @@ class fetchFunctions
     }
 
     private static function addJoinGroupFilter($query, $groups_id) {
-        $query->whereHas('groups', function ($query) use ($groups_id) {
+        $query->whereHas('group', function ($query) use ($groups_id) {
             if (!empty($groups_id)) {
                 $query->whereIn('groups.id', $groups_id);
             }
