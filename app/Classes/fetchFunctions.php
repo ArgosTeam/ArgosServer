@@ -68,17 +68,17 @@ class fetchFunctions
     // {
     //     $results = [];
 
-    //     foreach ($cells AS $row) {
-    //         foreach ($row AS $col) {
-    //             $poly = $col;
-    //             $locations = Location::query()
-    //                        ->whereRaw("ST_CONTAINS(PolygonFromText('POLYGON((" . implode(',', $poly) . "))'), GeomFromText(CONCAT('Point(',`lat`, ' ', `lng`,')')))")
-    //                        ->latest()
-    //                        ->limit(10)
-    //                        ->get();
+        foreach ($cells AS $row) {
+            foreach ($row AS $col) {
+                $poly = $col;
+                $locations = Location::query()
+                           ->whereRaw("ST_CONTAINS(PolygonFromText('POLYGON((" . implode(',', $poly) . "))'), GeomFromText(CONCAT('Point(',`lat`, ' ', `lng`,')')))")
+                           ->latest()
+                           ->limit(10)
+                           ->get();
 
-    //             $main = true;
-    //             foreach ($locations as $index => $location) {
+                $main = true;
+                foreach ($locations as $index => $location) {
 
     //                 Log::info('Location');
     //                 /*
@@ -153,8 +153,7 @@ class fetchFunctions
                 ** Group and User are 2 separated filters, for more clarity
                 ** 2 variables photos_users and photos_groups are used
                 */
-                $query_locations_photos_users = Location::query()
-                                              ->whereRaw("ST_CONTAINS(PolygonFromText('POLYGON((" . implode(',', $poly) . "))'), GeomFromText(CONCAT('Point(',`lat`, ' ', `lng`,')')))")
+                $query_locations_photos_users = Location::whereRaw("ST_CONTAINS(PolygonFromText('POLYGON((" . implode(',', $poly) . "))'), GeomFromText(CONCAT('Point(',`lat`, ' ', `lng`,')')))")
                                               ->get();
 
                 Log::info('before');
