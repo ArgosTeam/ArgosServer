@@ -215,7 +215,7 @@ class fetchFunctions
                 }
 
                 Log::info('Locations found with : ' . print_r($locations, true));
-                Log::info('Latest location found : ' . print_r($locations->latest()->first(), true));
+                // Log::info('Latest location found : ' . print_r($locations->latest()->first(), true));
 
             }
         }
