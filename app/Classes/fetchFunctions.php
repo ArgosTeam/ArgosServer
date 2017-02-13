@@ -153,74 +153,69 @@ class fetchFunctions
                 ** Group and User are 2 separated filters, for more clarity
                 ** 2 variables photos_users and photos_groups are used
                 */
-                $query_locations_photos_users = Location::whereRaw("ST_CONTAINS(PolygonFromText('POLYGON((" . implode(',', $poly) . "))'), GeomFromText(CONCAT('Point(',`lat`, ' ', `lng`,')')))")
-                                              ->get();
-
-                Log::info('before');
-                foreach ($query_locations_photos_users as $index => $location) {
-                    Log::info("Location");
-                }
+                $query_locations_photos_users = Location::whereRaw("ST_CONTAINS(PolygonFromText('POLYGON((" . implode(',', $poly) . "))'), GeomFromText(CONCAT('Point(',`lat`, ' ', `lng`,')')))");
                 
-                Log::info('after');
-                //$query_locations_photos_groups = clone $query_locations_photos_users;
+                $query_locations_photos_groups = clone $query_locations_photos_users;
 
                     
                 /*
                 ** Base of groups request
                 */
-                //$query_locations_groups = clone $query_locations_photos_users;
+                $query_locations_groups = clone $query_locations_photos_users;
                 
                 /*
                 ** Add query filters dependencies
                 */
-                //fetchFunctions::addJoinPhotoUserFilter($query_locations_photos_users, $filter['users'], $filter['hashtags']);
-                //fetchFunctions::addJoinPhotoGroupFilter($query_locations_photos_groups, $filter['groups'], $filter['hashtags']);
-                //fetchFunctions::addJoinGroupFilter($query_locations_groups, $filter['groups']);
+                fetchFunctions::addJoinPhotoUserFilter($query_locations_photos_users, $filter['users'], $filter['hashtags']);
+                fetchFunctions::addJoinPhotoGroupFilter($query_locations_photos_groups, $filter['groups'], $filter['hashtags']);
+                fetchFunctions::addJoinGroupFilter($query_locations_groups, $filter['groups']);
            
                 /*
                 ** Get Users picture, then flush ids to exclude them for next request
                 ** If users filter not applied, get all latest photos_users
                 */
-                // $locations_photos_users = $query_locations_photos_users
-                //                         ->latest()
-                //                         ->limit(10)
-                //                         ->get();
+                $locations_photos_users = $query_locations_photos_users
+                                        ->latest()
+                                        ->limit(10)
+                                        ->get();
+
+                foreach ($locations_photos_users as $location) {
+                    Log::info('result');
+                }
+                
+                // $exclude_ids = is_object($photos_users)
+                //              ? $photos_users->pluck('id')
+                //              : [];
+                
+                /*
+                ** Get Groups pictures
+                ** Same here, if groups filter not applied,
+                ** will get 10 more latest records
+                */
+                $locations_photos_groups = $query_locations_photos_groups
+                                         ->latest()
+                                         ->limit(10)
+                                         ->get();
+
+                /*
+                ** Get Groups -- TODO : check rights to display info
+                */
+                $locations_groups = $query_locations_groups
+                        ->latest()
+                        ->get();
 
                 
+                //Log::info('Locations found with : ' . print_r($locations_photos_users, true));
                 
-                // // $exclude_ids = is_object($photos_users)
-                // //              ? $photos_users->pluck('id')
-                // //              : [];
-                
-                // /*
-                // ** Get Groups pictures
-                // ** Same here, if groups filter not applied,
-                // ** will get 10 more latest records
-                // */
-                // $locations_photos_groups = $query_locations_photos_groups
-                //                          ->latest()
-                //                          ->limit(10)
-                //                          ->get();
+                $locations = $locations_photos_users->merge($locations_photos_groups)
+                           ->merge($locations_groups);
 
-                // /*
-                // ** Get Groups -- TODO : check rights to display info
-                // */
-                // $locations_groups = $query_locations_groups
-                //         ->latest()
-                //         ->get();
+                foreach ($locations as $location) {
+                    Log::info('location');
+                }
 
-                
-                // //Log::info('Locations found with : ' . print_r($locations_photos_users, true));
-                
-                // $locations = $locations_photos_users->merge($locations_photos_groups)
-                //            ->merge($locations_groups);
-
-                // foreach ($locations as $location) {
-                //     Log::info('location');
-                // }
-
-                //Log::info('Locations found with : ' . print_r($locations, true));
-                //Log::info('Latest location found : ' . print_r($locations->latest()->first(), true));
+                Log::info('Locations found with : ' . print_r($locations, true));
+                Log::info('Latest location found : ' . print_r($locations->latest()->first(), true));
 
             }
         }
