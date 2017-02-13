@@ -155,13 +155,13 @@ class fetchFunctions
                 */
                 $query_locations_photos_users = Location::whereRaw("ST_CONTAINS(PolygonFromText('POLYGON((" . implode(',', $poly) . "))'), GeomFromText(CONCAT('Point(',`lat`, ' ', `lng`,')')))");
                 
-                $query_locations_photos_groups = clone $query_locations_photos_users;
+                //$query_locations_photos_groups = clone $query_locations_photos_users;
 
                     
                 /*
                 ** Base of groups request
                 */
-                $query_locations_groups = clone $query_locations_photos_users;
+                //$query_locations_groups = clone $query_locations_photos_users;
                 
                 /*
                 ** Add query filters dependencies
@@ -183,36 +183,36 @@ class fetchFunctions
                     Log::info('location');
                 }
                 
-                // $exclude_ids = is_object($photos_users)
-                //              ? $photos_users->pluck('id')
-                //              : [];
+                // // $exclude_ids = is_object($photos_users)
+                // //              ? $photos_users->pluck('id')
+                // //              : [];
                 
-                /*
-                ** Get Groups pictures
-                ** Same here, if groups filter not applied,
-                ** will get 10 more latest records
-                */
-                $locations_photos_groups = $query_locations_photos_groups
-                                         ->latest()
-                                         ->limit(10)
-                                         ->get();
+                // /*
+                // ** Get Groups pictures
+                // ** Same here, if groups filter not applied,
+                // ** will get 10 more latest records
+                // */
+                // $locations_photos_groups = $query_locations_photos_groups
+                //                          ->latest()
+                //                          ->limit(10)
+                //                          ->get();
 
-                /*
-                ** Get Groups -- TODO : check rights to display info
-                */
-                $locations_groups = $query_locations_groups
-                        ->latest()
-                        ->get();
+                // /*
+                // ** Get Groups -- TODO : check rights to display info
+                // */
+                // $locations_groups = $query_locations_groups
+                //         ->latest()
+                //         ->get();
 
                 
-                //Log::info('Locations found with : ' . print_r($locations_photos_users, true));
+                // //Log::info('Locations found with : ' . print_r($locations_photos_users, true));
                 
-                $locations = $locations_photos_users->merge($locations_photos_groups)
-                           ->merge($locations_groups);
+                // $locations = $locations_photos_users->merge($locations_photos_groups)
+                //            ->merge($locations_groups);
 
-                foreach ($locations as $location) {
-                    Log::info('location');
-                }
+                // foreach ($locations as $location) {
+                //     Log::info('location');
+                // }
 
                 //Log::info('Locations found with : ' . print_r($locations, true));
                 //Log::info('Latest location found : ' . print_r($locations->latest()->first(), true));
