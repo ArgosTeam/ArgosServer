@@ -178,6 +178,10 @@ class fetchFunctions
                                         ->latest()
                                         ->limit(10)
                                         ->get();
+
+                foreach ($locations_photos_users as $location) {
+                    Log::info('location');
+                }
                 
                 // $exclude_ids = is_object($photos_users)
                 //              ? $photos_users->pluck('id')
