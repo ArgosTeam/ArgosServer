@@ -9,20 +9,6 @@ use App\Http\Requests;
 
 class UserController extends Controller
 {
-    //
-    public function profileRequests($userId){
-
-        $func = new UserFunctions;
-        return $func->fetch($userId);
-
-    }
-
-    public function setEmailRequests(){
-
-        $func = new UserFunctions;
-        return $func->setEmail();
-
-    }
 
     public function infos(Request $request) {
         $user = Auth::user();

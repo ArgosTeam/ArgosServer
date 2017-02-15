@@ -20,10 +20,10 @@ use Illuminate\Http\Request;
 
 Route::group(['middleware' => 'auth:api'], function () {
 
+    /*
+    ** Main request view rating and last
+    */
     Route::get('/fetch',            'FetchController@fetch');
-
-    // arthur : TEMPORARY SINCE I DONT HAVE ACCESS TO DB
-    Route::get('/user/setemail', 'UserController@setEmailRequests');
 
     /*
     ** Route regarding Followers functions
@@ -42,6 +42,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     ** Routes regarding users functions
     */
     Route::get('/user/infos', 'UserController@infos');
+    Route::post('/user/profile_pic', 'UserController@profile_pic');
 
     /*
     ** Routes regarding events actions
@@ -52,6 +53,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     //Route::post'/event/refuse', 'EventController@refuse');
     Route::get('/event/infos', 'EventController@infos');
     Route::post('/event/comment', 'EventController@comment');
+    Route::post('/event/profile_pic', 'EventController@profile_pic');
 
     /*
     ** Routes regarding search actions
@@ -77,4 +79,5 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/group/join', 'GroupController@join');
     Route::post('/group/accept', 'GroupController@accept');
     Route::get('/group/infos', 'GroupController@infos');
+    Route::post('/group/profile_pic', 'GroupController@profile_pic');
 });
