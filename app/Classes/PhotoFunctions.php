@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Log;
 class PhotoFunctions
 {
     
-    public static function uploadImage($data, $user, $md5, $image) {
+    public static function uploadImage($user, $md5, $image) {
         /*
         ** Create new Photo
         */
@@ -48,7 +48,6 @@ class PhotoFunctions
         $decode = base64_decode($data['image']);
         $md5 = md5($decode);
 
-        Log::info(print_r($data, true));
         /*
         ** Check photo already exists
         */
