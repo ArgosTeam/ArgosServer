@@ -218,7 +218,6 @@ class fetchFunctions
                 $main = true;
                 foreach ($locations as $location) {
 
-                    Log::info('Location');
                     /*
                     ** Photo fetch
                     */
@@ -273,9 +272,6 @@ class fetchFunctions
 
             }
         }
-
-        Log::info(print_r($results, true));
-
         return $results;
 
     }
