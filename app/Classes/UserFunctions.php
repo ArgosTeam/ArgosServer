@@ -6,6 +6,7 @@ namespace App\Classes;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Friend;
+use App\Models\Photo;
 use Illuminate\Support\Facades\Log;
 
 class UserFunctions
