@@ -59,7 +59,6 @@ class PhotoFunctions
         $photo = PhotoFunctions::uploadImage($user, $md5, $decode);
         $photo->public = $data['public'];
         $photo->mode = $data['mode'];
-        $photo->name = $data['name'];
         $photo->description = $data['description'];
         
         /*
