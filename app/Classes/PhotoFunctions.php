@@ -72,7 +72,7 @@ class PhotoFunctions
         /*
         ** Associate location to photo
         */
-        $photo->location()->associate($location->id);
+        $photo->location()->associate($location);
         $photo->save();
 
         /*
@@ -162,7 +162,7 @@ class PhotoFunctions
         }
         $comment = new Comment();
         $comment->content = $content;
-        $comment->user()->associate($user->id);
+        $comment->user()->associate($user);
         if ($comment->save()) {
             $comment->photos()->attach($photo->id);
             return response(['comment_id' => $comment->id], 200);

@@ -103,7 +103,7 @@ class UserFunctions
         $photo = PhotoFunctions::uploadImage($user, $md5, $decode);
         $photo->save();
 
-        $user->profile_pic()->associate($photo->id);
+        $user->profile_pic()->associate($photo);
 
         return response(['photo_id' => $photo->id], 200);
     }

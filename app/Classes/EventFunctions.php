@@ -151,7 +151,7 @@ class EventFunctions
         }
         $comment = new Comment();
         $comment->content = $content;
-        $comment->user()->associate($user->id);
+        $comment->user()->associate($user);
         if ($comment->save()) {
             $comment->events()->attach($event->id);
             return response(['comment_id' => $comment->id], 200);
@@ -180,7 +180,7 @@ class EventFunctions
         $photo->save();
 
         $event = Event::find($event_id);
-        $event->profile_pic()->associate($photo->id);
+        $event->profile_pic()->associate($photo);
 
         return response(['photo_id' => $photo->id], 200);
     }
