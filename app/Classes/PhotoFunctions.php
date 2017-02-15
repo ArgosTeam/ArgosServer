@@ -48,7 +48,7 @@ class PhotoFunctions
         $decode = base64_decode($data['image']);
         $md5 = md5($decode);
 
-        
+        Log::info(print_r($data, true));
         /*
         ** Check photo already exists
         */
