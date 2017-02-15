@@ -73,7 +73,7 @@ class PhotoFunctions
         /*
         ** Associate location to photo
         */
-        $photo->location()->associate($location);
+        $photo->location()->associate($location->id);
         $photo->save();
 
         /*
