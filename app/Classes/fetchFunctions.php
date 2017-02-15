@@ -152,6 +152,7 @@ class fetchFunctions
     public static function fetchAll($cells, $filter) {
         $results = [];
 
+        $index = -1;
         $filter_group = empty($filter['groups']) ? false : true;
         $filter_user = empty($filter['users']) ? false : true;
         foreach ($cells AS $row) {
@@ -215,7 +216,7 @@ class fetchFunctions
                            ->sortBy('created_at');
 
                 $main = true;
-                foreach ($locations as $index => $location) {
+                foreach ($locations as $location) {
 
                     Log::info('Location');
                     /*
@@ -244,8 +245,9 @@ class fetchFunctions
                                 'lng' => $location->lng,
                                 'photos' => []
                             ];
+                            $index += 1;
                         } else {
-                            $results[0]['photos'][] = [
+                            $results[$index]['photos'][] = [
                                 'id' => $photo->id,
                                 'name' => $photo->name,
                                 'path' => '' . $request->getUri() . '',
