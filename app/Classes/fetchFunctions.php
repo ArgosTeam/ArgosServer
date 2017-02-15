@@ -272,6 +272,7 @@ class fetchFunctions
             }
         }
 
+        Log::info(print_r($results, true));
 
         return $results;
 
