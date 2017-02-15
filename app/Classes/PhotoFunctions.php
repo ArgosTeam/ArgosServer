@@ -169,7 +169,7 @@ class PhotoFunctions
             $comment->photos()->attach($photo->id);
             return response(['comment_id' => $comment->id], 200);
         } else {
-            return response(['status' => 'Error while saving', 404);
+            return response(['status' => 'Error while saving'], 404);
         }
     }
 
