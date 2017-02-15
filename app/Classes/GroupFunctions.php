@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Hashtag;
 use Illuminate\Support\Facades\Log;
 use App\Models\Location;
+use PhotoFunctions;
 
 class GroupFunctions
 {
@@ -126,5 +127,27 @@ class GroupFunctions
         }
         return response('Group does not exist', 404);
     }
-    
+
+    public static function profile_pic($user, $encode, $group_id) {
+        $decode = base64_decode($encode);
+        $md5 = md5($decode);
+
+        /*
+        ** Check photo already exists
+        */
+        $photo = Photo::where('md5', $md5)->first();
+        if(is_object($photo)) {
+            return response(['refused' => 'Photo already exists'], 404);
+        }
+
+        $photo = PhotoFunctions::uploadImage($user, $md5, $decode);
+        $photo->save();
+
+        $event = Event::find($event_id);
+        $event->profile_pic()->associate($photo->id);
+
+        return response(['photo_id' => $photo->id], 200);
+    }
+}
+
 }

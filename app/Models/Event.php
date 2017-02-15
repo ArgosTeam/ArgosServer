@@ -31,6 +31,10 @@ class Event extends Model
 
     public function comments() {
         return $this->belongsToMany(Comment::class)
-            ->withTimestamps();;
+            ->withTimestamps();
+    }
+
+    public function profile_pic() {
+        return $this->belongsTo(Photo::class, 'profile_pic_id');
     }
 }

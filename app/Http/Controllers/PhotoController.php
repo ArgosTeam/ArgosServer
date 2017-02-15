@@ -9,8 +9,9 @@ use Illuminate\Support\Facades\Auth;
 
 class PhotoController extends Controller
 {
-    public function upload(Request $request){
-        return PhotoFunctions::upload($request);
+    public function uploadUserImage(Request $request){
+        $data = $request->all();
+        return PhotoFunctions::uploadUserImage($data);
     }
 
     public function macro(Request $request) {

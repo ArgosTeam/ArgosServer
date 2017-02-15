@@ -35,4 +35,10 @@ class GroupController extends Controller
         return GroupFunctions::infos($user, $group_id);
     }
 
+    public function profile_pic(Request $request) {
+        $user = Auth::user();
+        return UserFunctions::profile_pic($user,
+                                          $request->input('image'),
+                                          $request->input('group_id'));
+    }
 }

@@ -35,4 +35,10 @@ class UserController extends Controller
         $user_id = $request->input('user_id');
         UserFunctions::follow($user, $user_id);
     }
+
+    public function profile_pic(Request $request) {
+        $user = Auth::user();
+        return UserFunctions::profile_pic($user,
+                                          $request->input('image'));
+    }
 }

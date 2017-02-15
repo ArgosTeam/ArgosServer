@@ -11,10 +11,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 use App\Models\User;
+use PhotoFunctions;
 
 class EventFunctions
 {
-
+    
     public static function add($user, Request $request) {
 
         $data = $request->all();
@@ -56,7 +57,7 @@ class EventFunctions
                         'name' => $name
                     ]);
                 }
-                $hashtag->events()->attach($event);
+                $hashtag->events()->attach($event->id);
             }
             
             $user->events()->attach($event->id, [
@@ -157,5 +158,30 @@ class EventFunctions
         } else {
             return response('Error while saving', 404);
         }
+    }
+
+    public static function profile_pic($user, $encode, $event_id) {
+        if (!$user->events->contains($event_id)) {
+            return response([ 'error' => 'access to the event refused'], 404);
+        }
+        
+        $decode = base64_decode($encode);
+        $md5 = md5($decode);
+
+        /*
+        ** Check photo already exists
+        */
+        $photo = Photo::where('md5', $md5)->first();
+        if(is_object($photo)) {
+            return response(['refused' => 'Photo already exists'], 404);
+        }
+
+        $photo = PhotoFunctions::uploadImage($user, $md5, $decode);
+        $photo->save();
+
+        $event = Event::find($event_id);
+        $event->profile_pic()->associate($photo->id);
+
+        return response(['photo_id' => $photo->id], 200);
     }
 }

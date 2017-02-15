@@ -31,4 +31,8 @@ class Group extends Model
         return $this->belongsToMany(Hashtag::class)
             ->withTimestamps();
     }
+
+    public function profile_pic() {
+        return $this->belongsTo(Photo::class, 'profile_pic_id');
+    }
 }

@@ -52,6 +52,10 @@ class User extends Authenticatable
             ->withTimestamps();
     }
 
+    public function profile_pic() {
+        return $this->belongsTo(Photo::class, 'profile_pic_id');
+    }
+    
     /*
     ** Define Followers, Many-To-Many self relation
     ** followers -> set the relationship in order to get followers of user

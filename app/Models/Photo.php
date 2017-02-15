@@ -33,4 +33,16 @@ class Photo extends Model
         return $this->belongsToMany(Event::class)
             ->withTimestamps();
     }
+
+    public function event_profile_pic() {
+        return $this->hasOne(Event::class, 'profile_pic_id');
+    }
+
+    public function user_profile_pic() {
+        return $this->hasOne(User::class, 'profile_pic_id');
+    }
+
+    public function group_profile_pic() {
+        return $this->hasOne(Group::class, 'profile_pic_id');
+    }
 }

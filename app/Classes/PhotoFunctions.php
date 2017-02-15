@@ -14,44 +14,63 @@ use Illuminate\Support\Facades\Log;
 
 class PhotoFunctions
 {
+    
+    public static function uploadImage($data, $user, $md5, $image) {
+        /*
+        ** Create new Photo
+        */
+        $path =  'images/' . time() . '.jpg';
+        $photo = new Photo();
+        $photo->path = $path;
+        $photo->origin_user_id = $user->id;
+        $photo->md5 = $md5;
 
-    public static function upload(Request $request){
+        /*
+        ** Upload through storage -> AWS S3
+        */
+        $full = Image::make($image)->rotate(-90);
+        $avatar = Image::make($image)->resize(60, 60)->rotate(-90);
+        $full = $full->stream()->__toString();
+        $avatar = $avatar->stream()->__toString();
 
-        $data = $request->all();
+        //Upload Photo
+        Storage::disk('s3')->put($path, $full, 'public');
+
+        //Upload avatar
+        Storage::disk('s3')->put('avatar-' . $path, $avatar, 'public');
+        
+        return $photo;
+    }
+    
+    public static function uploadUserImage($data) {
         $user = Auth::user();
+
         $decode = base64_decode($data['image']);
         $md5 = md5($decode);
 
+        
         /*
         ** Check photo already exists
         */
         $photo = Photo::where('md5', $md5)->first();
-        if(is_object($photo)){
-            return response('Photo already exists', 404);
+        if(is_object($photo)) {
+            return response(['refused' => 'Photo already exists'], 404);
         }
-
-        $path =  'images/' . time() . '.jpg';
-
+        
+        $photo = PhotoFunctions::uploadImage($user, $md5, $decode);
+        $photo->public = $data['public'];
+        $photo->mode = $data['mode'];
+        $photo->name = $data['name'];
+        $photo->description = $data['description'];
+        
         /*
-        ** Create new location
+        ** Create new location, each upload image from user is geolocalised
         */
         $location = new Location();
         $location->lat = $data['latitude'];
         $location->lng = $data['longitude'];
         $location->save();
 
-        /*
-        ** Create new Photo
-        */
-        $photo = new Photo();
-        $photo->name = $data['name'];
-        $photo->description = $data['description'];
-        $photo->path = $path;
-        $photo->public = $data['public'];
-        $photo->mode = $data['mode'];
-        $photo->origin_user_id = $user->id;
-        $photo->md5 = $md5;
-        
         /*
         ** Associate location to photo
         */
@@ -71,7 +90,7 @@ class PhotoFunctions
                         'name' => $name
                     ]);
                 }
-                $hashtag->photos()->attach($photo);
+                $hashtag->photos()->attach($photo->id);
             }
         }
 
@@ -81,17 +100,6 @@ class PhotoFunctions
         $user->photos()->attach($photo->id, [
             'admin' => true
         ]);
-        
-        $full = Image::make($decode)->rotate(-90);
-        $avatar = Image::make($decode)->resize(60, 60)->rotate(-90);
-        $full = $full->stream()->__toString();
-        $avatar = $avatar->stream()->__toString();
-
-        //Upload Photo
-        Storage::disk('s3')->put($path, $full, 'public');
-
-        //Upload avatar
-        Storage::disk('s3')->put('avatar-' . $path, $avatar, 'public');
 
         return (response(['photo_id' => $photo->id], 200));
     }
@@ -161,7 +169,7 @@ class PhotoFunctions
             $comment->photos()->attach($photo->id);
             return response(['comment_id' => $comment->id], 200);
         } else {
-            return response('Error while saving', 404);
+            return response(['status' => 'Error while saving', 404);
         }
     }
 
