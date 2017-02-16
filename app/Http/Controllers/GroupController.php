@@ -37,7 +37,7 @@ class GroupController extends Controller
 
     public function profile_pic(Request $request) {
         $user = Auth::user();
-        return UserFunctions::profile_pic($user,
+        return GroupFunctions::profile_pic($user,
                                           $request->input('image'),
                                           $request->input('group_id'));
     }
