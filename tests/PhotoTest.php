@@ -59,18 +59,16 @@ class   PhotoTest extends TestCase
                                      ]);
         $token = json_decode($tokenResponse->getContent(), true);
 
-        $stub = __DIR__ . '/images/test.jpeg';
-        $name = str_random(8).'.png';
-        $path = sys_get_temp_dir().'/'.$name;
+        $path = __DIR__ . '/images/test.jpeg';
+        $type = pathinfo($path, PATHINFO_EXTENSION);
+        $data = file_get_contents($path);
+        $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
 
-        copy($stub, $path);
-
-        $file = new UploadedFile($path, $name, filesize($path), 'image/jpeg', null, true);
         // Test upload
         $response = $this->call('POST',
                     '/api/user/profile_pic',
                     [
-                        'image' => $file,
+                        'image' => $base64,
                     ], [], [],
                     ['HTTP_Authorization' => 'Bearer ' . $token['access_token']]);
         print_r($response->getContent());
