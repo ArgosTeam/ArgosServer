@@ -104,6 +104,7 @@ class UserFunctions
         $photo->save();
 
         $user->profile_pic()->associate($photo);
+        $user->save();
 
         return response(['photo_id' => $photo->id], 200);
     }
