@@ -7,7 +7,7 @@ use App\Models\User;
 use App\Models\Hashtag;
 use Illuminate\Support\Facades\Log;
 use App\Models\Location;
-use PhotoFunctions;
+use App\Classes\PhotoFunctions;
 
 class GroupFunctions
 {
