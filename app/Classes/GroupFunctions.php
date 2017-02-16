@@ -134,6 +134,7 @@ class GroupFunctions
             return response([ 'error' => 'access refused'], 404);
         }
 
+        Log::info(print_r($group->pivot, true));
         if (!$group->pivot->admin) {
             return response(['error' => 'You need to be admin'], 404);
         }
