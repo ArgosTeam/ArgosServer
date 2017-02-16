@@ -90,6 +90,8 @@ class SearchFunctions {
 
     private static function getUnknownEvents($user, $nameBegin, $limit) {
         return Event::where('id', '!=', $user->events->pluck('id'))
+            ->where('events.name', 'like', $nameBegin . '%')
+            ->limit($limit)
             ->get();
     }
     
