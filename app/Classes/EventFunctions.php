@@ -45,7 +45,7 @@ class EventFunctions
         $event->location()->associate($location);
         
         if ($event->save()) {
-            if (is_object($request->input('hashtags'))) {
+            if ($request->has('hashtags')) {
                 /*
                 ** Create hashtag if not exist
                 ** Associate hashtag to event
