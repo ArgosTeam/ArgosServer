@@ -59,7 +59,7 @@ class EventTest extends TestCase
         $response = $this->call('POST',
                                 '/api/event/join',
                                 [
-                                    'event_id' => 1
+                                    'event_id' => 3
                                 ], [], [],
                                 ['HTTP_Authorization' => 'Bearer ' . $token['access_token']]);
         
@@ -85,7 +85,7 @@ class EventTest extends TestCase
                                 '/api/event/accept',
                                 [
                                     'user_id' => 1,
-                                    'event_id' => 1
+                                    'event_id' => 3
                                 ], [], [],
                                 ['HTTP_Authorization' => 'Bearer ' . $token['access_token']]);
         
@@ -109,9 +109,40 @@ class EventTest extends TestCase
         $response = $this->call('GET',
                                 '/api/event/infos',
                                 [
-                                    'id' => 1
+                                    'id' => 3
                                 ], [], [],
                                 ['HTTP_Authorization' => 'Bearer ' . $token['access_token']]);
+        print_r($response->getContent());
+        $this->assertEquals(200, $response->status());
+    }
+
+    public function testProfilePic() {
+        //  Get token        
+        $tokenResponse = $this->call('POST',
+                                     '/oauth/token',
+                                     [
+                                         'grant_type' => 'password',
+                                         'client_id' => '1',
+                                         'client_secret' => '8KD1qlhGoguCBCTZDgWsRtV1cU6OZtRrsOJT0cjb',
+                                         'username' => 'aure.girardeau@gmail.com',
+                                         'password' => 'toto',
+                                         'scope' => '*'
+                                     ]);
+        $token = json_decode($tokenResponse->getContent(), true);
+
+        $path = __DIR__ . '/images/test.jpeg';
+        $type = pathinfo($path, PATHINFO_EXTENSION);
+        $data = file_get_contents($path);
+        $base64 = base64_encode($data);
+
+        // Test upload
+        $response = $this->call('POST',
+                    '/api/event/profile_pic',
+                    [
+                        'image' => $base64,
+                        'event_id' => 3
+                    ], [], [],
+                    ['HTTP_Authorization' => 'Bearer ' . $token['access_token']]);
         print_r($response->getContent());
         $this->assertEquals(200, $response->status());
     }
