@@ -90,15 +90,19 @@ class EventFunctions
                ->where('event_user.user_id', '=', $currentUser->id)
                ->find($event_id);
         $userToAccept = User::find($user_id);
+
+        if (!is_object($event)) {
+            return response(['status' => 'Event does not exist'], 404);
+        }
         
         if ($event->admin) {
             $userToAccept->events()->updateExistingPivot($event_id, [
                 'status' => 'accepted',
                 'admin' => false
             ]);
-            return response('Event join request sent', 200);
+            return response(['status' => 'Event join request sent'], 200);
         } else {
-            return response('Access refused, need to be admin', 404);
+            return response(['status' => 'Access refused, need to be admin'], 404);
         }
     }
 
