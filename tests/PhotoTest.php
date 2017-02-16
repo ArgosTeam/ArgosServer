@@ -58,7 +58,7 @@ class   PhotoTest extends TestCase
                                      ]);
         $token = json_decode($tokenResponse->getContent(), true);
 
-        $stub = __DIR__ . './images/test.png';
+        $stub = __DIR__ . '/images/test.png';
         $name = str_random(8).'.png';
         $path = sys_get_temp_dir().'/'.$name;
 
