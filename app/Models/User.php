@@ -37,7 +37,8 @@ class User extends Authenticatable
 
     public function groups() {
         return $this->belongsToMany(Group::class)
-            ->withTimestamps();
+            ->withTimestamps()
+            ->withPivot('admin');
     }
 
     public function events() {
