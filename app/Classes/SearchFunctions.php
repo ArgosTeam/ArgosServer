@@ -20,7 +20,7 @@ class SearchFunctions {
     private static function getKnownUsers($user, $nameBegin) {
         return $user->getFriends()
             ->where('firstName', 'like', $nameBegin . '%')
-            ->where('lastName', 'like', $nameBegin . '%')
+            ->orWhere('lastName', 'like', $nameBegin . '%')
             ->get();
     }
 
@@ -28,7 +28,7 @@ class SearchFunctions {
         $ids = $user->getFriends()->get()->pluck('id');
         return User::whereNotIn('id', $ids)
             ->where('firstName', 'like', $nameBegin . '%')
-            ->where('lastName', 'like', $nameBegin . '%')
+            ->orWhere('lastName', 'like', $nameBegin . '%')
             ->limit(15)
             ->get();
     }
