@@ -149,5 +149,3 @@ class GroupFunctions
         return response(['photo_id' => $photo->id], 200);
     }
 }
-
-}
