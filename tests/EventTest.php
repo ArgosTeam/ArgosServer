@@ -130,7 +130,7 @@ class EventTest extends TestCase
                                      ]);
         $token = json_decode($tokenResponse->getContent(), true);
 
-        $path = __DIR__ . '/images/test.jpeg';
+        $path = __DIR__ . '/images/test_event.jpeg';
         $type = pathinfo($path, PATHINFO_EXTENSION);
         $data = file_get_contents($path);
         $base64 = base64_encode($data);
