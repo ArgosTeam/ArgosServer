@@ -58,19 +58,18 @@ class   PhotoTest extends TestCase
                                      ]);
         $token = json_decode($tokenResponse->getContent(), true);
 
-        // Test Fetch
+        $stub = __DIR__ . './images/test.png';
+        $name = str_random(8).'.png';
+        $path = sys_get_temp_dir().'/'.$name;
+
+        copy($stub, $path);
+
+        $file = new UploadedFile($path, $name, filesize($path), 'image/jpeg', null, true);
+        // Test upload
         $response = $this->call('POST',
-                    '/api/photo/upload',
+                    '/api/user/profile_pic',
                     [
-                        'image' => '',
-                        'farLeft' => 'LatLng(54.38655404338235, -7.254924531250026)',
-                        'nearLeft' => 'LatLng(52.2879010895274, -7.254924531250026)',
-                        'nearRight' => 'LatLng(52.2879010895274, -5.277385468750026)',
-                        'filter' => [
-                            'users' => [],
-                            'hashtags' => [],
-                            'groups' => []
-                        ]
+                        'image' => $file,
                     ], [], [],
                     ['HTTP_Authorization' => 'Bearer ' . $token['access_token']]);
         print_r($response->getContent());

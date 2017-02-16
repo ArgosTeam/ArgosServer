@@ -24,6 +24,7 @@ class UserController extends Controller
 
     public function profile_pic(Request $request) {
         $user = Auth::user();
+        Log::info('request user_profile : ' . print_r($request->all(), true));
         return UserFunctions::profile_pic($user,
                                           $request->input('image'));
     }
