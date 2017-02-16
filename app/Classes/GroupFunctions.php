@@ -129,6 +129,15 @@ class GroupFunctions
     }
 
     public static function profile_pic($user, $encode, $group_id) {
+        $group = $user->groups()->where('groups.id', '=', $group_id)->first();
+        if (!is_object($group)) {
+            return response([ 'error' => 'access refused'], 404);
+        }
+
+        if (!$group->pivot->admin) {
+            return response(['error' => 'You need to be admin'], 404);
+        }
+        
         $decode = base64_decode($encode);
         $md5 = md5($decode);
 
@@ -143,8 +152,9 @@ class GroupFunctions
         $photo = PhotoFunctions::uploadImage($user, $md5, $decode);
         $photo->save();
 
-        $event = Event::find($event_id);
-        $event->profile_pic()->associate($photo->id);
+        $group = Group::find($group_id);
+        $group->profile_pic()->associate($photo->id);
+        $group->save();
 
         return response(['photo_id' => $photo->id], 200);
     }

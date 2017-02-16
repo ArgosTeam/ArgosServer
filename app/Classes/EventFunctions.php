@@ -167,10 +167,14 @@ class EventFunctions
     }
 
     public static function profile_pic($user, $encode, $event_id) {
-        if (!$user->events->contains($event_id)) {
-            return response([ 'error' => 'access to the event refused'], 404);
+        $event = $user->events()->where('events.id', '=', $event_id)->first();
+        if (!is_object($event)) {
+            return response([ 'error' => 'access refused'], 404);
         }
-        
+
+        if (!$event->pivot->admin) {
+            return response(['error' => 'You need to be admin'], 404);
+        }
         $decode = base64_decode($encode);
         $md5 = md5($decode);
 
@@ -187,6 +191,7 @@ class EventFunctions
 
         $event = Event::find($event_id);
         $event->profile_pic()->associate($photo);
+        $event->save();
 
         return response(['photo_id' => $photo->id], 200);
     }
