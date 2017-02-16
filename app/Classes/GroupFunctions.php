@@ -5,6 +5,7 @@ namespace App\Classes;
 use App\Models\Group;
 use App\Models\User;
 use App\Models\Hashtag;
+use App\Models\Photo;
 use Illuminate\Support\Facades\Log;
 use App\Models\Location;
 use App\Classes\PhotoFunctions;
