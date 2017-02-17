@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Hashtag extends Model
 {
+    protected $fillable = ['name'];
+    
     public function photos() {
         return $this->belongsToMany(Photo::class)
             ->withTimestamps();
