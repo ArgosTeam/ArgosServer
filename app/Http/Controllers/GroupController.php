@@ -48,4 +48,10 @@ class GroupController extends Controller
         $group_id = $request->input('group_id');
         return GroupFunctions::link_photo($user, $photo_id, $group_id);
     }
+
+    public function photos(Request $request) {
+        $user = Auth::user();
+        $group_id = $request->input('group_id');
+        return GroupFunctions::photos($user, $group_id);
+    }
 }

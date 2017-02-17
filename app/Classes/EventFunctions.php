@@ -220,4 +220,36 @@ class EventFunctions
 
         return response(['status' => 'Photo linked to event'], 200);
     }
+
+    public static function photos($user, $event_id) {
+        $event = Event::find($event_id);
+        if (!is_object($event)) {
+            return response(['status' => 'Event does not exists'], 404);
+        }
+
+        $response = [];
+        foreach ($event->photos as $photo) {
+            // Get signed url from s3
+            $s3 = Storage::disk('s3');
+            $client = $s3->getDriver()->getAdapter()->getClient();
+            $expiry = "+10 minutes";
+            
+            $command = $client->getCommand('GetObject', [
+                'Bucket' => env('S3_BUCKET'),
+                'Key'    => "avatar-" . $photo->path,
+            ]);
+            $request = $client->createPresignedRequest($command, $expiry);
+            
+            $response[] = [
+                'photo_id' => $photo->id,
+                'lat' => $photo->location->lat,
+                'lng' => $photo->location->lng,
+                'description' => $photo->description,
+                'path' => '' . $request->getUri() . '',
+                'public' => $photo->public
+            ];
+        }
+
+        return response($response, 200);
+    }
 }
