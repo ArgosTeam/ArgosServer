@@ -39,7 +39,7 @@ class Event extends Model
     }
 
     public function photos() {
-        $this->belongsToMany(Photo::class)
+        return $this->belongsToMany(Photo::class)
             ->withTimestamps();
     }
 }
