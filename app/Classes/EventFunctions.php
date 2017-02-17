@@ -246,7 +246,8 @@ class EventFunctions
                 'lng' => $photo->location->lng,
                 'description' => $photo->description,
                 'path' => '' . $request->getUri() . '',
-                'public' => $photo->public
+                'public' => $photo->public,
+                'origin_user_id' => $photo->origin_user_id
             ];
         }
 
