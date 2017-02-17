@@ -13,11 +13,6 @@ use Illuminate\Http\Request;
 |
 */
 
-//Route::get('/user', function (Request $request) {
-//    return $request->user();
-//})->middleware('scope:check-status,place-orders');
-
-
 Route::group(['middleware' => 'auth:api'], function () {
 
     /*
@@ -43,6 +38,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     */
     Route::get('/user/infos', 'UserController@infos');
     Route::post('/user/profile_pic', 'UserController@profile_pic');
+    Route::get('/user/photos', 'UserController@photos');
 
     /*
     ** Routes regarding events actions
