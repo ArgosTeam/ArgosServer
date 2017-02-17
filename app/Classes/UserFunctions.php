@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Friend;
 use App\Models\Photo;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class UserFunctions
 {

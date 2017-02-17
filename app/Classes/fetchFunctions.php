@@ -6,7 +6,6 @@ use App\Models\Group;
 use App\Models\Hashtag;
 use App\Models\Location;
 use App\Models\Photo;
-use Config;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
