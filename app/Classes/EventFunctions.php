@@ -213,7 +213,8 @@ class EventFunctions
             return response(['status' => 'This photo does not belong to you'], 404);
         }
 
-        if ($event->photos->contains($photo->id)) {
+        if (is_object($event->photos)
+            && $event->photos->contains($photo->id)) {
             return response('Photo already linked to event');
         }
         $event->photos()->attach($photo->id);
