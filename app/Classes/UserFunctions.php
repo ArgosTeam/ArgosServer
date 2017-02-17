@@ -70,5 +70,36 @@ class UserFunctions
 
         return response(['photo_id' => $photo->id], 200);
     }
-    
+
+    public static function getUserAlbum($user, $all) {
+        $photos = $user->photos();
+        if (!$all) {
+            $photos->where('public', '=', true);
+        }
+        $photos = $photos->get();
+        $response = [];
+        foreach ($photos as $photo) {
+
+            // Get signed url from s3
+            $s3 = Storage::disk('s3');
+            $client = $s3->getDriver()->getAdapter()->getClient();
+            $expiry = "+10 minutes";
+            
+            $command = $client->getCommand('GetObject', [
+                'Bucket' => env('S3_BUCKET'),
+                'Key'    => "avatar-" . $photo->path,
+            ]);
+            $request = $client->createPresignedRequest($command, $expiry);
+            
+            $response[] = [
+                'photo_id' => $photo->id,
+                'lat' => $photo->location->lat,
+                'lng' => $photo->location->lng,
+                'description' => $photo->description,
+                'path' => '' . $request->getUri() . '',
+                'public' => $photo->public
+            ];
+        }
+        return response($response, 200);
+    }
 }

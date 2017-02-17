@@ -29,4 +29,14 @@ class UserController extends Controller
         return UserFunctions::profile_pic($user,
                                           $request->input('image'));
     }
+
+    public function photos(Request $request) {
+        $user = $request->input('id') == -1
+              ? Auth::user()
+              : User::find($request->input('id'));
+        $all = $request->input('id') == -1
+             ? true
+             : false;
+        return UserFunctions::getUserAlbum($user, $all);
+    }
 }
