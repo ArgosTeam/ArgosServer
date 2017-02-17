@@ -9,6 +9,7 @@ use App\Models\Photo;
 use Illuminate\Support\Facades\Log;
 use App\Models\Location;
 use App\Classes\PhotoFunctions;
+use Illuminate\Support\Facades\Storage;
 
 class GroupFunctions
 {
