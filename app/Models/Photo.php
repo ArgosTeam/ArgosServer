@@ -30,6 +30,11 @@ class Photo extends Model
     }
 
     public function comments() {
+        return $this->belongsToMany(Comment::class)
+            ->withTimestamps();
+    }
+
+    public function events() {
         return $this->belongsToMany(Event::class)
             ->withTimestamps();
     }
