@@ -146,4 +146,29 @@ class EventTest extends TestCase
         print_r($response->getContent());
         $this->assertEquals(200, $response->status());
     }
+
+    public function testPhotoLink() {
+        
+        $tokenResponse = $this->call('POST',
+                                     '/oauth/token',
+                                     [
+                                         'grant_type' => 'password',
+                                         'client_id' => '1',
+                                         'client_secret' => '8KD1qlhGoguCBCTZDgWsRtV1cU6OZtRrsOJT0cjb',
+                                         'username' => 'aure.girardeau@gmail.com',
+                                         'password' => 'toto',
+                                         'scope' => '*'
+                                     ]);
+        $token = json_decode($tokenResponse->getContent(), true);
+
+        
+        $response = $this->call('POST',
+                                '/api/event/photo/link',
+                                [
+                                    'photo_id' => 29,
+                                    'event_id' => 3
+                                ], [], [],
+                                ['HTTP_Authorization' => 'Bearer ' . $token['access_token']]);
+        $this->assertEquals(200, $response->status());
+    }
 }
