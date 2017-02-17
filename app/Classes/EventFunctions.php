@@ -195,4 +195,29 @@ class EventFunctions
 
         return response(['photo_id' => $photo->id], 200);
     }
+
+    public static function link_photo($user, $photo_id, $event_id) {
+        $event = Event::find($event_id);
+        if (!is_object($event)) {
+            return response(['status' => 'Event does not exists'], 404);
+        }
+        if (!$event->users->contains($user->id)) {
+            return response(['status' => 'Access to event denied'], 404);
+        }
+
+        $photo = Photo::find($photo_id);
+        if (!is_object($photo)) {
+            return response('Photo does not exist');
+        }
+        if (!$photo->users->contains($user->id)) {
+            return response(['status' => 'This photo does not belong to you'], 404);
+        }
+
+        if ($event->photos->contains($photo->id)) {
+            return response('Photo already linked to event');
+        }
+        $event->photos()->attach($photo->id);
+
+        return response(['status' => 'Photo linked to event'], 200);
+    }
 }

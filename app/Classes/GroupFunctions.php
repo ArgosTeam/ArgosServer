@@ -160,4 +160,29 @@ class GroupFunctions
 
         return response(['photo_id' => $photo->id], 200);
     }
+
+    public static function link_photo($user, $photo_id, $group_id) {
+        $group = Group::find($group_id);
+        if (!is_object($group)) {
+            return response(['status' => 'Group does not exists'], 404);
+        }
+        if (!$group->users->contains($user->id)) {
+            return response(['status' => 'Access to group denied'], 404);
+        }
+
+        $photo = Photo::find($photo_id);
+        if (!is_object($photo)) {
+            return response('Photo does not exist');
+        }
+        if (!$photo->users->contains($user->id)) {
+            return response(['status' => 'This photo does not belong to you'], 404);
+        }
+
+        if ($group->photos->contains($photo->id)) {
+            return response('Photo already linked to group');
+        }
+        $group->photos()->attach($photo->id);
+
+        return response(['status' => 'Photo linked to group'], 200);
+    }
 }
