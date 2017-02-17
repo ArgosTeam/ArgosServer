@@ -179,7 +179,7 @@ class GroupFunctions
         }
 
         if ($group->photos->contains($photo->id)) {
-            return response('Photo already linked to group');
+            return response('Photo already linked to group', 404);
         }
         $group->photos()->attach($photo->id);
 

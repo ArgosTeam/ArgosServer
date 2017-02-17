@@ -215,7 +215,7 @@ class EventFunctions
 
         if (is_object($event->photos)
             && $event->photos->contains($photo->id)) {
-            return response('Photo already linked to event');
+            return response('Photo already linked to event', 404);
         }
         $event->photos()->attach($photo->id);
 
