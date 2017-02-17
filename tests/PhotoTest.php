@@ -75,7 +75,8 @@ class   PhotoTest extends TestCase
                             '#tropfrais',
                             '#arthurlapute'
                         ],
-                        'mode' => 'normal'
+                        'mode' => 'normal',
+                        'public' => true
                     ], [], [],
                     ['HTTP_Authorization' => 'Bearer ' . $token['access_token']]);
         print_r($response->getContent());
