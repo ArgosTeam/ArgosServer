@@ -171,4 +171,29 @@ class GroupTest extends TestCase
                                 ['HTTP_Authorization' => 'Bearer ' . $token['access_token']]);
         $this->assertEquals(200, $response->status());
     }
+
+    public function testAlbum() {
+        
+        $tokenResponse = $this->call('POST',
+                                     '/oauth/token',
+                                     [
+                                         'grant_type' => 'password',
+                                         'client_id' => '1',
+                                         'client_secret' => '8KD1qlhGoguCBCTZDgWsRtV1cU6OZtRrsOJT0cjb',
+                                         'username' => 'aure.girardeau@gmail.com',
+                                         'password' => 'toto',
+                                         'scope' => '*'
+                                     ]);
+        $token = json_decode($tokenResponse->getContent(), true);
+
+        
+        $response = $this->call('GET',
+                                '/api/group/photos',
+                                [
+                                    'group_id' => 9
+                                ], [], [],
+                                ['HTTP_Authorization' => 'Bearer ' . $token['access_token']]);
+        print_r($response->getContent());
+        $this->assertEquals(200, $response->status());
+    }
 }
