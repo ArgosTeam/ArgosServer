@@ -85,4 +85,5 @@ Route::group(['middleware' => 'auth:api'], function () {
     ** Route regarding Notifications
     */
     Route::get('/notifs', 'NotificationController@getNotifications');
+    Route::post('/notif/mark_read', 'NotificationController@markAsRead');
 });

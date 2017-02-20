@@ -23,4 +23,14 @@ class NotificationController extends Controller
 
         return response($response, 200);
     }
+
+    public function markAsRead(Request $request) {
+        $notification_id = $request->input('notification_id');
+        if ($user->unreadNotifications->contains($notification_id)) {
+            $notification = Notification::find($notification_id);
+            $notification->markAsRead();
+            return response(['status' => 'success'], 200);
+        }
+        return response(['status' => 'No such notification'], 404);
+    }
 }
