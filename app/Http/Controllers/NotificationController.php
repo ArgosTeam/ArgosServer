@@ -28,7 +28,9 @@ class NotificationController extends Controller
         $user = Auth::user();
         $notification_id = $request->input('notification_id');
         if ($user->unreadNotifications->contains($notification_id)) {
-            $notification = $user->notifications()->where('id', '=', $notification_id);
+            $notification = $user->notifications()
+                          ->where('id', '=', $notification_id)
+                          ->first();
             $notification->markAsRead();
             return response(['status' => 'success'], 200);
         }
