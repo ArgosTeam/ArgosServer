@@ -52,8 +52,8 @@ class NotificationTest extends TestCase {
 
         $data = json_decode($response->getContent());
 
-        print_r($data);
         foreach ($data as $notification) {
+            print_r($notification);
             $response2 = $this->call('GET',
                                      '/api/notif/mark_read',
                                      [
