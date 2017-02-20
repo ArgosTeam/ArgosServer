@@ -20,6 +20,7 @@ class CreateUsersTable extends Migration
             $table->string('lastName');
             $table->enum('sex', ['male', 'female', 'unsure']);
             $table->string('email');
+            $table->string('phone');
             $table->string('username');
             $table->string('password');
             $table->integer('profile_pic_id')
