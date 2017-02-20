@@ -90,6 +90,7 @@ class User extends Authenticatable
      * @return mixed
      */
     public function findForPassport($phone) {
-        return User::where('phone', $phone);
+        return User::where('phone', $phone)
+            ->first();;
     }
 }
