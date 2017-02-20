@@ -60,6 +60,7 @@ class NotificationTest extends TestCase {
                                          'notification_id' => $notification->notification_id
                                      ], [], [],
                                      ['HTTP_Authorization' => 'Bearer ' . $token['access_token']]);
+            print_r($response2->getContent());
             $this->assertEquals(200, $response2->status());
         }
     }
