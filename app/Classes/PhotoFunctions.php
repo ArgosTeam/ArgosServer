@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Log;
+use App\Notifications\NewPublicPicture;
+use Illuminate\Notifications\Notification;
 
 class PhotoFunctions
 {
@@ -38,6 +40,10 @@ class PhotoFunctions
 
         //Upload avatar
         Storage::disk('s3')->put('avatar-' . $path, $avatar, 'public');
+
+        foreach ($user->followers()->get() as $follower) {
+            $follower->notify(new NewPublicPicture($user, $photo));
+        }
         
         return $photo;
     }
