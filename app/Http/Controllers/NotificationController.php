@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
-use Illuminate\Support\Facades\Notification;
+use Illuminate\Notifications\Notification;
 
 class NotificationController extends Controller
 {
@@ -28,7 +28,7 @@ class NotificationController extends Controller
         $user = Auth::user();
         $notification_id = $request->input('notification_id');
         if ($user->unreadNotifications->contains($notification_id)) {
-            $notification = Notification::find($notification_id);
+            $notification = $user->notifications()->where('id', '=', $notification_id);
             $notification->markAsRead();
             return response(['status' => 'success'], 200);
         }
