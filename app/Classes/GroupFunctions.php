@@ -41,15 +41,17 @@ class GroupFunctions
             ** Create hashtag if not exist
             ** Associate hashtag to group
             */
-            foreach ($request->input('hashtags') as $name) {
-                $hashtag = Hashtag::where('name', '=', $name)
-                         ->first();
-                if (!is_object($hashtag)) {
-                    $hashtag = Hashtag::create([
-                        'name' => $name
-                    ]);
+            if ($request->has('hashtags')) {
+                foreach ($request->input('hashtags') as $name) {
+                    $hashtag = Hashtag::where('name', '=', $name)
+                             ->first();
+                    if (!is_object($hashtag)) {
+                        $hashtag = Hashtag::create([
+                            'name' => $name
+                        ]);
+                    }
+                    $hashtag->groups()->attach($group);
                 }
-                $hashtag->groups()->attach($group);
             }
 
             $user->groups()->attach($group->id, [
