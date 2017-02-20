@@ -25,6 +25,7 @@ class NotificationController extends Controller
     }
 
     public function markAsRead(Request $request) {
+        $user = Auth::user();
         $notification_id = $request->input('notification_id');
         if ($user->unreadNotifications->contains($notification_id)) {
             $notification = Notification::find($notification_id);
