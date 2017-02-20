@@ -91,4 +91,27 @@ class   UserTest extends TestCase
         $this->assertEquals(200, $response->status());
     }
 
+    public function testFollow() {
+        $tokenResponse = $this->call('POST',
+                                     '/oauth/token',
+                                     [
+                                         'grant_type' => 'password',
+                                         'client_id' => '2',
+                                         'client_secret' => 'H9c9USUmSWsw2yxqxrnPbXl8sPvRfDCxztFc7xZ8',
+                                         'username' => 'aure.girardeau@gmail.com',
+                                         'password' => 'toto',
+                                         'scope' => '*'
+                                     ]);
+        $token = json_decode($tokenResponse->getContent(), true);
+
+        // Test album
+        $response = $this->call('POST',
+                    '/api/follow',
+                    [
+                        'user_id' => 1
+                    ], [], [],
+                    ['HTTP_Authorization' => 'Bearer ' . $token['access_token']]);
+        print_r($response->getContent());
+        $this->assertEquals(200, $response->status());
+    }
 }
