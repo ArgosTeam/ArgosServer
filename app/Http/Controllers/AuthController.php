@@ -16,16 +16,15 @@ class AuthController extends Controller
         $data = $request->all();
         \Illuminate\Support\Facades\Log::info('Showing request registerManual : ' . json_encode($data));
         //Check if object exists
-        $user = \App\Models\User::where('email', $data["email"])->orWhere('phone', $data["phone"])->first();
+        $user = \App\Models\User::where('phone', $data["phone"])->first();
 
         if(is_object($user)){
             return (response()->json(["registered" => false]));
         }
 
-
         //Create User
         $user = new \App\Models\User();
-        $user->email = $data["phone"];
+        $user->email = $data["email"];
         $user->firstName = $data["firstname"];
         $user->lastName = $data["lastname"];
         $user->username = (array_key_exists("username",$data))? $data["username"] : "";
@@ -35,6 +34,5 @@ class AuthController extends Controller
         $user->save();
 
         return (response()->json(["registered" => true, "user_id" => $user->id]));
-
     }
 }
