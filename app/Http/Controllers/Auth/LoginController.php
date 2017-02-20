@@ -36,4 +36,12 @@ class LoginController extends Controller
     {
         $this->middleware('guest', ['except' => 'logout']);
     }
+
+    public function authenticate()
+    {
+        if (Auth::attempt(['phone' => $phone, 'password' => $password])) {
+            // Authentication passed...
+            return response(['status' => 'Authenticated'], 200);
+        }
+    }
 }
