@@ -41,9 +41,6 @@ class PhotoFunctions
         //Upload avatar
         Storage::disk('s3')->put('avatar-' . $path, $avatar, 'public');
 
-        foreach ($user->followers()->get() as $follower) {
-            $follower->notify(new NewPublicPicture($user, $photo));
-        }
         
         return $photo;
     }
@@ -105,6 +102,13 @@ class PhotoFunctions
             'admin' => true
         ]);
 
+
+        if ($photo->public) {
+            foreach ($user->followers()->get() as $follower) {
+                $follower->notify(new NewPublicPicture($user, $photo));
+            }
+        }
+        
         return (response(['photo_id' => $photo->id], 200));
     }
 
