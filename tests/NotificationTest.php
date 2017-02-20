@@ -50,7 +50,7 @@ class NotificationTest extends TestCase {
                                 [], [], [],
                                 ['HTTP_Authorization' => 'Bearer ' . $token['access_token']]);
 
-        $data = $response->getContent();
+        $data = json_decode($response->getContent());
 
         print_r($data);
         $response2 = $this->call('GET',
