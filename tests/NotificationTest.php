@@ -52,13 +52,13 @@ class NotificationTest extends TestCase {
 
         $data = $response->getContent();
 
-        
+        print_r($data);
         $response2 = $this->call('GET',
                                  '/api/notif/mark_read',
                                  [
-                                     'notification_id' => $data['notification_id']
+                                     'notification_id' => $data->notification_id
                                  ], [], [],
                                  ['HTTP_Authorization' => 'Bearer ' . $token['access_token']]);
-        $this->assertEquals(200, $response->status());
+        $this->assertEquals(200, $response2->status());
     }
 }
