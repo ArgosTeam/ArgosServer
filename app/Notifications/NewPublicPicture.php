@@ -71,7 +71,7 @@ class NewPublicPicture extends Notification
     {
         return [
             'from_user_id' => $this->user->id,
-            'from_user_name' => $this->firstName . ' ' . $this->lastName,
+            'from_user_name' => $this->user->firstName . ' ' . $this->user->lastName,
             'path' => $this->path,
             'photo_id' => $this->photo->id
         ];
