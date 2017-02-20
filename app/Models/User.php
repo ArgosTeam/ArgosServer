@@ -16,7 +16,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'phone', 'email', 'password',
     ];
 
     /**
@@ -82,5 +82,14 @@ class User extends Authenticatable
     public function routeNotificationForSlack() {
         return 'https://hooks.slack.com/services/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';
     }
-    
+
+    /**
+     * Find the user identified by the given $identifier.
+     *
+     * @param $identifier email|phone
+     * @return mixed
+     */
+    public function findForPassport($phone) {
+        return User::where('phone', $phone);
+    }
 }
