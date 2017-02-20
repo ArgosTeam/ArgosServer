@@ -15,8 +15,8 @@ class GroupTest extends TestCase
                                      '/oauth/token',
                                      [
                                          'grant_type' => 'password',
-                                         'client_id' => '1',
-                                         'client_secret' => '8KD1qlhGoguCBCTZDgWsRtV1cU6OZtRrsOJT0cjb',
+                                         'client_id' => '2',
+                                         'client_secret' => 'H9c9USUmSWsw2yxqxrnPbXl8sPvRfDCxztFc7xZ8',
                                          'username' => 'aure.girardeau@gmail.com',
                                          'password' => 'toto',
                                          'scope' => '*'
@@ -46,9 +46,9 @@ class GroupTest extends TestCase
                                      '/oauth/token',
                                      [
                                          'grant_type' => 'password',
-                                         'client_id' => '1',
-                                         'client_secret' => '8KD1qlhGoguCBCTZDgWsRtV1cU6OZtRrsOJT0cjb',
-                                         'username' => 'aure.giardeau@gmail.com',
+                                         'client_id' => '2',
+                                         'client_secret' => 'H9c9USUmSWsw2yxqxrnPbXl8sPvRfDCxztFc7xZ8',
+                                         'username' => 'aure.girard@gmail.com',
                                          'password' => 'toto',
                                          'scope' => '*'
                                      ]);
@@ -58,7 +58,7 @@ class GroupTest extends TestCase
         $response = $this->call('POST',
                                 '/api/group/join',
                                 [
-                                    'group_id' => 9
+                                    'group_id' => 1
                                 ], [], [],
                                 ['HTTP_Authorization' => 'Bearer ' . $token['access_token']]);
         
@@ -71,8 +71,8 @@ class GroupTest extends TestCase
                                      '/oauth/token',
                                      [
                                          'grant_type' => 'password',
-                                         'client_id' => '1',
-                                         'client_secret' => '8KD1qlhGoguCBCTZDgWsRtV1cU6OZtRrsOJT0cjb',
+                                         'client_id' => '2',
+                                         'client_secret' => 'H9c9USUmSWsw2yxqxrnPbXl8sPvRfDCxztFc7xZ8',
                                          'username' => 'aure.girardeau@gmail.com',
                                          'password' => 'toto',
                                          'scope' => '*'
@@ -84,7 +84,7 @@ class GroupTest extends TestCase
                                 '/api/group/accept',
                                 [
                                     'user_id' => 1,
-                                    'group_id' => 9
+                                    'group_id' => 1
                                 ], [], [],
                                 ['HTTP_Authorization' => 'Bearer ' . $token['access_token']]);
         
@@ -97,8 +97,8 @@ class GroupTest extends TestCase
                                      '/oauth/token',
                                      [
                                          'grant_type' => 'password',
-                                         'client_id' => '1',
-                                         'client_secret' => '8KD1qlhGoguCBCTZDgWsRtV1cU6OZtRrsOJT0cjb',
+                                         'client_id' => '2',
+                                         'client_secret' => 'H9c9USUmSWsw2yxqxrnPbXl8sPvRfDCxztFc7xZ8',
                                          'username' => 'aure.girardeau@gmail.com',
                                          'password' => 'toto',
                                          'scope' => '*'
@@ -109,7 +109,7 @@ class GroupTest extends TestCase
         $response = $this->call('GET',
                                 '/api/group/infos',
                                 [
-                                    'id' => 9
+                                    'id' => 1
                                 ], [], [],
                                 ['HTTP_Authorization' => 'Bearer ' . $token['access_token']]);
         
@@ -122,8 +122,8 @@ class GroupTest extends TestCase
                                      '/oauth/token',
                                      [
                                          'grant_type' => 'password',
-                                         'client_id' => '1',
-                                         'client_secret' => '8KD1qlhGoguCBCTZDgWsRtV1cU6OZtRrsOJT0cjb',
+                                         'client_id' => '2',
+                                         'client_secret' => 'H9c9USUmSWsw2yxqxrnPbXl8sPvRfDCxztFc7xZ8',
                                          'username' => 'aure.girardeau@gmail.com',
                                          'password' => 'toto',
                                          'scope' => '*'
@@ -140,7 +140,7 @@ class GroupTest extends TestCase
                     '/api/group/profile_pic',
                     [
                         'image' => $base64,
-                        'group_id' => 9
+                        'group_id' => 1
                     ], [], [],
                     ['HTTP_Authorization' => 'Bearer ' . $token['access_token']]);
         print_r($response->getContent());
@@ -153,8 +153,8 @@ class GroupTest extends TestCase
                                      '/oauth/token',
                                      [
                                          'grant_type' => 'password',
-                                         'client_id' => '1',
-                                         'client_secret' => '8KD1qlhGoguCBCTZDgWsRtV1cU6OZtRrsOJT0cjb',
+                                         'client_id' => '2',
+                                         'client_secret' => 'H9c9USUmSWsw2yxqxrnPbXl8sPvRfDCxztFc7xZ8',
                                          'username' => 'aure.girardeau@gmail.com',
                                          'password' => 'toto',
                                          'scope' => '*'
@@ -165,8 +165,8 @@ class GroupTest extends TestCase
         $response = $this->call('POST',
                                 '/api/group/photo/link',
                                 [
-                                    'photo_id' => 29,
-                                    'group_id' => 9
+                                    'photo_id' => 1,
+                                    'group_id' => 1
                                 ], [], [],
                                 ['HTTP_Authorization' => 'Bearer ' . $token['access_token']]);
         $this->assertEquals(200, $response->status());
@@ -178,8 +178,8 @@ class GroupTest extends TestCase
                                      '/oauth/token',
                                      [
                                          'grant_type' => 'password',
-                                         'client_id' => '1',
-                                         'client_secret' => '8KD1qlhGoguCBCTZDgWsRtV1cU6OZtRrsOJT0cjb',
+                                         'client_id' => '2',
+                                         'client_secret' => 'H9c9USUmSWsw2yxqxrnPbXl8sPvRfDCxztFc7xZ8',
                                          'username' => 'aure.girardeau@gmail.com',
                                          'password' => 'toto',
                                          'scope' => '*'
@@ -190,7 +190,7 @@ class GroupTest extends TestCase
         $response = $this->call('GET',
                                 '/api/group/photos',
                                 [
-                                    'group_id' => 9
+                                    'group_id' => 1
                                 ], [], [],
                                 ['HTTP_Authorization' => 'Bearer ' . $token['access_token']]);
         print_r($response->getContent());

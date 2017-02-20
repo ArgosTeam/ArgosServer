@@ -18,8 +18,8 @@ class EventTest extends TestCase
                                      '/oauth/token',
                                      [
                                          'grant_type' => 'password',
-                                         'client_id' => '1',
-                                         'client_secret' => '8KD1qlhGoguCBCTZDgWsRtV1cU6OZtRrsOJT0cjb',
+                                         'client_id' => '2',
+                                         'client_secret' => 'H9c9USUmSWsw2yxqxrnPbXl8sPvRfDCxztFc7xZ8',
                                          'username' => 'aure.girardeau@gmail.com',
                                          'password' => 'toto',
                                          'scope' => '*'
@@ -47,9 +47,9 @@ class EventTest extends TestCase
                                      '/oauth/token',
                                      [
                                          'grant_type' => 'password',
-                                         'client_id' => '1',
-                                         'client_secret' => '8KD1qlhGoguCBCTZDgWsRtV1cU6OZtRrsOJT0cjb',
-                                         'username' => 'aure.giardeau@gmail.com',
+                                         'client_id' => '2',
+                                         'client_secret' => 'H9c9USUmSWsw2yxqxrnPbXl8sPvRfDCxztFc7xZ8',
+                                         'username' => 'aure.girard@gmail.com',
                                          'password' => 'toto',
                                          'scope' => '*'
                                      ]);
@@ -59,7 +59,7 @@ class EventTest extends TestCase
         $response = $this->call('POST',
                                 '/api/event/join',
                                 [
-                                    'event_id' => 3
+                                    'event_id' => 1
                                 ], [], [],
                                 ['HTTP_Authorization' => 'Bearer ' . $token['access_token']]);
         
@@ -72,8 +72,8 @@ class EventTest extends TestCase
                                      '/oauth/token',
                                      [
                                          'grant_type' => 'password',
-                                         'client_id' => '1',
-                                         'client_secret' => '8KD1qlhGoguCBCTZDgWsRtV1cU6OZtRrsOJT0cjb',
+                                         'client_id' => '2',
+                                         'client_secret' => 'H9c9USUmSWsw2yxqxrnPbXl8sPvRfDCxztFc7xZ8',
                                          'username' => 'aure.girardeau@gmail.com',
                                          'password' => 'toto',
                                          'scope' => '*'
@@ -85,7 +85,7 @@ class EventTest extends TestCase
                                 '/api/event/accept',
                                 [
                                     'user_id' => 1,
-                                    'event_id' => 3
+                                    'event_id' => 1
                                 ], [], [],
                                 ['HTTP_Authorization' => 'Bearer ' . $token['access_token']]);
         
@@ -97,8 +97,8 @@ class EventTest extends TestCase
                                      '/oauth/token',
                                      [
                                          'grant_type' => 'password',
-                                         'client_id' => '1',
-                                         'client_secret' => '8KD1qlhGoguCBCTZDgWsRtV1cU6OZtRrsOJT0cjb',
+                                         'client_id' => '2',
+                                         'client_secret' => 'H9c9USUmSWsw2yxqxrnPbXl8sPvRfDCxztFc7xZ8',
                                          'username' => 'aure.girardeau@gmail.com',
                                          'password' => 'toto',
                                          'scope' => '*'
@@ -109,7 +109,7 @@ class EventTest extends TestCase
         $response = $this->call('GET',
                                 '/api/event/infos',
                                 [
-                                    'id' => 3
+                                    'id' => 1
                                 ], [], [],
                                 ['HTTP_Authorization' => 'Bearer ' . $token['access_token']]);
         print_r($response->getContent());
@@ -122,8 +122,8 @@ class EventTest extends TestCase
                                      '/oauth/token',
                                      [
                                          'grant_type' => 'password',
-                                         'client_id' => '1',
-                                         'client_secret' => '8KD1qlhGoguCBCTZDgWsRtV1cU6OZtRrsOJT0cjb',
+                                         'client_id' => '2',
+                                         'client_secret' => 'H9c9USUmSWsw2yxqxrnPbXl8sPvRfDCxztFc7xZ8',
                                          'username' => 'aure.girardeau@gmail.com',
                                          'password' => 'toto',
                                          'scope' => '*'
@@ -140,7 +140,7 @@ class EventTest extends TestCase
                     '/api/event/profile_pic',
                     [
                         'image' => $base64,
-                        'event_id' => 3
+                        'event_id' => 1
                     ], [], [],
                     ['HTTP_Authorization' => 'Bearer ' . $token['access_token']]);
         print_r($response->getContent());
@@ -153,8 +153,8 @@ class EventTest extends TestCase
                                      '/oauth/token',
                                      [
                                          'grant_type' => 'password',
-                                         'client_id' => '1',
-                                         'client_secret' => '8KD1qlhGoguCBCTZDgWsRtV1cU6OZtRrsOJT0cjb',
+                                         'client_id' => '2',
+                                         'client_secret' => 'H9c9USUmSWsw2yxqxrnPbXl8sPvRfDCxztFc7xZ8',
                                          'username' => 'aure.girardeau@gmail.com',
                                          'password' => 'toto',
                                          'scope' => '*'
@@ -165,8 +165,8 @@ class EventTest extends TestCase
         $response = $this->call('POST',
                                 '/api/event/photo/link',
                                 [
-                                    'photo_id' => 29,
-                                    'event_id' => 3
+                                    'photo_id' => 1,
+                                    'event_id' => 1
                                 ], [], [],
                                 ['HTTP_Authorization' => 'Bearer ' . $token['access_token']]);
         $this->assertEquals(200, $response->status());
@@ -178,8 +178,8 @@ class EventTest extends TestCase
                                      '/oauth/token',
                                      [
                                          'grant_type' => 'password',
-                                         'client_id' => '1',
-                                         'client_secret' => '8KD1qlhGoguCBCTZDgWsRtV1cU6OZtRrsOJT0cjb',
+                                         'client_id' => '2',
+                                         'client_secret' => 'H9c9USUmSWsw2yxqxrnPbXl8sPvRfDCxztFc7xZ8',
                                          'username' => 'aure.girardeau@gmail.com',
                                          'password' => 'toto',
                                          'scope' => '*'
@@ -190,7 +190,7 @@ class EventTest extends TestCase
         $response = $this->call('GET',
                                 '/api/event/photos',
                                 [
-                                    'event_id' => 3
+                                    'event_id' => 1
                                 ], [], [],
                                 ['HTTP_Authorization' => 'Bearer ' . $token['access_token']]);
         print_r($response->getContent());

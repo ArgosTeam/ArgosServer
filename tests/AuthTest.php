@@ -18,8 +18,8 @@ class AuthTest extends TestCase
         $data = [
             'csrf_token' => csrf_token(),
             'grant_type' => 'password',
-            'client_id' => '1',
-            'client_secret' => '8KD1qlhGoguCBCTZDgWsRtV1cU6OZtRrsOJT0cjb',
+            'client_id' => '2',
+            'client_secret' => 'H9c9USUmSWsw2yxqxrnPbXl8sPvRfDCxztFc7xZ8',
             'phone' => 'aure.girard@gmail.com',
             'email' => 'aure.girard@gmail.com',
             'firstname' => 'test',
@@ -38,6 +38,30 @@ class AuthTest extends TestCase
                   ]);
     }
 
+    public function testRegisterManual2() {
+        $data = [
+            'csrf_token' => csrf_token(),
+            'grant_type' => 'password',
+            'client_id' => '2',
+            'client_secret' => 'H9c9USUmSWsw2yxqxrnPbXl8sPvRfDCxztFc7xZ8',
+            'phone' => 'aure.girardeau@gmail.com',
+            'email' => 'aure.girardeau@gmail.com',
+            'firstname' => 'Aurelien',
+            'lastname' => 'Girardeau',
+            'password' => 'toto',
+            'password_confirm' => 'toto',
+            'sex' => 'male',
+            'scope' => '*'
+        ];
+        $response = $this->json(
+            'POST',
+            '/register',
+            $data)
+                  ->seeJsonStructure([
+                      "registered"
+                  ]);
+    }
+    
     /*
     ** Test of Passport@Oauth@Token
     */
@@ -46,8 +70,8 @@ class AuthTest extends TestCase
                                 '/oauth/token',
                                 [
                                     'grant_type' => 'password',
-                                    'client_id' => '1',
-                                    'client_secret' => '8KD1qlhGoguCBCTZDgWsRtV1cU6OZtRrsOJT0cjb',
+                                    'client_id' => '2',
+                                    'client_secret' => 'H9c9USUmSWsw2yxqxrnPbXl8sPvRfDCxztFc7xZ8',
                                     'username' => 'aure.girard@gmail.com',
                                     'password' => 'toto',
                                     'scope' => '*'

@@ -15,8 +15,8 @@ class   FriendTest extends TestCase
                                      '/oauth/token',
                                      [
                                          'grant_type' => 'password',
-                                         'client_id' => '1',
-                                         'client_secret' => '8KD1qlhGoguCBCTZDgWsRtV1cU6OZtRrsOJT0cjb',
+                                         'client_id' => '2',
+                                         'client_secret' => 'H9c9USUmSWsw2yxqxrnPbXl8sPvRfDCxztFc7xZ8',
                                          'username' => 'aure.girardeau@gmail.com',
                                          'password' => 'toto',
                                          'scope' => '*'
@@ -39,9 +39,9 @@ class   FriendTest extends TestCase
                                      '/oauth/token',
                                      [
                                          'grant_type' => 'password',
-                                         'client_id' => '1',
-                                         'client_secret' => '8KD1qlhGoguCBCTZDgWsRtV1cU6OZtRrsOJT0cjb',
-                                         'username' => 'aure.giardeau@gmail.com',
+                                         'client_id' => '2',
+                                         'client_secret' => 'H9c9USUmSWsw2yxqxrnPbXl8sPvRfDCxztFc7xZ8',
+                                         'username' => 'aure.girard@gmail.com',
                                          'password' => 'toto',
                                          'scope' => '*'
                                      ]);
@@ -51,7 +51,7 @@ class   FriendTest extends TestCase
         $response = $this->call('POST',
                                 '/api/friend/accept',
                                  [
-                                    'user_id' => 3
+                                    'user_id' => 2
                                 ], [], [],
                                 ['HTTP_Authorization' => 'Bearer ' . $token['access_token']]);
         

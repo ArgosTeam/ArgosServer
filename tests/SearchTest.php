@@ -19,8 +19,8 @@ class SearchTest extends TestCase
                                 '/oauth/token',
                                 [
                                     'grant_type' => 'password',
-                                    'client_id' => '1',
-                                    'client_secret' => '8KD1qlhGoguCBCTZDgWsRtV1cU6OZtRrsOJT0cjb',
+                                    'client_id' => '2',
+                                    'client_secret' => 'H9c9USUmSWsw2yxqxrnPbXl8sPvRfDCxztFc7xZ8',
                                     'username' => 'aure.girardeau@gmail.com',
                                     'password' => 'toto',
                                     'scope' => '*'
@@ -41,8 +41,8 @@ class SearchTest extends TestCase
                                 '/oauth/token',
                                 [
                                     'grant_type' => 'password',
-                                    'client_id' => '1',
-                                    'client_secret' => '8KD1qlhGoguCBCTZDgWsRtV1cU6OZtRrsOJT0cjb',
+                                    'client_id' => '2',
+                                    'client_secret' => 'H9c9USUmSWsw2yxqxrnPbXl8sPvRfDCxztFc7xZ8',
                                     'username' => 'aure.girardeau@gmail.com',
                                     'password' => 'toto',
                                     'scope' => '*'
