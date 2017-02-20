@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Log;
 use App\Notifications\NewPublicPicture;
-use Illuminate\Notifications\Notification;
 
 class PhotoFunctions
 {

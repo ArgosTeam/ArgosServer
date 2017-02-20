@@ -80,4 +80,9 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/group/profile_pic', 'GroupController@profile_pic');
     Route::post('/group/photo/link', 'GroupController@link_photo');
     Route::get('/group/photos', 'GroupController@photos');
+
+    /*
+    ** Route regarding Notifications
+    */
+    Route::get('/notifs', 'NotificationController@getNotifications');
 });
