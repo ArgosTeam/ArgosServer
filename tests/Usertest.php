@@ -98,7 +98,7 @@ class   UserTest extends TestCase
                                          'grant_type' => 'password',
                                          'client_id' => '2',
                                          'client_secret' => 'H9c9USUmSWsw2yxqxrnPbXl8sPvRfDCxztFc7xZ8',
-                                         'username' => 'aure.girardeau@gmail.com',
+                                         'username' => 'aure.girard@gmail.com',
                                          'password' => 'toto',
                                          'scope' => '*'
                                      ]);
@@ -108,7 +108,7 @@ class   UserTest extends TestCase
         $response = $this->call('POST',
                     '/api/follow',
                     [
-                        'user_id' => 1
+                        'user_id' => 2
                     ], [], [],
                     ['HTTP_Authorization' => 'Bearer ' . $token['access_token']]);
         print_r($response->getContent());
