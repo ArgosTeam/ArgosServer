@@ -54,7 +54,7 @@ class NotificationTest extends TestCase {
 
         foreach ($data as $notification) {
             print_r($notification);
-            $response2 = $this->call('GET',
+            $response2 = $this->call('POST',
                                      '/api/notif/mark_read',
                                      [
                                          'notification_id' => $notification->notification_id
