@@ -13,9 +13,6 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        'Illuminate\Notifications\Events\NotificationSent' => [
-            'App\Listeners\LogNotification',
-        ],
     ];
 
     /**
