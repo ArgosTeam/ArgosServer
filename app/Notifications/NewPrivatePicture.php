@@ -6,6 +6,8 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Notifications\Messages\SlackMessage;
 use App\Models\Photo;
 use App\Models\User;
 
