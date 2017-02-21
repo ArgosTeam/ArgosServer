@@ -120,8 +120,11 @@ class PhotoFunctions
         } else {
             $user->notify(new NewPrivatePicture($user, $photo, 'slack'));
         }
+
+        if (!empty($users_to_share)) {
+            Notification::send($users_to_share, new NewPrivatePicture($user, $photo, 'database'));
+        }
         
-        Notification::send($users_to_share, new NewPrivatePicture($user, $photo, 'database'));
         return (response(['photo_id' => $photo->id], 200));
     }
 
