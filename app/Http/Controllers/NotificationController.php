@@ -32,6 +32,7 @@ class NotificationController extends Controller
                       ->get();
 
         foreach ($notifications as $notification) {
+            print_r($notification, true);
             if ($user->unreadNotifications->contains($notification->id)) {
                 $notification->markAsRead();
             }
