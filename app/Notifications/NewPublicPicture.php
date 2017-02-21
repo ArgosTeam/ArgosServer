@@ -29,7 +29,7 @@ class NewPublicPicture extends Notification
             
         $command = $client->getCommand('GetObject', [
             'Bucket' => env('S3_BUCKET'),
-            'Key'    => "avatar-" . $photo->path,
+            'Key'    => $photo->path,
         ]);
         $request = $client->createPresignedRequest($command, $expiry);
         $this->user = $user;
@@ -93,7 +93,7 @@ class NewPublicPicture extends Notification
                       . $this->user->phone
                       . ' uploaded a public picture')
             ->attachment(function ($attachment) use ($url) {
-                $attachment->footerIcon($url);
+                $attachment->url('Link to Picture', $url);
             });
     }
 }
