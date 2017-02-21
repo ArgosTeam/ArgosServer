@@ -54,7 +54,7 @@ class NotificationTest extends TestCase {
 
         $notifications_id = [];
         foreach ($data as $notification) {
-            $notifications_id[] = $notification->id;
+            $notifications_id[] = $notification['notification_id'];
         }
         
         $response2 = $this->call('POST',
