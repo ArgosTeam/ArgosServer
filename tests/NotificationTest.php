@@ -52,16 +52,18 @@ class NotificationTest extends TestCase {
 
         $data = json_decode($response->getContent());
 
+        $notifications_id = [];
         foreach ($data as $notification) {
-            print_r($notification);
-            $response2 = $this->call('POST',
-                                     '/api/notif/mark_read',
-                                     [
-                                         'notification_id' => $notification->notification_id
-                                     ], [], [],
-                                     ['HTTP_Authorization' => 'Bearer ' . $token['access_token']]);
-            print_r($response2->getContent());
-            $this->assertEquals(200, $response2->status());
+            $notifications_id[] = $notification->id;
         }
+        
+        $response2 = $this->call('POST',
+                                 '/api/notif/mark_read',
+                                 [
+                                     'notifications_id' => $notifications_id
+                                 ], [], [],
+                                 ['HTTP_Authorization' => 'Bearer ' . $token['access_token']]);
+        print_r($response2->getContent());
+        $this->assertEquals(200, $response2->status());
     }
 }

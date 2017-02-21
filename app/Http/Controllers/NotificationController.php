@@ -26,14 +26,16 @@ class NotificationController extends Controller
 
     public function markAsRead(Request $request) {
         $user = Auth::user();
-        $notification_id = $request->input('notification_id');
-        if ($user->unreadNotifications->contains($notification_id)) {
-            $notification = $user->notifications()
-                          ->where('id', '=', $notification_id)
-                          ->first();
-            $notification->markAsRead();
-            return response(['status' => 'success'], 200);
+        $notifications_id = $request->input('notifications_id');
+        $notifications = $user->notifications()
+                      ->whereIn('notifications.id', $notifications_id)
+                      ->get();
+
+        foreach ($notifications as $notification) {
+            if ($user->unreadNotifications->contains($notification->id)) {
+                $notification->markAsRead();
+            }
         }
-        return response(['status' => 'No such notification'], 404);
+        return response(['status' => 'success'], 200);
     }
 }
