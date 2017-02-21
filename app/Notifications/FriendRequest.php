@@ -18,10 +18,11 @@ class FriendRequest extends Notification
      *
      * @return void
      */
-    public function __construct(User $user, User $friend)
+    public function __construct(User $user, User $friend, $via)
     {
         $this->user = $user;
         $this->friend = $friend;
+        $this->via = $via;
     }
 
     /**
@@ -32,7 +33,7 @@ class FriendRequest extends Notification
      */
     public function via($notifiable)
     {
-        return ['slack'];
+        return [$this->via];
     }
 
     /**
@@ -58,7 +59,9 @@ class FriendRequest extends Notification
     public function toArray($notifiable)
     {
         return [
-            //
+            'from_user_id' => $this->friend->id,
+            'from_user_name' => $this->friend->firstName \
+                                . ' ' . $this->friend->lastName
         ];
     }
 

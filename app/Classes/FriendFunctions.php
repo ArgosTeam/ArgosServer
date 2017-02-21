@@ -18,7 +18,9 @@ class FriendFunctions
             'active' =>$active
         ]);
         if ($own) {
-            $user->notify(new FriendRequest($user, $friend));
+            $user->notify(new FriendRequest($user, $friend, 'slack'));
+        } else {
+            $user->notify(new FriendRequest($user, $friend, 'database'));
         }
         return response(['status' => 'success'], 200);
     }
