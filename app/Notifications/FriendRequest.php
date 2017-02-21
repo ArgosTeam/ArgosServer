@@ -60,7 +60,7 @@ class FriendRequest extends Notification
     {
         return [
             'from_user_id' => $this->friend->id,
-            'from_user_name' => $this->friend->firstName \
+            'from_user_name' => $this->friend->firstName
                                 . ' ' . $this->friend->lastName
         ];
     }
