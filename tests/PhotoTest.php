@@ -76,7 +76,8 @@ class   PhotoTest extends TestCase
                             '#arthurlapute'
                         ],
                         'mode' => 'normal',
-                        'public' => true
+                        'public' => false,
+                        'rights' => [1]
                     ], [], [],
                     ['HTTP_Authorization' => 'Bearer ' . $token['access_token']]);
         print_r($response->getContent());
