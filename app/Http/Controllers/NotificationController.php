@@ -5,7 +5,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use App\Models\User;
-use Illuminate\Notifications\Notification;
 
 class NotificationController extends Controller
 {

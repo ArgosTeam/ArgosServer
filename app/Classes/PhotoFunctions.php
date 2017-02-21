@@ -11,10 +11,10 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Notification;
 use App\Notifications\NewPublicPicture;
 use App\Notifications\NewPrivatePicture;
 use App\Models\User;
-use Illuminate\Notifications\Notification;
 
 class PhotoFunctions
 {
