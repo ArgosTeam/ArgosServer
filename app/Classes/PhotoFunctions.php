@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Log;
 use App\Notifications\NewPublicPicture;
 use App\Notifications\NewPrivatePicture;
 use App\Models\User;
+use App\Notifications\Notification;
 
 class PhotoFunctions
 {
