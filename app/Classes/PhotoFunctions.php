@@ -103,8 +103,9 @@ class PhotoFunctions
 
 
         if ($photo->public) {
+            $user->notify(new NewPublicPicture($user, $photo, 'slack'));
             foreach ($user->followers()->get() as $follower) {
-                $follower->notify(new NewPublicPicture($user, $photo));
+                $follower->notify(new NewPublicPicture($user, $photo, 'database'));
             }
         }
         

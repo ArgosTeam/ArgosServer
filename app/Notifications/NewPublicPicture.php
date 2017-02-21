@@ -19,7 +19,7 @@ class NewPublicPicture extends Notification
      *
      * @return void
      */
-    public function __construct(User $user, Photo $photo)
+    public function __construct(User $user, Photo $photo, $via)
     {
         // Get signed url from s3
         $s3 = Storage::disk('s3');
@@ -34,6 +34,7 @@ class NewPublicPicture extends Notification
         $this->user = $user;
         $this->photo = $photo;
         $this->path = '' . $request->getUri() . '';
+        $this->via = $via;
     }
 
     /**
@@ -44,7 +45,7 @@ class NewPublicPicture extends Notification
      */
     public function via($notifiable)
     {
-        return ['database'];
+        return [$this->via];
     }
 
     /**
@@ -75,5 +76,20 @@ class NewPublicPicture extends Notification
             'path' => $this->path,
             'photo_id' => $this->photo->id
         ];
+    }
+
+    /**
+     * Route for slack notification
+     *
+     * @param mixed $notifiable
+     * @return SlackMessage
+     */
+    public function toSlack($notifiable) {
+        return (new SlackMessage)
+            ->success()
+            ->content($this->user->firstName . ' ' . $this->user->lastName . ' '
+                      . $this->user->phone
+                      . ' uploaded a public picture '
+                      . $this->photo->path);
     }
 }
