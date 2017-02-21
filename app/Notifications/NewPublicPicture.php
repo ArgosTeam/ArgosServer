@@ -91,6 +91,6 @@ class NewPublicPicture extends Notification
             ->content($this->user->firstName . ' ' . $this->user->lastName . ' '
                       . $this->user->phone
                       . ' uploaded a public picture '
-                      . $this->photo->path);
+                      . $this->path);
     }
 }
