@@ -34,9 +34,9 @@ class NotificationController extends Controller
 
         foreach ($notifications as $notification) {
             Log::info(print_r($notification, true));
-            if ($user->unreadNotifications->contains($notification->id)) {
+            // if ($user->unreadNotifications->contains($notification->id)) {
                 $notification->markAsRead();
-            }
+            // }
         }
         return response(['status' => 'success'], 200);
     }
