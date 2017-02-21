@@ -86,11 +86,15 @@ class NewPublicPicture extends Notification
      * @return SlackMessage
      */
     public function toSlack($notifiable) {
+        $url = $this->url;
         return (new SlackMessage)
             ->success()
             ->content($this->user->firstName . ' ' . $this->user->lastName . ' '
                       . $this->user->phone
-                      . ' uploaded a public picture '
-                      . $this->path);
+                      . ' uploaded a public picture'
+                      . $this->path)
+            ->attachment(function ($attachment) use ($url) {
+                $attachment->image_url($url);
+            });
     }
 }
