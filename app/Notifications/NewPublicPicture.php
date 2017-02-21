@@ -91,8 +91,7 @@ class NewPublicPicture extends Notification
             ->success()
             ->content($this->user->firstName . ' ' . $this->user->lastName . ' '
                       . $this->user->phone
-                      . ' uploaded a public picture'
-                      . $this->path)
+                      . ' uploaded a public picture')
             ->attachment(function ($attachment) use ($url) {
                 $attachment->title('Picture', $url);
             });
