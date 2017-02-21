@@ -166,7 +166,7 @@ class EventTest extends TestCase
                                 '/api/event/photo/link',
                                 [
                                     'photo_id' => 1,
-                                    'event_id' => 1
+                                    'events_id' => [1]
                                 ], [], [],
                                 ['HTTP_Authorization' => 'Bearer ' . $token['access_token']]);
         $this->assertEquals(200, $response->status());

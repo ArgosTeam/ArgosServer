@@ -166,7 +166,7 @@ class GroupTest extends TestCase
                                 '/api/group/photo/link',
                                 [
                                     'photo_id' => 1,
-                                    'group_id' => 1
+                                    'groups_id' => [1]
                                 ], [], [],
                                 ['HTTP_Authorization' => 'Bearer ' . $token['access_token']]);
         $this->assertEquals(200, $response->status());
