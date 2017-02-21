@@ -13,6 +13,7 @@ use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Log;
 use App\Notifications\NewPublicPicture;
 use App\Notifications\NewPrivatePicture;
+use App\Models\User;
 
 class PhotoFunctions
 {
