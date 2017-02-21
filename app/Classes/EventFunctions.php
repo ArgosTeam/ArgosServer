@@ -196,30 +196,35 @@ class EventFunctions
         return response(['photo_id' => $photo->id], 200);
     }
 
-    public static function link_photo($user, $photo_id, $event_id) {
-        $event = Event::find($event_id);
-        if (!is_object($event)) {
-            return response(['status' => 'Event does not exists'], 404);
-        }
-        if (!$event->users->contains($user->id)) {
-            return response(['status' => 'Access to event denied'], 404);
-        }
+    public static function link_photo($user, $photo_id, $events_id) {
+        $events = Event::whereIn('events.id', $events_id)->get();
 
         $photo = Photo::find($photo_id);
         if (!is_object($photo)) {
             return response('Photo does not exist');
         }
+
         if (!$photo->users->contains($user->id)) {
             return response(['status' => 'This photo does not belong to you'], 404);
         }
+        
+        foreach ($events as $event) {
+            if (!is_object($event)) {
+                return response(['status' => 'Event does not exists'], 404);
+            }
+            
+            if (!$event->users->contains($user->id)) {
+                return response(['status' => 'Access to event denied'], 404);
+            }
 
-        if (is_object($event->photos)
-            && $event->photos->contains($photo->id)) {
-            return response('Photo already linked to event', 404);
+            if (is_object($event->photos)
+                && $event->photos->contains($photo->id)) {
+                return response('Photo already linked to event', 404);
+            }
+            $event->photos()->attach($photo->id);
         }
-        $event->photos()->attach($photo->id);
-
-        return response(['status' => 'Photo linked to event'], 200);
+        
+        return response(['status' => 'Photo linked to events'], 200);
     }
 
     public static function photos($user, $event_id) {
