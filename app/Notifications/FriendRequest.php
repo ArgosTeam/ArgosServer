@@ -73,12 +73,13 @@ class FriendRequest extends Notification
             ->content($this->user->firstName . ' ' . $this->user->lastName
                       . ' sent a friend request to '
                       . $this->friend->firstName . ' ' . $this->friend->lastName)
-            ->attachment(function ($attachment) use ($user_id, $friend_id) {
-                    $attachment->title('More info')
-                               ->fields([
-                                    'user_id' => $user_id,
-                                    'friend_id' => $friend_id
-                                ]);
-            });
+            // ->attachment(function ($attachment) use ($user_id, $friend_id) {
+            //         $attachment->title('More info')
+            //                    ->fields([
+            //                         'user_id' => $user_id,
+            //                         'friend_id' => $friend_id
+            //                     ]);
+            // })
+            ;
     }
 }
