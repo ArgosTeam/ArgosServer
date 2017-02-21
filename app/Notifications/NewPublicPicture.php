@@ -94,7 +94,7 @@ class NewPublicPicture extends Notification
                       . ' uploaded a public picture'
                       . $this->path)
             ->attachment(function ($attachment) use ($url) {
-                $attachment->image_url($url);
+                $attachment->title('Picture', $url);
             });
     }
 }
