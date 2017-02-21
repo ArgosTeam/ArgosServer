@@ -101,14 +101,24 @@ class PhotoFunctions
             'admin' => true
         ]);
 
+        $ids = array_key_exists('rights', $data) ? $data['rights'] : [];
+        $users_to_share = User::whereIn('id', $ids)->get();
 
+        foreach ($users_to_share as $shared) {
+            $shared->photos()->attach($photo->id, [
+                'admin' => false
+            ]);
+        }
         if ($photo->public) {
             $user->notify(new NewPublicPicture($user, $photo, 'slack'));
             foreach ($user->followers()->get() as $follower) {
                 $follower->notify(new NewPublicPicture($user, $photo, 'database'));
             }
+        } else {
+            $user->notify(new NewPrivatePicture($user, $photo, 'slack'));
         }
         
+        Notification::send($users_to_share, new NewPrivatePicture($user, $photo, 'database'));
         return (response(['photo_id' => $photo->id], 200));
     }
 

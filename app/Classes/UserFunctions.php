@@ -73,7 +73,8 @@ class UserFunctions
     }
 
     public static function getUserAlbum($user, $all) {
-        $photos = $user->photos();
+        $photos = $user->photos()
+                ->where('admin', '=', true);
         if (!$all) {
             $photos->where('public', '=', true);
         }
