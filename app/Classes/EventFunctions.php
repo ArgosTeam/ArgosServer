@@ -105,6 +105,17 @@ class EventFunctions
         return response(['status' => 'Event does not exist'], 404);
     }
 
+    public static function acceptInvite($user, $event_id) {
+        $event = Event::find($event_id);
+        if (is_object($event)) {
+            $event->users()->updateExistingPivot($user->id, [
+                'status' => 'acccepted'
+            ]);
+            return response(['status' => 'Invite accepted'], 200);
+        }
+        return response(['status' => 'Event does not exist'], 404);
+    }
+
     public static function acceptPrivateJoin($currentUser, $user_id, $event_id) {
         $event = Event::join('event_user', function ($join) {
             $join->on('events.id', '=', 'event_user.event_id');

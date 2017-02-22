@@ -52,7 +52,8 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/event/profile_pic', 'EventController@profile_pic');
     Route::post('/event/photo/link', 'EventController@link_photo');
     Route::get('/event/photos', 'EventController@photos');
-    Route::post('/event/invite', 'GroupController@invite');
+    Route::post('/event/invite', 'EventController@invite');
+    Route::post('/event/accept_invite', 'EventController@accept_invite');
 
     /*
     ** Routes regarding search actions
@@ -82,6 +83,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/group/photo/link', 'GroupController@link_photo');
     Route::get('/group/photos', 'GroupController@photos');
     Route::post('/group/invite', 'GroupController@invite');
+    Route::post('/group/accept_invite', 'GroupController@accept_invite');
 
     /*
     ** Route regarding Notifications

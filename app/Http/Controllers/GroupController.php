@@ -61,4 +61,10 @@ class GroupController extends Controller
         $users_id = $request->input('users_id');
         return GroupFunctions::invite($user, $group_id, $users_id);
     }
+
+    public function accept_invite(Request $request) {
+        $user = Auth::user();
+        $group_id = $request->input('group_id');
+        return GroupFunctions::acceptInvite($user, $group_id);
+    }
 }

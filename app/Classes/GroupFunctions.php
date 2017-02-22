@@ -110,6 +110,17 @@ class GroupFunctions
         return response(['status' => 'Group does not exist'], 404);
     }
 
+    public static function acceptInvite($user, $group_id) {
+        $group = Group::find($group_id);
+        if (is_object($group)) {
+            $group->users()->updateExistingPivot($user->id, [
+                'status' => 'acccepted'
+            ]);
+            return response(['status' => 'Invite accepted'], 200);
+        }
+        return response(['status' => 'Group does not exist'], 404);
+    }
+    
     public static function acceptPrivateJoin($currentUser, $user_id, $group_id) {
         $group = Group::join('group_user', function ($join) {
             $join->on('groups.id', '=', 'group_user.group_id');
