@@ -101,13 +101,27 @@ class GroupFunctions
     public static function infos($user, $group_id) {
         $group = Group::find($group_id);
         if (is_object($group)) {
-            $belong =$group->users()
-                    ->where('users.id', '=', $user->id)
-                    ->first();
+            
 
             $data = [];
+            $profile_pic = $group->profile_pic()->first();
+            $pofile_pic_path = null;
+            // Get signed url from s3
+            if (is_object($profile_pic)) {
+                $s3 = Storage::disk('s3');
+                $client = $s3->getDriver()->getAdapter()->getClient();
+                $expiry = "+10 minutes";
+                
+                $command = $client->getCommand('GetObject', [
+                    'Bucket' => env('S3_BUCKET'),
+                    'Key'    => "avatar-" . $profile_pic->path,
+                ]);
+                $request = $client->createPresignedRequest($command, $expiry);
+                $pofile_pic_path = '' . $request->getUri() . '';
+            }
+            
             $data['id'] = $group_id;
-            $data['profile_pic'] = '';
+            $data['profile_pic'] = $profile_pic_path;
             $data['name'] = $group->name;
             $data['hashtags'] = [];
             $hashtags = $group->hashtags()->get();
@@ -119,6 +133,11 @@ class GroupFunctions
             }
             $data['address'] = $group->address;
             $data['date'] = $group->created_at;
+
+            $belong =$group->users()
+                    ->where('users.id', '=', $user->id)
+                    ->first();
+            
             if (is_object($belong)) {
                 $data['belong'] = true;
                 $data['admin'] = $belong->pivot->admin;

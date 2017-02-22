@@ -20,10 +20,27 @@ class UserFunctions
         $friendShip = Friend::where('user_id', '=', $user->id)
                     ->where('friend_id', '=', $userProfile->id)
                     ->first();
+        $profile_pic = $userProfile->profile_pic()->first();
+        $profile_pic_path = null;
+
+        if (is_object($profile_pic)) {
+            // Get signed url from s3
+            $s3 = Storage::disk('s3');
+            $client = $s3->getDriver()->getAdapter()->getClient();
+            $expiry = "+10 minutes";
+            
+            $command = $client->getCommand('GetObject', [
+                'Bucket' => env('S3_BUCKET'),
+                'Key'    => "avatar-" . $photo->path,
+            ]);
+            $request = $client->createPresignedRequest($command, $expiry);
+            $profile_pic_path = '' . $request->getUri() . '';
+        }
+        
         $response = [];
         $response['id'] = $userProfile->id;
         $response['nickname'] = '';
-        $response['profile_pic'] = '';
+        $response['profile_pic'] = $profile_pic_path;
         $response['name'] = $userProfile->firstName;
         $response['surname'] = $userProfile->lastName;
         $response['university'] = '';

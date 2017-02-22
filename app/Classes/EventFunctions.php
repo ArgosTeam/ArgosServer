@@ -114,13 +114,27 @@ class EventFunctions
         if (!is_object($event)) {
             return response('Event does not exist', 404);
         }
-        $belong = $user->events()
-                ->where('events.id', '=', $event_id)
-                ->first();
-
+     
         $data = [];
+        $profile_pic = $event->profile_pic()->first();
+        $pofile_pic_path = null;
+        // Get signed url from s3
+        if (is_object($profile_pic)) {
+            $s3 = Storage::disk('s3');
+            $client = $s3->getDriver()->getAdapter()->getClient();
+            $expiry = "+10 minutes";
+            
+            $command = $client->getCommand('GetObject', [
+                'Bucket' => env('S3_BUCKET'),
+                'Key'    => "avatar-" . $profile_pic->path,
+            ]);
+            $request = $client->createPresignedRequest($command, $expiry);
+            $pofile_pic_path = '' . $request->getUri() . '';
+        }
+        
+        
         $data['name'] = $event->name;
-        $data['profile_pic'] = '';
+        $data['profile_pic'] = $profile_pic_path;
         $data['description'] = $event->description;
         $data['hashtags'] = [];
         foreach ($event->hashtags()->get() as $hashtag) {
@@ -132,6 +146,11 @@ class EventFunctions
         $data['date'] = $event->start;
         $data['expires'] = $event->expires;
         $data['address'] = '';
+
+        $belong = $user->events()
+                ->where('events.id', '=', $event_id)
+                ->first();
+        
         if (is_object($belong)) {
             $data['participate'] = ($belong->pivot->status === 'accepted' ? true : false);
             $data['pending'] = ($belong->pivot->status === 'pending' ? true : false);
