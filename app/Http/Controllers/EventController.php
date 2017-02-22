@@ -22,11 +22,18 @@ class EventController extends Controller
         return EventFunctions::join($user, $event_id);
     }
 
-    public function accept(Request $request){
+    public function accept_join(Request $request){
         $user = Auth::user();
         $user_id = $request->input('user_id');
         $event_id = $request->input('event_id');
-        return EventFunctions::accept($user, $user_id, $event_id);
+        return EventFunctions::acceptPrivateJoin($user, $user_id, $event_id);
+    }
+
+    public function invite(Request $request) {
+        $user = Auth::user();
+        $event_id = $request->input('event_id');
+        $users_id = $request->input('users_id');
+        return EventFunctions::invite($user, $event_id, $users_id);
     }
 
     public function refuse(Request $request){

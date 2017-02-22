@@ -22,11 +22,11 @@ class GroupController extends Controller
         return GroupFunctions::join($user, $group_id);
     }
 
-    public function accept(Request $request) {
+    public function accept_join(Request $request) {
         $user = Auth::user();
         $user_id = $request->input('user_id');
         $group_id = $request->input('group_id');
-        return GroupFunctions::accept($user, $user_id, $group_id);
+        return GroupFunctions::acceptPrivateJoin($user, $user_id, $group_id);
     }
 
     public function infos(Request $request) {
@@ -53,5 +53,12 @@ class GroupController extends Controller
         $user = Auth::user();
         $group_id = $request->input('group_id');
         return GroupFunctions::photos($user, $group_id);
+    }
+
+    public function invite(Request $request) {
+        $user = Auth::user();
+        $group_id = $request->input('group_id');
+        $users_id = $request->input('users_id');
+        return GroupFunctions::invite($user, $group_id, $users_id);
     }
 }

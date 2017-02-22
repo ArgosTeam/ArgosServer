@@ -70,16 +70,47 @@ class GroupFunctions
         $group = Group::find($group_id);
         if (is_object($group)
             && !$user->groups->contains($group_id)) {
-            $user->groups()->attach($group_id, [
-                'status' => 'pending',
-                'admin' => false
-            ]);
-            return response('Join request sent', 200);
+            if ($group->public) {
+                $pivot = [
+                    'status' => 'accepted',
+                    'admin' => false
+                ];
+                $status = 'Group joined successfully';
+            } else {
+                $pivot = [
+                    'status' => 'pending',
+                    'admin' => false
+                ];
+                $status = 'Join request sent, waiting for accept';
+            }
+            
+            $user->groups()->attach($group_id, $pivot);
+            return response(['status' => $status], 200);
         }
-        return response('Group does not exist or invite already exists', 404);
+        return response(['status' => 'Group does not exist or invite already exists'], 404);
     }
 
-    public static function accept($currentUser, $user_id, $group_id) {
+    public static function invite($user, $group_id, $users_id) {
+        $group = Group::find($group_id);
+        if (is_object($group)) {
+            if ($user->groups->contains($group_id)) {
+                foreach ($users_id as $user_id) {
+                    $group->users()->attach($user_id, [
+                        'status' => 'invited',
+                        'admin' => false
+                    ]);
+                    // TODO : Add InvitedGroup Notification
+                    
+                }
+
+                return response(['status' => 'Invites sent'], 200);
+            }
+            return response(['status' => 'Access refused'], 404);
+        }
+        return response(['status' => 'Group does not exist'], 404);
+    }
+
+    public static function acceptPrivateJoin($currentUser, $user_id, $group_id) {
         $group = Group::join('group_user', function ($join) {
             $join->on('groups.id', '=', 'group_user.group_id');
         })
@@ -92,9 +123,9 @@ class GroupFunctions
                 'status' => 'accepted',
                 'admin' => false
             ]);
-            return response('Join request sent', 200);
+            return response(['status' => 'Accepted'], 200);
         } else {
-            return response('Access refused, need to be admin, or group does not exist', 404);
+            return response(['status' => 'Access refused, need to be admin, or group does not exist'], 404);
         }
     }
 
@@ -102,7 +133,6 @@ class GroupFunctions
         $group = Group::find($group_id);
         if (is_object($group)) {
             
-
             $data = [];
             $profile_pic = $group->profile_pic()->first();
             $pofile_pic_path = null;

@@ -45,13 +45,14 @@ Route::group(['middleware' => 'auth:api'], function () {
     */
     Route::post('/event/add',           'EventController@add');
     Route::post('/event/join', 'EventController@join');
-    Route::post('/event/accept', 'EventController@accept');
+    Route::post('/event/accept_join', 'EventController@accept_join');
     //Route::post'/event/refuse', 'EventController@refuse');
     Route::get('/event/infos', 'EventController@infos');
     Route::post('/event/comment', 'EventController@comment');
     Route::post('/event/profile_pic', 'EventController@profile_pic');
     Route::post('/event/photo/link', 'EventController@link_photo');
     Route::get('/event/photos', 'EventController@photos');
+    Route::post('/event/invite', 'GroupController@invite');
 
     /*
     ** Routes regarding search actions
@@ -75,11 +76,12 @@ Route::group(['middleware' => 'auth:api'], function () {
     */
     Route::post('/group/add', 'GroupController@add');
     Route::post('/group/join', 'GroupController@join');
-    Route::post('/group/accept', 'GroupController@accept');
+    Route::post('/group/accept_join', 'GroupController@accept_join');
     Route::get('/group/infos', 'GroupController@infos');
     Route::post('/group/profile_pic', 'GroupController@profile_pic');
     Route::post('/group/photo/link', 'GroupController@link_photo');
     Route::get('/group/photos', 'GroupController@photos');
+    Route::post('/group/invite', 'GroupController@invite');
 
     /*
     ** Route regarding Notifications

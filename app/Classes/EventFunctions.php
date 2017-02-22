@@ -85,7 +85,27 @@ class EventFunctions
         return response('Event does not exist or invite already exists', 404);
     }
 
-    public static function accept($currentUser, $user_id, $event_id) {
+    public static function invite($user, $event_id, $users_id) {
+        $event = Event::find($event_id);
+        if (is_object($event)) {
+            if ($user->events->contains($event_id)) {
+                foreach ($users_id as $user_id) {
+                    $event->users()->attach($user_id, [
+                        'status' => 'invited',
+                        'admin' => false
+                    ]);
+                    // TODO : Add InvitedEvent Notification
+                    
+                }
+
+                return response(['status' => 'Invites sent'], 200);
+            }
+            return response(['status' => 'Access refused'], 404);
+        }
+        return response(['status' => 'Event does not exist'], 404);
+    }
+
+    public static function acceptPrivateJoin($currentUser, $user_id, $event_id) {
         $event = Event::join('event_user', function ($join) {
             $join->on('events.id', '=', 'event_user.event_id');
         })
