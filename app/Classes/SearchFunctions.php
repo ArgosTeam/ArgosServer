@@ -125,11 +125,30 @@ class SearchFunctions {
     public static function  events($currentUser, $nameBegin, $knownOnly) {
         $events = SearchFunctions::getEvents($currentUser, $nameBegin, $knownOnly);
         $data = [];
+
+        
         
         foreach ($events as $event) {
+            $profile_pic = $event->profile_pic()->first();
+            $profile_pic_path = null;
+            if (is_object($profile_pic)) {
+                // Get signed url from s3
+                $s3 = Storage::disk('s3');
+                $client = $s3->getDriver()->getAdapter()->getClient();
+                $expiry = "+10 minutes";
+                
+                $command = $client->getCommand('GetObject', [
+                    'Bucket' => env('S3_BUCKET'),
+                    'Key'    => "avatar-" . $profile_pic->path,
+                ]);
+                $request = $client->createPresignedRequest($command, $expiry);
+                $profile_pic_path = '' . $request->getUri() . '';
+            }
+
+            
             $newEntry = [];
             $newEntry['id'] = $event->id;
-            $newEntry['url'] = null;
+            $newEntry['profile_pic'] = $profile_pic_path;
             $newEntry['name'] = $event->name;
             if (is_object($event->pivot)) {
                 $newEntry['accepted'] = ($event->pivot->status == "accepted" ? true : false);
