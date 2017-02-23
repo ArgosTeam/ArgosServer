@@ -62,9 +62,9 @@ class UserFunctions
     public static function follow($user, $user_id) {
         if (is_object(User::find($user_id))) {
             $user->followed()->attach($user_id);
-            return response('Succes', 200);
+            return response(['status' => 'Succes'], 200);
         } else {
-            return response('User does not exist', 404);
+            return response(['status' => 'User does not exist'], 404);
         }
     }
 
