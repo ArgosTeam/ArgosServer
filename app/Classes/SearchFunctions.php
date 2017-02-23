@@ -25,7 +25,7 @@ class SearchFunctions {
                });
 
         if ($self) {
-            $query->where('id', '!=', $user->id);
+            $query->where('users.id', '!=', $user->id);
         }
         return $query->get();
     }
@@ -35,7 +35,7 @@ class SearchFunctions {
         if ($self) {
             $ids[] = $user->id;
         }
-        return User::whereNotIn('id', $ids)
+        return User::whereNotIn('users.id', $ids)
             ->where(function ($query) use ($nameBegin) {
                 $query->where('firstName', 'like', $nameBegin . '%')
                       ->orWhere('lastName', 'like', $nameBegin . '%');
