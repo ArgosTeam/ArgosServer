@@ -155,7 +155,7 @@ class GroupFunctions
                 
                 $command = $client->getCommand('GetObject', [
                     'Bucket' => env('S3_BUCKET'),
-                    'Key'    => "avatar-" . $profile_pic->path,
+                    'Key'    => $profile_pic->path,
                 ]);
                 $request = $client->createPresignedRequest($command, $expiry);
                 $profile_pic_path = '' . $request->getUri() . '';
