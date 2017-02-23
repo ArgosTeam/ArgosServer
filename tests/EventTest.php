@@ -212,7 +212,7 @@ class EventTest extends TestCase
         $token = json_decode($tokenResponse->getContent(), true);
 
         
-        $response = $this->call('GET',
+        $response = $this->call('POST',
                                 '/api/group/invite',
                                 [
                                     'event_id' => 1,
