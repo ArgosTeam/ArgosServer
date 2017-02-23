@@ -146,7 +146,7 @@ class GroupFunctions
             
             $data = [];
             $profile_pic = $group->profile_pic()->first();
-            $pofile_pic_path = null;
+            $profile_pic_path = null;
             // Get signed url from s3
             if (is_object($profile_pic)) {
                 $s3 = Storage::disk('s3');
@@ -158,7 +158,7 @@ class GroupFunctions
                     'Key'    => "avatar-" . $profile_pic->path,
                 ]);
                 $request = $client->createPresignedRequest($command, $expiry);
-                $pofile_pic_path = '' . $request->getUri() . '';
+                $profile_pic_path = '' . $request->getUri() . '';
             }
             
             $data['id'] = $group_id;
