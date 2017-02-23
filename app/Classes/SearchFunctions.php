@@ -10,6 +10,7 @@ use App\Models\Friend;
 use App\Models\Hashtag;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class SearchFunctions {
 
@@ -17,32 +18,51 @@ class SearchFunctions {
     /*
     ** Search Users
     */
-    private static function getKnownUsers($user, $nameBegin) {
-        return $user->getFriends()
-            ->where('firstName', 'like', $nameBegin . '%')
-            ->orWhere('lastName', 'like', $nameBegin . '%')
-            ->get();
+    private static function getKnownUsers($user, $nameBegin, $self = false) {
+        $query = $user->getFriends()
+               ->where(function ($query) use ($nameBegin) {
+                   $query->where('firstName', 'like', $nameBegin . '%')
+                         ->orWhere('lastName', 'like', $nameBegin . '%');
+               });
+
+        if ($self) {
+            $query->where('id', '!=', $user->id);
+        }
+        return $query->get();
     }
 
-    private static function getUnknownUsers($user, $nameBegin, $limit) {
+    private static function getUnknownUsers($user, $nameBegin, $limit, $self = false) {
         $ids = $user->getFriends()->get()->pluck('id');
+        if ($self) {
+            $ids[] = $user->id;
+        }
         return User::whereNotIn('id', $ids)
-            ->where('firstName', 'like', $nameBegin . '%')
-            ->orWhere('lastName', 'like', $nameBegin . '%')
+            ->where(function ($query) use ($nameBegin) {
+                $query->where('firstName', 'like', $nameBegin . '%')
+                      ->orWhere('lastName', 'like', $nameBegin . '%');
+            })
             ->limit(15)
             ->get();
     }
     
-    private static function getUsers($user, $nameBegin, $knownOnly) {
-        $users = SearchFunctions::getknownUsers($user, $nameBegin);
+    private static function getUsers($user, $nameBegin, $knownOnly, $self = false) {
+        $users = SearchFunctions::getknownUsers($user, $nameBegin, $self);
         if (!$knownOnly && ($limit = 15 - $users->count()) > 0) {
-            $users = $users->merge(SearchFunctions::getUnknownUsers($user, $nameBegin, $limit));
+            $users = $users->merge(SearchFunctions::getUnknownUsers($user,
+                                                                    $nameBegin,
+                                                                    $limit,
+                                                                    $self));
         }
         return $users;
     }
     
-    public static function  getContacts($currentUser, $nameBegin, $knownOnly) {
-        $users = SearchFunctions::getUsers($currentUser, $nameBegin, $knownOnly);
+    public static function  getContacts($user_id, $nameBegin, $knownOnly) {
+        $self = $user_id == -1 ? true : false;
+        $currentUser = $self
+                     ? Auth::user()
+                     : User::find($user_id);
+        
+        $users = SearchFunctions::getUsers($currentUser, $nameBegin, $knownOnly, $self);
         $groups =  Group::where('name', 'like', $nameBegin . '%')
                 ->limit(15)
                 ->get();

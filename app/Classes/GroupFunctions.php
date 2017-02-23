@@ -63,7 +63,7 @@ class GroupFunctions
             return response('User not found', 404);
         }
 
-        return response('Accepted', 200);
+        return response(['group_id' => $group->id], 200);
     }
 
     public static function join($user, $group_id) {
