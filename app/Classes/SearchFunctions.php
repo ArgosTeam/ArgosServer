@@ -10,7 +10,6 @@ use App\Models\Friend;
 use App\Models\Hashtag;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Auth;
 
 class SearchFunctions {
 
