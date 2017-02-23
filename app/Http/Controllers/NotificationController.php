@@ -3,7 +3,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 use App\Models\User;
 
 class NotificationController extends Controller
@@ -31,7 +30,6 @@ class NotificationController extends Controller
                       ->get();
 
         foreach ($notifications as $notification) {
-            Log::info(print_r($notification, true));
             if ($user->unreadNotifications->contains($notification->id)) {
                 $notification->markAsRead();
             }

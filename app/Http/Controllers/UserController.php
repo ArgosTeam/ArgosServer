@@ -6,7 +6,6 @@ use App\Models\User;
 use App\Classes\UserFunctions;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 use App\Http\Requests;
 
 class UserController extends Controller
@@ -26,7 +25,6 @@ class UserController extends Controller
 
     public function profile_pic(Request $request) {
         $user = Auth::user();
-        Log::info('request user_profile : ' . print_r($request->all(), true));
         return UserFunctions::profile_pic($user,
                                           $request->input('image'));
     }

@@ -6,7 +6,6 @@ use App\Models\Group;
 use App\Models\User;
 use App\Models\Hashtag;
 use App\Models\Photo;
-use Illuminate\Support\Facades\Log;
 use App\Models\Location;
 use App\Classes\PhotoFunctions;
 use Illuminate\Support\Facades\Storage;
@@ -200,7 +199,6 @@ class GroupFunctions
             return response([ 'error' => 'access refused'], 404);
         }
 
-        Log::info(print_r($group->pivot, true));
         if (!$group->pivot->admin) {
             return response(['error' => 'You need to be admin'], 404);
         }

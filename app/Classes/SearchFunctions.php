@@ -9,7 +9,6 @@ use App\Models\Event;
 use App\Models\Friend;
 use App\Models\Hashtag;
 use Illuminate\Support\Facades\Input;
-use Illuminate\Support\Facades\Log;
 
 class SearchFunctions {
 
@@ -159,7 +158,6 @@ class SearchFunctions {
             }
             $data[] = $newEntry;
         }
-        Log::info('EVENTS : ' . print_r($data,true));
         return response($data, 200);
     }
 
