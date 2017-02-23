@@ -213,7 +213,7 @@ class EventTest extends TestCase
 
         
         $response = $this->call('POST',
-                                '/api/group/invite',
+                                '/api/event/invite',
                                 [
                                     'event_id' => 1,
                                     'users_id' => [1]
