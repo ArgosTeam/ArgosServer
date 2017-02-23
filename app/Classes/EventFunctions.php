@@ -90,12 +90,13 @@ class EventFunctions
         if (is_object($event)) {
             if ($user->events->contains($event_id)) {
                 foreach ($users_id as $user_id) {
-                    $event->users()->attach($user_id, [
-                        'status' => 'invited',
-                        'admin' => false
-                    ]);
-                    // TODO : Add InvitedEvent Notification
-                    
+                    if (!$event->users->contains($user_id)) {
+                        $event->users()->attach($user_id, [
+                            'status' => 'invited',
+                            'admin' => false
+                        ]);
+                        // TODO : Add InvitedEvent Notification
+                    }
                 }
 
                 return response(['status' => 'Invites sent'], 200);

@@ -95,11 +95,13 @@ class GroupFunctions
         if (is_object($group)) {
             if ($user->groups->contains($group_id)) {
                 foreach ($users_id as $user_id) {
-                    $group->users()->attach($user_id, [
-                        'status' => 'invited',
-                        'admin' => false
-                    ]);
+                    if (!$group->users->contains($user_id)) {
+                        $group->users()->attach($user_id, [
+                            'status' => 'invited',
+                            'admin' => false
+                        ]);
                     // TODO : Add InvitedGroup Notification
+                    }
                     
                 }
 
