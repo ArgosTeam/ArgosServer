@@ -110,7 +110,7 @@ class EventFunctions
         $event = Event::find($event_id);
         if (is_object($event)) {
             $event->users()->updateExistingPivot($user->id, [
-                'status' => 'acccepted'
+                'status' => 'accepted'
             ]);
             return response(['status' => 'Invite accepted'], 200);
         }

@@ -116,7 +116,7 @@ class GroupFunctions
         $group = Group::find($group_id);
         if (is_object($group)) {
             $group->users()->updateExistingPivot($user->id, [
-                'status' => 'acccepted'
+                'status' => 'accepted'
             ]);
             return response(['status' => 'Invite accepted'], 200);
         }
