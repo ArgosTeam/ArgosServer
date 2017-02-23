@@ -148,7 +148,7 @@ class EventFunctions
      
         $data = [];
         $profile_pic = $event->profile_pic()->first();
-        $pofile_pic_path = null;
+        $profile_pic_path = null;
         // Get signed url from s3
         if (is_object($profile_pic)) {
             $s3 = Storage::disk('s3');
@@ -160,7 +160,7 @@ class EventFunctions
                 'Key'    => "avatar-" . $profile_pic->path,
             ]);
             $request = $client->createPresignedRequest($command, $expiry);
-            $pofile_pic_path = '' . $request->getUri() . '';
+            $profile_pic_path = '' . $request->getUri() . '';
         }
         
         
