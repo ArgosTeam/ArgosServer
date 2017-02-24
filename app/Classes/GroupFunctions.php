@@ -58,6 +58,14 @@ class GroupFunctions
                 'admin' => true
             ]);
 
+            /*
+            ** Invite users associated to field contact in the new created group
+            */
+            if ($request->has('contacts')
+                && !empty($contacts = $request->input('contacts'))) {
+                GroupFunctions::invite($user, $group->id, $contacts);
+            }
+
         } else {
             return response('User not found', 404);
         }
