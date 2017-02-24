@@ -6,6 +6,8 @@ namespace App\Classes;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Notifications\FriendRequest;
+use App\Notifications\FriendRequestAccepted;
+use App\Notifications\FriendRequestRejected;
 
 class FriendFunctions
 {
@@ -25,15 +27,27 @@ class FriendFunctions
         return response(['status' => 'success'], 200);
     }
 
-    public static function accept($user, $friend) {
+    public static function accept($user, $friend, $own = false) {
         $user->friends()->updateExistingPivot($friend->id, [
             'active' => true
         ]);
+        if ($own) {
+            $user->notify(new FriendRequestAccepted($user, $friend, 'slack'));
+        } else {
+            $user->notify(new FriendRequestAccepted($user, $friend, 'database'));
+        }
         return response(['status' => 'success'], 200);
     }
 
-    public static function refuse($user, $friend) {
+    public static function refuse($user, $friend, $own = false) {
         $user->friends()->detach($friend->id);
+
+        if ($own) {
+            $user->notify(new FriendRequestRejected($user, $friend, 'slack'));
+        } else {
+            $user->notify(new FriendRequestRejected($user, $friend, 'database'));
+        }
+        
         return response(['status' => 'success'], 200);
     }
 

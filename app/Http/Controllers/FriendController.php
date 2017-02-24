@@ -26,7 +26,7 @@ class FriendController extends Controller
         $friendId = $request->input("user_id");
         $friend = User::find($friendId);
         FriendFunctions::accept($friend, $user);
-        return FriendFunctions::accept($user, $friend);
+        return FriendFunctions::accept($user, $friend, true);
     }
 
     public function refuse(Request $request) {
@@ -34,7 +34,7 @@ class FriendController extends Controller
         $friendId = $request->input("user_id");
         $friend = User::find($friendId);
         FriendFunctions::refuse($friend, $user);
-        return FriendFunctions::refuse($user, $friend);
+        return FriendFunctions::refuse($user, $friend, true);
     }
 
     public function delete(Request $request) {
