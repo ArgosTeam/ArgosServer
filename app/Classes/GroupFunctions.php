@@ -1,7 +1,5 @@
 <?php
 namespace App\Classes;
-
-
 use App\Models\Group;
 use App\Models\User;
 use App\Models\Hashtag;
@@ -9,6 +7,9 @@ use App\Models\Photo;
 use App\Models\Location;
 use App\Classes\PhotoFunctions;
 use Illuminate\Support\Facades\Storage;
+use App\Notifications\GroupAdded;
+use App\Notifications\GroupInvite;
+use App\Notifications\GroupInviteAccepted;
 
 class GroupFunctions
 {
@@ -59,6 +60,11 @@ class GroupFunctions
             ]);
 
             /*
+            ** Notify Slack that a group has been created
+            */
+            $user->notify(new GroupAdded($user, $group));
+            
+            /*
             ** Invite users associated to field contact in the new created group
             */
             if ($request->has('contacts')
@@ -107,7 +113,9 @@ class GroupFunctions
                             'status' => 'invited',
                             'admin' => false
                         ]);
-                    // TODO : Add InvitedGroup Notification
+                        $invitedUser = User::find($user_id);
+                        $invitedUser->notify(new GroupInvite($user, $group, 'database'));
+                        $user->notify(new GroupInvite($invitedUser, $group, 'slack'));
                     }
                     
                 }
@@ -125,6 +133,12 @@ class GroupFunctions
             $group->users()->updateExistingPivot($user->id, [
                 'status' => 'accepted'
             ]);
+
+            $admin = $group->users()
+                   ->where('admin', '=', true)
+                   ->first();
+            $user->notify(new GroupInviteAccepted($admin, $group, 'slack'));
+            $admin->notify(new GroupInviteAccepted($user, $group, 'database'));            
             return response(['status' => 'Invite accepted'], 200);
         }
         return response(['status' => 'Group does not exist'], 404);

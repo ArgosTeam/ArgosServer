@@ -9,9 +9,13 @@ use App\Models\Location;
 use App\Models\Photo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 use Intervention\Image\Facades\Image;
 use App\Models\User;
 use App\Classes\PhotoFunctions;
+use App\Notifications\EventAdded;
+use App\Notifications\EventInvite;
+use App\Notifications\EventInviteAccepted;
 
 class EventFunctions
 {
@@ -66,6 +70,12 @@ class EventFunctions
                 'status' => 'accepted',
                 'admin' => true
             ]);
+
+            /*
+            ** Notify Slack that an event has been created
+            */
+            $user->notify(new EventAdded($user, $group));
+            
             return response(['event_id' => $event->id], 200);
         } else {
             return response('error while saving event', 404);
@@ -95,6 +105,9 @@ class EventFunctions
                             'status' => 'invited',
                             'admin' => false
                         ]);
+                        $invitedUser = User::find($user_id);
+                        $invitedUser->notify(new EventInvite($user, $event, 'database'));
+                        $user->notify(new EventInvite($invitedUser, $event, 'slack'));
                         // TODO : Add InvitedEvent Notification
                     }
                 }
@@ -112,6 +125,11 @@ class EventFunctions
             $event->users()->updateExistingPivot($user->id, [
                 'status' => 'accepted'
             ]);
+            $admin = $event->users()
+                   ->where('admin', '=', true)
+                   ->first();
+            $user->notify(new EventInviteAccepted($admin, $event, 'slack'));
+            $admin->notify(new EventInviteAccepted($user, $event, 'database'));
             return response(['status' => 'Invite accepted'], 200);
         }
         return response(['status' => 'Event does not exist'], 404);
