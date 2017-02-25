@@ -74,7 +74,7 @@ class EventFunctions
             /*
             ** Notify Slack that an event has been created
             */
-            $user->notify(new EventAdded($user, $group));
+            $user->notify(new EventAdded($user, $event));
             
             return response(['event_id' => $event->id], 200);
         } else {
