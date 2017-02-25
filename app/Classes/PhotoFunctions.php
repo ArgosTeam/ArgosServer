@@ -184,7 +184,7 @@ class PhotoFunctions
     public static function comment($user, $photo_id, $content) {
         $photo = Photo::find($photo_id);
         if (!is_object($photo)) {
-            return response('Photo does not exist', 404);
+            return response(['status' => 'Photo does not exist'], 404);
         }
         $comment = new Comment();
         $comment->content = $content;

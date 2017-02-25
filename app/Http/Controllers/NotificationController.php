@@ -11,7 +11,12 @@ class NotificationController extends Controller
         $user = Auth::user();
 
         $response = [];
-        foreach ($user->unreadNotifications as $notification) {
+        $notifications = $user->unreadNotifications();
+        foreach ($request->input('types') as $type) {
+            $notifications->orWhere('type', 'like', '%' . $type);
+        }
+        $notifications = $notifications->get();
+        foreach ($notfications as $notification) {
             $response[] = [
                 'notification_id' => $notification->id,
                 'notification_type' => $notification->type,
