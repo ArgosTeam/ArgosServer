@@ -16,7 +16,7 @@ class NotificationController extends Controller
             $notifications->orWhere('type', 'like', '%' . $type);
         }
         $notifications = $notifications->get();
-        foreach ($notfications as $notification) {
+        foreach ($notifications as $notification) {
             $response[] = [
                 'notification_id' => $notification->id,
                 'notification_type' => $notification->type,
