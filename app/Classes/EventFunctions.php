@@ -168,20 +168,11 @@ class EventFunctions
         $data = [];
         $profile_pic = $event->profile_pic()->first();
         $profile_pic_path = null;
-        // Get signed url from s3
+ 
         if (is_object($profile_pic)) {
-            $s3 = Storage::disk('s3');
-            $client = $s3->getDriver()->getAdapter()->getClient();
-            $expiry = "+10 minutes";
-            
-            $command = $client->getCommand('GetObject', [
-                'Bucket' => env('S3_BUCKET'),
-                'Key'    => $profile_pic->path,
-            ]);
-            $request = $client->createPresignedRequest($command, $expiry);
+            $request = PhotoFunctions::getUrl($profile_pic, true);
             $profile_pic_path = '' . $request->getUri() . '';
-        }
-        
+        }        
         
         $data['name'] = $event->name;
         $data['profile_pic'] = $profile_pic_path;
@@ -210,6 +201,7 @@ class EventFunctions
             $data['pending'] = false;
             $data['admin'] = false;
         }
+        
         $admin = $event->users()
                ->where('admin', '=', true)
                ->first();
@@ -304,16 +296,8 @@ class EventFunctions
 
         $response = [];
         foreach ($event->photos as $photo) {
-            // Get signed url from s3
-            $s3 = Storage::disk('s3');
-            $client = $s3->getDriver()->getAdapter()->getClient();
-            $expiry = "+10 minutes";
-            
-            $command = $client->getCommand('GetObject', [
-                'Bucket' => env('S3_BUCKET'),
-                'Key'    => "avatar-" . $photo->path,
-            ]);
-            $request = $client->createPresignedRequest($command, $expiry);
+
+            $request = PhotoFunctions::getUrl($photo);
             
             $response[] = [
                 'photo_id' => $photo->id,

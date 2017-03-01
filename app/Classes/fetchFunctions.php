@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Log;
+use App\Classes\PhotoFunctions;
 
 //http://gis.stackexchange.com/questions/31628/find-points-within-a-distance-using-mysql
 class fetchFunctions
@@ -146,16 +147,8 @@ class fetchFunctions
                     */
                     if (is_object($location->photo()->first())) {
                         $photo = $location->photo()->first();
-                        // Get signed url from s3
-                        $s3 = Storage::disk('s3');
-                        $client = $s3->getDriver()->getAdapter()->getClient();
-                        $expiry = "+10 minutes";
-                        
-                        $command = $client->getCommand('GetObject', [
-                            'Bucket' => env('S3_BUCKET'),
-                            'Key'    => "avatar-" . $photo->path,
-                        ]);
-                        $request = $client->createPresignedRequest($command, $expiry);
+
+                        $request = PhotoFunctions::getUrl($photo);
                         
                         if ($main) {
                             $results[] = [

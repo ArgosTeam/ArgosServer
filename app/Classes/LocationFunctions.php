@@ -33,20 +33,4 @@ class LocationFunctions
         return (["status" => "created", "event_id" => $location->id]);
 
     }
-
-    public static function fetch($id){
-
-        $asset = Location::find($id);
-
-        $result = [
-            "id" => $asset->id,
-            "name" => $asset->name,
-            "lat" => $asset->lat,
-            "lng" => $asset->lng
-        ];
-
-        return $result;
-
-    }
-
 }

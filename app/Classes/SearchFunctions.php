@@ -9,6 +9,7 @@ use App\Models\Event;
 use App\Models\Friend;
 use App\Models\Hashtag;
 use Illuminate\Support\Facades\Input;
+use App\Classes\PhotoFunctions;
 
 class SearchFunctions {
 
@@ -124,26 +125,14 @@ class SearchFunctions {
     public static function  events($currentUser, $nameBegin, $knownOnly) {
         $events = SearchFunctions::getEvents($currentUser, $nameBegin, $knownOnly);
         $data = [];
-
-        
         
         foreach ($events as $event) {
             $profile_pic = $event->profile_pic()->first();
             $profile_pic_path = null;
             if (is_object($profile_pic)) {
-                // Get signed url from s3
-                $s3 = Storage::disk('s3');
-                $client = $s3->getDriver()->getAdapter()->getClient();
-                $expiry = "+10 minutes";
-                
-                $command = $client->getCommand('GetObject', [
-                    'Bucket' => env('S3_BUCKET'),
-                    'Key'    => "avatar-" . $profile_pic->path,
-                ]);
-                $request = $client->createPresignedRequest($command, $expiry);
+                $request = PhotoFunctions::getUrl($profile_pic);
                 $profile_pic_path = '' . $request->getUri() . '';
             }
-
             
             $newEntry = [];
             $newEntry['event_id'] = $event->id;
@@ -189,18 +178,8 @@ class SearchFunctions {
         $response = [];
         foreach ($photos as $photo) {
             $location = $photo->location()->first();
-            
-            // Get signed url from s3
-            $s3 = Storage::disk('s3');
-            $client = $s3->getDriver()->getAdapter()->getClient();
-            $expiry = "+10 minutes";
-            
-            $command = $client->getCommand('GetObject', [
-                'Bucket' => env('S3_BUCKET'),
-                'Key'    => "avatar-" . $photo->path,
-            ]);
-            $request = $client->createPresignedRequest($command, $expiry);
 
+            $request = PhotoFunctions::getUrl($photo);
             
             $response[] = [
                 'id' => $photo->id,

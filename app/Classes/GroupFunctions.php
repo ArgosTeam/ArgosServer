@@ -170,17 +170,9 @@ class GroupFunctions
             $data = [];
             $profile_pic = $group->profile_pic()->first();
             $profile_pic_path = null;
-            // Get signed url from s3
+            
             if (is_object($profile_pic)) {
-                $s3 = Storage::disk('s3');
-                $client = $s3->getDriver()->getAdapter()->getClient();
-                $expiry = "+10 minutes";
-                
-                $command = $client->getCommand('GetObject', [
-                    'Bucket' => env('S3_BUCKET'),
-                    'Key'    => $profile_pic->path,
-                ]);
-                $request = $client->createPresignedRequest($command, $expiry);
+                $request = PhotoFunctions::getUrl($profile_pic, true);
                 $profile_pic_path = '' . $request->getUri() . '';
             }
             
@@ -282,16 +274,8 @@ class GroupFunctions
 
         $response = [];
         foreach ($group->photos as $photo) {
-            // Get signed url from s3
-            $s3 = Storage::disk('s3');
-            $client = $s3->getDriver()->getAdapter()->getClient();
-            $expiry = "+10 minutes";
-            
-            $command = $client->getCommand('GetObject', [
-                'Bucket' => env('S3_BUCKET'),
-                'Key'    => "avatar-" . $photo->path,
-            ]);
-            $request = $client->createPresignedRequest($command, $expiry);
+
+            $request = PhotoFunctions::getUrl($photo);
             
             $response[] = [
                 'photo_id' => $photo->id,

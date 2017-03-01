@@ -18,6 +18,26 @@ use App\Models\User;
 
 class PhotoFunctions
 {
+
+    public static function getUrl(Photo $photo, $macro = false) {
+        // Get signed url from s3
+        $s3 = Storage::disk('s3');
+        $client = $s3->getDriver()->getAdapter()->getClient();
+        $expiry = "+10 minutes";
+
+        $key = '';
+        if (!$macro) {
+            $key = "avatar-" . $photo->path;
+        } else {
+            $key = $photo->path;
+        }
+        $command = $client->getCommand('GetObject', [
+            'Bucket' => env('S3_BUCKET'),
+            'Key'    => $key,
+        ]);
+        $request = $client->createPresignedRequest($command, $expiry);
+        return $request;
+    }
     
     public static function uploadImage($user, $md5, $image) {
         /*
@@ -134,18 +154,7 @@ class PhotoFunctions
             return response('Photo not found', 404);
         }
 
-        /*
-        ** Get signed url from s3
-        */
-        $s3 = Storage::disk('s3');
-        $client = $s3->getDriver()->getAdapter()->getClient();
-        $expiry = "+10 minutes";
-        
-        $command = $client->getCommand('GetObject', [
-            'Bucket' => env('S3_BUCKET'),
-            'Key'    => $photo->path,
-        ]);
-        $request = $client->createPresignedRequest($command, $expiry);
+        $request = PhotoFunctions::getUrl($photo);
 
         $hashtags = [];
         foreach ($photo->hashtags()->get() as $hashtag) {
