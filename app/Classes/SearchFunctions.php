@@ -146,9 +146,9 @@ class SearchFunctions {
 
             
             $newEntry = [];
-            $newEntry['id'] = $event->id;
+            $newEntry['event_id'] = $event->id;
             $newEntry['profile_pic'] = $profile_pic_path;
-            $newEntry['name'] = $event->name;
+            $newEntry['event_name'] = $event->name;
             if (is_object($event->pivot)) {
                 $newEntry['accepted'] = ($event->pivot->status == "accepted" ? true : false);
                 $newEntry['pending'] = ($event->pivot->status == "pending" ? true : false);

@@ -31,7 +31,7 @@ class NewPublicPicture extends Notification
             'Bucket' => env('S3_BUCKET'),
             'Key'    => $photo->path,
         ]);
-        $request = $client->createPresignedRequest($command, $expiry);
+        $request = $client->createPresignedRequest($command);
         $this->user = $user;
         $this->photo = $photo;
         $this->path = '' . $request->getUri() . '';

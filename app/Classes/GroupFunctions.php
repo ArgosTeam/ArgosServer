@@ -184,7 +184,7 @@ class GroupFunctions
                 $profile_pic_path = '' . $request->getUri() . '';
             }
             
-            $data['id'] = $group_id;
+            $data['group_id'] = $group_id;
             $data['profile_pic'] = $profile_pic_path;
             $data['name'] = $group->name;
             $data['hashtags'] = [];
