@@ -1,3 +1,4 @@
+
 <?php
 namespace App\Classes;
 use App\Http\Requests\SubmitEventCreate;
@@ -195,10 +196,12 @@ class EventFunctions
         if (is_object($belong)) {
             $data['participate'] = ($belong->pivot->status === 'accepted' ? true : false);
             $data['pending'] = ($belong->pivot->status === 'pending' ? true : false);
+            $data['invited'] = ($belong->pivot->status === 'invited' ? true : false);
             $data['admin'] = $belong->pivot->admin;
         } else {
             $data['participate'] = false;
             $data['pending'] = false;
+            $data['invited'] = false;
             $data['admin'] = false;
         }
         
@@ -206,7 +209,33 @@ class EventFunctions
                ->where('admin', '=', true)
                ->first();
         $data['admin_id'] = $admin->id;
+        $profile_pica = $admin->profile_pic()->first();
+        $profile_pica_path = null;
+        if (is_object($profile_pica)) {
+            $profile_pica_path = ''
+                               .(PhotoFunctions::getUrl($profile_picca))->getUri()
+                               . '';
+        }
+        $data['admin_url'] = $profile_pica_path;
         $data['admin_name'] = $admin->firstName . ' ' . $admin->lastName;
+
+        $comments = [];
+        foreach ($event->comments()->get() as $comment) {
+            $currentUser = User::find($comment->user_id);
+            $profile_pic = $currentUser->profile_pic()->first();
+            $profile_pic_path = null;
+            if (is_object($profile_pic)) {
+                $profile_pic_path = '' . (PhotoFunctions::getUrl())->getUri() . '';
+            }
+            $comments[] = [
+                'content' => $comment->content,
+                'user_id' => $comment->user_id,
+                'user_url' => $profile_pic_path,
+                'user_name' => $currentUser->firstName . ' ' . $currentUser->lastName
+            ];
+        }
+
+        $data['comments'] = $comments;
         
         return response($data, 200);
     }
