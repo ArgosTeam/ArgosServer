@@ -213,7 +213,7 @@ class EventFunctions
         $profile_pica_path = null;
         if (is_object($profile_pica)) {
             $profile_pica_path = ''
-                               .(PhotoFunctions::getUrl($profile_picca))->getUri()
+                               .(PhotoFunctions::getUrl($profile_pica))->getUri()
                                . '';
         }
         $data['admin_url'] = $profile_pica_path;
