@@ -173,7 +173,8 @@ class PhotoFunctions
             $profile_pic = $currentUser->profile_pic()->first();
             $profile_pic_path = null;
             if (is_object($profile_pic)) {
-                $profile_pic_path = '' . (PhotoFunctions::getUrl($profile_pic))->getUri() . '';
+                $request = PhotoFunctions::getUrl($profile_pic);
+                $profile_pic_path = '' . $request->getUri() . '';
             }
             $comments[] = [
                 'content' => $comment->content,
