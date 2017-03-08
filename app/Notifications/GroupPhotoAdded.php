@@ -7,10 +7,11 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\SlackMessage;
-use App\Models\Event;
-use App\Models\User;
+use Illuminate\Support\Facades\Storage;
+use App\Models\Group;
+use App\Models\Photo;
 
-class EventInviteAccepted extends Notification
+class GroupPhotoAdded extends Notification
 {
     use Queueable;
 
@@ -19,11 +20,25 @@ class EventInviteAccepted extends Notification
      *
      * @return void
      */
-    public function __construct(User $user, Event $event, $via)
+    public function __construct(Group $group, Photo $photo, $via)
     {
-        $this->user = $user;
-        $this->event = $event;
+        $this->group = $group;
+        $this->photo = $photo;
         $this->via = $via;
+
+        
+        // Get signed url from s3
+        $s3 = Storage::disk('s3');
+        $client = $s3->getDriver()->getAdapter()->getClient();
+        $expiry = "+10 minutes";
+            
+        $command = $client->getCommand('GetObject', [
+            'Bucket' => env('S3_BUCKET'),
+            'Key'    => $photo->path,
+        ]);
+        $request = $client->createPresignedRequest($command);
+
+        $this->path = '' . $request->getUri() . '';
     }
 
     /**
@@ -60,22 +75,23 @@ class EventInviteAccepted extends Notification
     public function toArray($notifiable)
     {
         return [
+            'group_id' => $this->group->id,
+            'group_name' => $this->group->name,
+            'photo_id' => $this->photo->id,
             'from_user_id' => $this->user->id,
-            'from_user_name' => $this->user->firstName,
-            'event_id' => $this->event->id,
-            'event_name' => $this->event->name,
-            'status' => 'accepted'
+            'from_user_name' => $this->user->firstName . ' ' . $this->user->lastName
         ];
     }
 
     public function toSlack($notifiable) {
+        $url = $this->path;
         return (new SlackMessage)
-            ->success()
-            ->content($notifiable->firstName . ' ' $notifiable->lastName
+            ->content($notifiable->firstName . ' ' . $notifiable->lastName
                       . ' ' . $notifiable->phone
-                      . ' accepted invite from '
-                      . $this->user->firstName . ' ' $this->user->lastName
-                      . ' ' . $this->user->phone . ' to join event : '
-                      . $this->event->name);
+                      . ' added a picture to group : '
+                      . $this->group->name)
+            ->attachment(function ($attachment) use($url) {
+                $attachment->title('Link to Picture', $url);
+            });
     }
 }
