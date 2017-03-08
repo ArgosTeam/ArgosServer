@@ -1,4 +1,3 @@
-
 <?php
 namespace App\Classes;
 use App\Http\Requests\SubmitEventCreate;
@@ -19,8 +18,7 @@ use App\Notifications\EventInvite;
 use App\Notifications\EventInviteAccepted;
 
 class EventFunctions
-{
-    
+{    
     public static function add($user, Request $request) {
 
         $data = $request->all();
@@ -212,8 +210,9 @@ class EventFunctions
         $profile_pica = $admin->profile_pic()->first();
         $profile_pica_path = null;
         if (is_object($profile_pica)) {
+            $request = PhotoFunctions::getUrl($profile_pica);
             $profile_pica_path = ''
-                               .(PhotoFunctions::getUrl($profile_pica))->getUri()
+                               . $request->getUri()
                                . '';
         }
         $data['admin_url'] = $profile_pica_path;
@@ -225,7 +224,8 @@ class EventFunctions
             $profile_pic = $currentUser->profile_pic()->first();
             $profile_pic_path = null;
             if (is_object($profile_pic)) {
-                $profile_pic_path = '' . (PhotoFunctions::getUrl())->getUri() . '';
+                $request = PhotoFunctions::getUrl($profile_pic);
+                $profile_pic_path = '' . $request->getUri() . '';
             }
             $comments[] = [
                 'content' => $comment->content,
