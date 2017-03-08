@@ -71,10 +71,10 @@ class GroupInviteAccepted extends Notification
     public function toSlack($notifiable) {
         return (new SlackMessage)
             ->success()
-            ->content($notifiable->firstName . ' ' $notifable->lastName
+            ->content($notifiable->firstName . ' ' . $notifiable->lastName
                       . ' ' . $notifiable->phone
                       . ' accepted invite from '
-                      . $this->user->firstName . ' ' $this->user->lastName
+                      . $this->user->firstName . ' ' . $this->user->lastName
                       . ' ' . $this->user->phone . ' to join group : '
                       . $this->group->name);
     }
