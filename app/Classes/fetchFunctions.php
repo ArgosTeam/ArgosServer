@@ -81,9 +81,11 @@ class fetchFunctions
         foreach ($cells AS $row) {
             foreach ($row AS $col) {
                 $poly = $col;
-                
-                $locations_photos_users = [];
-                $locations_groups = [];
+
+                $query_base_locations = Location::whereRaw("ST_CONTAINS(PolygonFromText('POLYGON((" . implode(',', $poly) . "))'), GeomFromText(CONCAT('Point(',`lat`, ' ', `lng`,')')))");
+                $locations_photos_users = collect();
+                $locations_groups = collect();
+                $locations_events = collect();
                 if ($mode == 'photo'
                     || $mode == 'all') {
                     
@@ -93,7 +95,7 @@ class fetchFunctions
                     ** 2 variables photos_users and photos_groups are used
                     */
                     
-                    $query_locations_photos_users = Location::whereRaw("ST_CONTAINS(PolygonFromText('POLYGON((" . implode(',', $poly) . "))'), GeomFromText(CONCAT('Point(',`lat`, ' ', `lng`,')')))");
+                    $query_locations_photos_users = clone $query_base_locations;
 
                     /*
                     ** Add query filters dependencies
@@ -111,11 +113,12 @@ class fetchFunctions
                     
                 }
 
-                if ($mode == 'group') {
+                if ($mode == 'group'
+                    || $mode == 'all') {
                     /*
                     ** Base of groups request
                     */
-                    $query_locations_groups = clone $query_locations_photos_users;
+                    $query_locations_groups = clone $query_base_locations;
                     fetchFunctions::addJoinGroupFilter($query_locations_groups, $filter['groups']);
                     
                     /*
@@ -123,11 +126,24 @@ class fetchFunctions
                     */
                     $locations_groups = $query_locations_groups
                                       ->latest()
+                                      ->limit(1)
+                                      ->get();
+                }
+
+                if ($mode == 'event'
+                    || $mode == 'all') {
+                    $query_locations_events = clone $query_base_locations;
+                    fetchFunctions::addJoinEventFilter($query_locations_events);
+
+                    $locations_events = $query_locations_events
+                                      ->latest()
+                                      ->limit(1)
                                       ->get();
                 }
            
                 $locations = $locations_photos_users
                            ->merge($locations_groups)
+                           ->merge($locations_events)
                            ->sortBy('created_at');
 
                 $main = true;
@@ -277,6 +293,10 @@ class fetchFunctions
                 $query->whereIn('groups.id', $groups_id);
             }
         });
+    }
+
+    private static function addJoinEventFilter($query) {
+        $query->whereHas('event');
     }
     
 }
