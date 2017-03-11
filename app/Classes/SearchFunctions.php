@@ -45,9 +45,9 @@ class SearchFunctions {
         })
                ->limit(15);
 
-        $merge_ids = array_merge($ids, $exclude_ids);
-        if (!empty($exclude_ids)) {
-            $query->whereNotIn('users.id', array_merge($ids, $exclude_ids));
+        $merge_ids = array_merge($ids->all(), $exclude_ids);
+        if (!empty($merge_ids)) {
+            $query->whereNotIn('users.id', $merge_ids);
         }
         return $query->get();
     }
@@ -64,7 +64,7 @@ class SearchFunctions {
         return $users;
     }
     
-    public static function  getContacts($user_id, $nameBegin, $knownOnly, $exclude_ids) {
+    public static function  getContacts($user_id, $nameBegin, $knownOnly, $exclude_ids = []) {
         $self = $user_id == -1 ? true : false;
         $currentUser = $self
                      ? Auth::user()

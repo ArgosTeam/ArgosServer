@@ -39,7 +39,7 @@ class SearchController extends Controller
         $user_id = $request->input("id");
         $nameBegin = $request->input("name_begin");
         $knownOnly = $request->input("known_only");
-        $exclude_ids = $request->input("excludes");
+        $exclude_ids = $request->has("excludes") ? $request->input("excludes") : [];
         return SearchFunctions::getContacts($user_id, $nameBegin, $knownOnly, $exclude_ids);
     }
 

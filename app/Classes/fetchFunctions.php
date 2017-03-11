@@ -127,7 +127,7 @@ class fetchFunctions
                 }
            
                 $locations = $locations_photos_users
-                           ->merge($location_groups)
+                           ->merge($locations_groups)
                            ->sortBy('created_at');
 
                 $main = true;
