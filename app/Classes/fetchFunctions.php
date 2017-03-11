@@ -69,11 +69,12 @@ class fetchFunctions
         $filter['hashtags'] = array_key_exists('hashtags', $filter)
                          ? $filter['hashtags']
                          : [];
-        $results = fetchFunctions::fetchAll($cells, $filter);
+        $mode = $data['mode'];
+        $results = fetchFunctions::fetchAll($cells, $filter, $mode);
         return ($results);
     }
 
-    public static function fetchAll($cells, $filter) {
+    public static function fetchAll($cells, $filter, $mode) {
         $results = [];
 
         $index = -1;
@@ -81,41 +82,52 @@ class fetchFunctions
             foreach ($row AS $col) {
                 $poly = $col;
                 
-                /*
-                ** Base of photos request, add conditions on locations to be in the screen
-                ** Group and User are 2 separated filters, for more clarity
-                ** 2 variables photos_users and photos_groups are used
-                */
-                $query_locations_photos_users = Location::whereRaw("ST_CONTAINS(PolygonFromText('POLYGON((" . implode(',', $poly) . "))'), GeomFromText(CONCAT('Point(',`lat`, ' ', `lng`,')')))");
+                $locations_photos_users = [];
+                $locations_groups = [];
+                if ($mode == 'photo'
+                    || $mode == 'all') {
+                    
+                    /*
+                    ** Base of photos request, add conditions on locations to be in the screen
+                    ** Group and User are 2 separated filters, for more clarity
+                    ** 2 variables photos_users and photos_groups are used
+                    */
+                    
+                    $query_locations_photos_users = Location::whereRaw("ST_CONTAINS(PolygonFromText('POLYGON((" . implode(',', $poly) . "))'), GeomFromText(CONCAT('Point(',`lat`, ' ', `lng`,')')))");
 
-                /*
-                ** Base of groups request
-                */
-                $query_locations_groups = clone $query_locations_photos_users;
-                
-                /*
-                ** Add query filters dependencies
-                */
-                fetchFunctions::addJoinPhotoUserFilter($query_locations_photos_users, $filter['users'], $filter['hashtags']);
-                fetchFunctions::addJoinGroupFilter($query_locations_groups, $filter['groups']);
-           
-                /*
-                ** Get Users picture, then flush ids to exclude them for next request
-                ** If users filter not applied, get all latest photos_users
-                */
-                $locations_photos_users = $query_locations_photos_users
+                    /*
+                    ** Add query filters dependencies
+                    */
+                    fetchFunctions::addJoinPhotoUserFilter($query_locations_photos_users, $filter['users'], $filter['hashtags']);
+
+                    /*
+                    ** Get Users picture
+                    ** If users filter not applied, get all latest photos_users
+                    */
+                    $locations_photos_users = $query_locations_photos_users
                                         ->latest()
                                         ->limit(15)
                                         ->get();
+                    
+                }
 
-                /*
-                ** Get Groups -- TODO : check rights to display info
-                */
-                $locations_groups = $query_locations_groups
-                        ->latest()
-                        ->get();
-                
+                if ($mode == 'group') {
+                    /*
+                    ** Base of groups request
+                    */
+                    $query_locations_groups = clone $query_locations_photos_users;
+                    fetchFunctions::addJoinGroupFilter($query_locations_groups, $filter['groups']);
+                    
+                    /*
+                    ** Get Groups -- TODO : check rights to display info
+                    */
+                    $locations_groups = $query_locations_groups
+                                      ->latest()
+                                      ->get();
+                }
+           
                 $locations = $locations_photos_users
+                           ->merge($location_groups)
                            ->sortBy('created_at');
 
                 $main = true;
@@ -151,11 +163,40 @@ class fetchFunctions
                         }
                         $main = false;
                     }
+                    
+                    /*
+                    ** Group fetch
+                    */
+                    if (is_object($location->group()->first())) {
+                        $group = $location->group()->first();
+                        /*
+                        ** If the item selected in the grid is a photo
+                        ** Continue to try other locations at the same point
+                        ** To fill Array Photo on the first selected photo
+                        */
+                        if ($index != -1) {
+                            continue ;
+                        }
 
-                    // // Group fetch
-                    // if (is_object($location->group()->first())) {
+                        $profile_pic = $group->profile_pic()->first();
+                        $profile_pic_path = null;
+            
+                        if (is_object($profile_pic)) {
+                            $request = PhotoFunctions::getUrl($profile_pic);
+                            $profile_pic_path = '' . $request->getUri() . '';
+                        }
                         
-                    // }
+                        // If a group is selected, break the loop
+                        $results[] = [
+                            'type' => 'group',
+                            'id' => $group->id,
+                            'name' => $group->name,
+                            'path' => $profile_pic_path,
+                            'lat' => $group->location->lat,
+                            'lng' => $group->location->lng
+                        ];
+                        break ;
+                    }
 
                     // //  Event fetch
                     // if (is_object($location->group()->first())) {
