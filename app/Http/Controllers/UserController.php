@@ -38,4 +38,9 @@ class UserController extends Controller
              : false;
         return UserFunctions::getUserAlbum($user, $all);
     }
+
+    public function session(Request $request) {
+        $user = Auth::user();
+        return UserFunctions::getSession($user);
+    }
 }

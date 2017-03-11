@@ -39,6 +39,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('/user/infos', 'UserController@infos');
     Route::post('/user/profile_pic', 'UserController@profile_pic');
     Route::get('/user/photos', 'UserController@photos');
+    Route::get('/user/session', 'UserController@session');
 
     /*
     ** Routes regarding events actions

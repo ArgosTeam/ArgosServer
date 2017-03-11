@@ -54,9 +54,9 @@ class UserFunctions
     public static function follow($user, $user_id) {
         if (is_object(User::find($user_id))) {
             $user->followed()->attach($user_id);
-            return response(['status' => 'Succes'], 200);
+            return response(['status' => 'Success'], 200);
         } else {
-            return response(['status' => 'User does not exist'], 404);
+            return response(['status' => 'User does not exist'], 403);
         }
     }
 
@@ -69,7 +69,7 @@ class UserFunctions
         */
         $photo = Photo::where('md5', $md5)->first();
         if(is_object($photo)) {
-            return response(['refused' => 'Photo already exists'], 404);
+            return response(['refused' => 'Photo already exists'], 403);
         }
 
         $photo = PhotoFunctions::uploadImage($user, $md5, $decode);
@@ -101,6 +101,22 @@ class UserFunctions
                 'path' => '' . $request->getUri() . '',
                 'public' => $photo->public
             ];
+        }
+        return response($response, 200);
+    }
+
+    public static function getSession($user) {
+        $profile_pic = $user->profile_pic()->first();
+        $keys = ['avatar', 'regular'];
+        $response = [
+            'profile_pic_avatar' => null,
+            'profile_pic_regular' => null
+        ]
+        if (is_object($profile_pic)) {
+            foreach ($keys as $key) {
+                $response = PhotoFunctions::getUrl($profile_pic, $key);
+                $response['profile_pic_' . $key] = '' . $response->getUri() . '';
+            }
         }
         return response($response, 200);
     }

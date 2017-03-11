@@ -17,7 +17,7 @@ class GroupFunctions
         $group = Group::where('name', '=', $request->input('name'))
                ->first();
         if (is_object($group)) {
-            return response('This group name already exists', 404);
+            return response('This group name already exists', 403);
         }
         
         if(is_object($user)) {
@@ -73,7 +73,7 @@ class GroupFunctions
             }
 
         } else {
-            return response('User not found', 404);
+            return response('User not found', 403);
         }
 
         return response(['group_id' => $group->id], 200);
@@ -100,7 +100,7 @@ class GroupFunctions
             $user->groups()->attach($group_id, $pivot);
             return response(['status' => $status], 200);
         }
-        return response(['status' => 'Group does not exist or invite already exists'], 404);
+        return response(['status' => 'Group does not exist or invite already exists'], 403);
     }
 
     public static function invite($user, $group_id, $users_id) {
@@ -122,9 +122,9 @@ class GroupFunctions
 
                 return response(['status' => 'Invites sent'], 200);
             }
-            return response(['status' => 'Access refused'], 404);
+            return response(['status' => 'Access refused'], 403);
         }
-        return response(['status' => 'Group does not exist'], 404);
+        return response(['status' => 'Group does not exist'], 403);
     }
 
     public static function acceptInvite($user, $group_id) {
@@ -141,7 +141,7 @@ class GroupFunctions
             $admin->notify(new GroupInviteAccepted($user, $group, 'database'));            
             return response(['status' => 'Invite accepted'], 200);
         }
-        return response(['status' => 'Group does not exist'], 404);
+        return response(['status' => 'Group does not exist'], 403);
     }
     
     public static function acceptPrivateJoin($currentUser, $user_id, $group_id) {
@@ -159,7 +159,7 @@ class GroupFunctions
             ]);
             return response(['status' => 'Accepted'], 200);
         } else {
-            return response(['status' => 'Access refused, need to be admin, or group does not exist'], 404);
+            return response(['status' => 'Access refused, need to be admin, or group does not exist'], 403);
         }
     }
 
@@ -172,7 +172,7 @@ class GroupFunctions
             $profile_pic_path = null;
             
             if (is_object($profile_pic)) {
-                $request = PhotoFunctions::getUrl($profile_pic, true);
+                $request = PhotoFunctions::getUrl($profile_pic, 'macro');
                 $profile_pic_path = '' . $request->getUri() . '';
             }
             
@@ -204,17 +204,17 @@ class GroupFunctions
             
             return response($data, 200);
         }
-        return response('Group does not exist', 404);
+        return response('Group does not exist', 403);
     }
 
     public static function profile_pic($user, $encode, $group_id) {
         $group = $user->groups()->where('groups.id', '=', $group_id)->first();
         if (!is_object($group)) {
-            return response([ 'error' => 'access refused'], 404);
+            return response([ 'error' => 'access refused'], 403);
         }
 
         if (!$group->pivot->admin) {
-            return response(['error' => 'You need to be admin'], 404);
+            return response(['error' => 'You need to be admin'], 403);
         }
         
         $decode = base64_decode($encode);
@@ -225,7 +225,7 @@ class GroupFunctions
         */
         $photo = Photo::where('md5', $md5)->first();
         if(is_object($photo)) {
-            return response(['refused' => 'Photo already exists'], 404);
+            return response(['refused' => 'Photo already exists'], 403);
         }
 
         $photo = PhotoFunctions::uploadImage($user, $md5, $decode);
@@ -246,19 +246,19 @@ class GroupFunctions
             return response('Photo does not exist');
         }
         if (!$photo->users->contains($user->id)) {
-            return response(['status' => 'This photo does not belong to you'], 404);
+            return response(['status' => 'This photo does not belong to you'], 403);
         }
 
         foreach ($groups as $group) {
             if (!is_object($group)) {
-                return response(['status' => 'Group does not exists'], 404);
+                return response(['status' => 'Group does not exists'], 403);
             }
             if (!$group->users->contains($user->id)) {
-                return response(['status' => 'Access to group denied'], 404);
+                return response(['status' => 'Access to group denied'], 403);
             }
 
             if ($group->photos->contains($photo->id)) {
-                return response('Photo already linked to group', 404);
+                return response('Photo already linked to group', 403);
             }
             $group->photos()->attach($photo->id);
         }
@@ -269,7 +269,7 @@ class GroupFunctions
     public static function photos($user, $group_id) {
         $group = Group::find($group_id);
         if (!is_object($group)) {
-            return response(['status' => 'Group does not exists'], 404);
+            return response(['status' => 'Group does not exists'], 403);
         }
 
         $response = [];

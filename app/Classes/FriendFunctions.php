@@ -13,7 +13,7 @@ class FriendFunctions
 {
     public static function add($user, $friend, $own = false, $active = false) {
         if ($user->friends->contains($friend->id)) {
-            return response('Friendship already exists', 404);
+            return response('Friendship already exists', 403);
         }
         $user->friends()->attach($friend->id, [
             'own' => $own,

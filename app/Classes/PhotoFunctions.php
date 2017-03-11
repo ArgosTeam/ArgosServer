@@ -19,17 +19,23 @@ use App\Models\User;
 class PhotoFunctions
 {
 
-    public static function getUrl(Photo $photo, $macro = false) {
+    public static function getUrl(Photo $photo, $type = "avatar") {
         // Get signed url from s3
         $s3 = Storage::disk('s3');
         $client = $s3->getDriver()->getAdapter()->getClient();
         $expiry = "+10 minutes";
 
         $key = '';
-        if (!$macro) {
-            $key = "avatar-" . $photo->path;
-        } else {
-            $key = $photo->path;
+        switch ($type) {
+          case "avatar":
+              $key = "avatar-" . $photo->path;
+              break ;
+          case "regular":
+              $key = "regular-" . $photo->path;
+              break;
+          case "macro":
+              $key = $photo->path;
+              break;
         }
         $command = $client->getCommand('GetObject', [
             'Bucket' => env('S3_BUCKET'),
@@ -54,15 +60,19 @@ class PhotoFunctions
         */
         $full = Image::make($image)->rotate(-90);
         $avatar = Image::make($image)->resize(60, 60)->rotate(-90);
+        $regular = Image::make($image)->resize(120, 120)->rotate(-90);
         $full = $full->stream()->__toString();
         $avatar = $avatar->stream()->__toString();
+        $regular = $regular->stream()->__toString();
 
         //Upload Photo
         Storage::disk('s3')->put($path, $full, 'public');
 
         //Upload avatar
         Storage::disk('s3')->put('avatar-' . $path, $avatar, 'public');
-
+        
+        //Upload Regular size
+        Storage::disk('s3')->put('regular-' . $path, $regular, 'public');
         
         return $photo;
     }
@@ -78,7 +88,7 @@ class PhotoFunctions
         */
         $photo = Photo::where('md5', $md5)->first();
         if(is_object($photo)) {
-            return response(['refused' => 'Photo already exists'], 404);
+            return response(['refused' => 'Photo already exists'], 403);
         }
         
         $photo = PhotoFunctions::uploadImage($user, $md5, $decode);
@@ -151,7 +161,7 @@ class PhotoFunctions
     public static function getMacro($user, $photo_id) {
         $photo = Photo::find($photo_id);
         if (!is_object($photo)) {
-            return response('Photo not found', 404);
+            return response('Photo not found', 403);
         }
 
         $request = PhotoFunctions::getUrl($photo);
@@ -202,7 +212,7 @@ class PhotoFunctions
     public static function comment($user, $photo_id, $content) {
         $photo = Photo::find($photo_id);
         if (!is_object($photo)) {
-            return response(['status' => 'Photo does not exist'], 404);
+            return response(['status' => 'Photo does not exist'], 403);
         }
         $comment = new Comment();
         $comment->content = $content;
@@ -211,7 +221,7 @@ class PhotoFunctions
             $comment->photos()->attach($photo->id);
             return response(['comment_id' => $comment->id], 200);
         } else {
-            return response(['status' => 'Error while saving'], 404);
+            return response(['status' => 'Error while saving'], 403);
         }
     }
 

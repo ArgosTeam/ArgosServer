@@ -26,7 +26,7 @@ class EventFunctions
         $event = Event::where('name', '=', $data['name'])
                ->first();
         if (is_object($event)) {
-            return response('Event alreay exists', 404);
+            return response('Event alreay exists', 403);
         }
 
         $event = new Event();
@@ -77,7 +77,7 @@ class EventFunctions
             
             return response(['event_id' => $event->id], 200);
         } else {
-            return response('error while saving event', 404);
+            return response('error while saving event', 403);
         }
     }
 
@@ -91,7 +91,7 @@ class EventFunctions
             ]);
             return response('Join request sent', 200);
         }
-        return response('Event does not exist or invite already exists', 404);
+        return response('Event does not exist or invite already exists', 403);
     }
 
     public static function invite($user, $event_id, $users_id) {
@@ -113,9 +113,9 @@ class EventFunctions
 
                 return response(['status' => 'Invites sent'], 200);
             }
-            return response(['status' => 'Access refused'], 404);
+            return response(['status' => 'Access refused'], 403);
         }
-        return response(['status' => 'Event does not exist'], 404);
+        return response(['status' => 'Event does not exist'], 403);
     }
 
     public static function acceptInvite($user, $event_id) {
@@ -131,7 +131,7 @@ class EventFunctions
             $admin->notify(new EventInviteAccepted($user, $event, 'database'));
             return response(['status' => 'Invite accepted'], 200);
         }
-        return response(['status' => 'Event does not exist'], 404);
+        return response(['status' => 'Event does not exist'], 403);
     }
 
     public static function acceptPrivateJoin($currentUser, $user_id, $event_id) {
@@ -143,7 +143,7 @@ class EventFunctions
         $userToAccept = User::find($user_id);
 
         if (!is_object($event)) {
-            return response(['status' => 'Event does not exist'], 404);
+            return response(['status' => 'Event does not exist'], 403);
         }
         
         if ($event->admin) {
@@ -153,7 +153,7 @@ class EventFunctions
             ]);
             return response(['status' => 'Event join request sent'], 200);
         } else {
-            return response(['status' => 'Access refused, need to be admin'], 404);
+            return response(['status' => 'Access refused, need to be admin'], 403);
         }
     }
 
@@ -161,7 +161,7 @@ class EventFunctions
         $event = Event::find($event_id);
 
         if (!is_object($event)) {
-            return response('Event does not exist', 404);
+            return response('Event does not exist', 403);
         }
      
         $data = [];
@@ -169,7 +169,7 @@ class EventFunctions
         $profile_pic_path = null;
  
         if (is_object($profile_pic)) {
-            $request = PhotoFunctions::getUrl($profile_pic, true);
+            $request = PhotoFunctions::getUrl($profile_pic, 'macro');
             $profile_pic_path = '' . $request->getUri() . '';
         }        
         
@@ -243,7 +243,7 @@ class EventFunctions
     public static function comment($user, $event_id, $content) {
         $event = Event::find($event_id);
         if (!is_object($event)) {
-            return response('Event does not exist', 404);
+            return response('Event does not exist', 403);
         }
         $comment = new Comment();
         $comment->content = $content;
@@ -252,18 +252,18 @@ class EventFunctions
             $comment->events()->attach($event->id);
             return response(['comment_id' => $comment->id], 200);
         } else {
-            return response(['status' => 'Error while saving'], 404);
+            return response(['status' => 'Error while saving'], 403);
         }
     }
 
     public static function profile_pic($user, $encode, $event_id) {
         $event = $user->events()->where('events.id', '=', $event_id)->first();
         if (!is_object($event)) {
-            return response([ 'error' => 'access refused'], 404);
+            return response([ 'error' => 'access refused'], 403);
         }
 
         if (!$event->pivot->admin) {
-            return response(['error' => 'You need to be admin'], 404);
+            return response(['error' => 'You need to be admin'], 403);
         }
         $decode = base64_decode($encode);
         $md5 = md5($decode);
@@ -273,7 +273,7 @@ class EventFunctions
         */
         $photo = Photo::where('md5', $md5)->first();
         if(is_object($photo)) {
-            return response(['refused' => 'Photo already exists'], 404);
+            return response(['refused' => 'Photo already exists'], 403);
         }
 
         $photo = PhotoFunctions::uploadImage($user, $md5, $decode);
@@ -295,21 +295,21 @@ class EventFunctions
         }
 
         if (!$photo->users->contains($user->id)) {
-            return response(['status' => 'This photo does not belong to you'], 404);
+            return response(['status' => 'This photo does not belong to you'], 403);
         }
         
         foreach ($events as $event) {
             if (!is_object($event)) {
-                return response(['status' => 'Event does not exists'], 404);
+                return response(['status' => 'Event does not exists'], 403);
             }
             
             if (!$event->users->contains($user->id)) {
-                return response(['status' => 'Access to event denied'], 404);
+                return response(['status' => 'Access to event denied'], 403);
             }
 
             if (is_object($event->photos)
                 && $event->photos->contains($photo->id)) {
-                return response('Photo already linked to event', 404);
+                return response('Photo already linked to event', 403);
             }
             $event->photos()->attach($photo->id);
         }
@@ -320,7 +320,7 @@ class EventFunctions
     public static function photos($user, $event_id) {
         $event = Event::find($event_id);
         if (!is_object($event)) {
-            return response(['status' => 'Event does not exists'], 404);
+            return response(['status' => 'Event does not exists'], 403);
         }
 
         $response = [];

@@ -103,7 +103,7 @@ class SearchFunctions {
             $profile_pic_path = null;
             
             if (is_object($profile_pic)) {
-                $request = PhotoFunctions::getUrl($profile_pic, true);
+                $request = PhotoFunctions::getUrl($profile_pic, 'macro');
                 $profile_pic_path = '' . $request->getUri() . '';
             }
             
