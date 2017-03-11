@@ -19,11 +19,14 @@ class SearchFunctions {
     */
     private static function getKnownUsers($user, $nameBegin, $self = false, $exclude_ids = []) {
         $query = $user->getFriends()
-               ->whereNotIn('users.id', $exclude_ids)
                ->where(function ($query) use ($nameBegin) {
                    $query->where('firstName', 'like', $nameBegin . '%')
                          ->orWhere('lastName', 'like', $nameBegin . '%');
                });
+
+        if (!empty($exclude_ids)) {
+            $query->whereNotIn('users.id', $exclude_ids);
+        }
 
         if ($self) {
             $query->where('users.id', '!=', $user->id);
@@ -36,13 +39,17 @@ class SearchFunctions {
         if ($self) {
             $ids[] = $user->id;
         }
-        return User::whereNotIn('users.id', array_merge($ids, $exclude_ids))
-            ->where(function ($query) use ($nameBegin) {
-                $query->where('firstName', 'like', $nameBegin . '%')
-                      ->orWhere('lastName', 'like', $nameBegin . '%');
-            })
-            ->limit(15)
-            ->get();
+        $query = User::where(function ($query) use ($nameBegin) {
+                    $query->where('firstName', 'like', $nameBegin . '%')
+                          ->orWhere('lastName', 'like', $nameBegin . '%');
+        })
+               ->limit(15);
+
+        $merge_ids = array_merge($ids, $exclude_ids);
+        if (!empty($exclude_ids)) {
+            $query->whereNotIn('users.id', array_merge($ids, $exclude_ids));
+        }
+        return $query->get();
     }
     
     private static function getUsers($user, $nameBegin, $knownOnly, $self = false, $exclude_ids = []) {
