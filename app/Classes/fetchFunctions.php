@@ -77,8 +77,6 @@ class fetchFunctions
         $results = [];
 
         $index = -1;
-        $filter_group = empty($filter['groups']) ? false : true;
-        $filter_user = empty($filter['users']) ? false : true;
         foreach ($cells AS $row) {
             foreach ($row AS $col) {
                 $poly = $col;
@@ -89,8 +87,6 @@ class fetchFunctions
                 ** 2 variables photos_users and photos_groups are used
                 */
                 $query_locations_photos_users = Location::whereRaw("ST_CONTAINS(PolygonFromText('POLYGON((" . implode(',', $poly) . "))'), GeomFromText(CONCAT('Point(',`lat`, ' ', `lng`,')')))");
-                
-                $query_locations_photos_groups = clone $query_locations_photos_users;
 
                 /*
                 ** Base of groups request
@@ -101,7 +97,6 @@ class fetchFunctions
                 ** Add query filters dependencies
                 */
                 fetchFunctions::addJoinPhotoUserFilter($query_locations_photos_users, $filter['users'], $filter['hashtags']);
-                fetchFunctions::addJoinPhotoGroupFilter($query_locations_photos_groups, $filter['groups'], $filter['hashtags']);
                 fetchFunctions::addJoinGroupFilter($query_locations_groups, $filter['groups']);
            
                 /*
@@ -110,23 +105,8 @@ class fetchFunctions
                 */
                 $locations_photos_users = $query_locations_photos_users
                                         ->latest()
-                                        ->limit(10)
+                                        ->limit(15)
                                         ->get();
-
-                
-                // $exclude_ids = is_object($photos_users)
-                //              ? $photos_users->pluck('id')
-                //              : [];
-                
-                /*
-                ** Get Groups pictures
-                ** Same here, if groups filter not applied,
-                ** will get 10 more latest records
-                */
-                $locations_photos_groups = $query_locations_photos_groups
-                                         ->latest()
-                                         ->limit(10)
-                                         ->get();
 
                 /*
                 ** Get Groups -- TODO : check rights to display info
@@ -135,8 +115,7 @@ class fetchFunctions
                         ->latest()
                         ->get();
                 
-                $locations = $locations_photos_users->merge($locations_photos_groups)
-                           ->merge($locations_groups)
+                $locations = $locations_photos_users
                            ->sortBy('created_at');
 
                 $main = true;
