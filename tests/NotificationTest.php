@@ -25,7 +25,9 @@ class NotificationTest extends TestCase {
         
         $response = $this->call('GET',
                                 '/api/notifs',
-                                ['types' => []], [], [],
+                                [
+                                    'types' => ['NewPublicPicture']
+                                ], [], [],
                                 ['HTTP_Authorization' => 'Bearer ' . $token['access_token']]);
         print_r($response->getContent());
         $this->assertEquals(200, $response->status());
@@ -47,7 +49,7 @@ class NotificationTest extends TestCase {
         
         $response = $this->call('GET',
                                 '/api/notifs',
-                                [], [], [],
+                                ['types' => ['NewPublicPicture']], [], [],
                                 ['HTTP_Authorization' => 'Bearer ' . $token['access_token']]);
 
         $data = json_decode($response->getContent());
