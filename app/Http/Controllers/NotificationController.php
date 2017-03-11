@@ -12,7 +12,8 @@ class NotificationController extends Controller
 
         $response = [];
         $notifications = $user->unreadNotifications();
-        foreach ($request->input('types') as $type) {
+        $types = $request->input('types');
+        foreach ($types as $type) {
             $notifications->orWhere('type', 'like', '%' . $type);
         }
         $notifications = $notifications->get();
