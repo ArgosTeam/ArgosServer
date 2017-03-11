@@ -57,9 +57,9 @@ class EventController extends Controller
 
     public function comment(Request $request) {
         $user = Auth::user();
-        $photo_id = $request->input('photo_id');
+        $event_id = $request->input('event_id');
         $content = $request->input('content');
-        return EventFunctions::comment($user, $photo_id, $content);
+        return EventFunctions::comment($user, $event_id, $content);
     }
 
     public function profile_pic(Request $request) {

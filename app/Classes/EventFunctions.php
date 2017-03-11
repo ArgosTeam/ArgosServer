@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Intervention\Image\Facades\Image;
 use App\Models\User;
+use App\Models\Comment;
 use App\Classes\PhotoFunctions;
 use App\Notifications\EventAdded;
 use App\Notifications\EventInvite;
@@ -171,7 +172,7 @@ class EventFunctions
         if (is_object($profile_pic)) {
             $request = PhotoFunctions::getUrl($profile_pic, 'macro');
             $profile_pic_path = '' . $request->getUri() . '';
-        }        
+        }
         
         $data['name'] = $event->name;
         $data['profile_pic'] = $profile_pic_path;

@@ -67,4 +67,11 @@ class GroupController extends Controller
         $group_id = $request->input('group_id');
         return GroupFunctions::acceptInvite($user, $group_id);
     }
+
+    public function comment(Request $request) {
+        $user = Auth::user();
+        $group_id = $request->input('group_id');
+        $content = $request->input('content');
+        return GroupFunctions::comment($user, $group_id, $content);
+    }
 }

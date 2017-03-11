@@ -5,6 +5,7 @@ use App\Models\User;
 use App\Models\Hashtag;
 use App\Models\Photo;
 use App\Models\Location;
+use App\Models\Comment;
 use App\Classes\PhotoFunctions;
 use Illuminate\Support\Facades\Storage;
 use App\Notifications\GroupAdded;
@@ -201,6 +202,24 @@ class GroupFunctions
                 $data['belong'] = false;
                 $data['admin'] = false;
             }
+
+            $comments = [];
+            foreach ($group->comments()->get() as $comment) {
+                $currentUser = User::find($comment->user_id);
+                $profile_pic = $currentUser->profile_pic()->first();
+                $profile_pic_path = null;
+                if (is_object($profile_pic)) {
+                    $request = PhotoFunctions::getUrl($profile_pic);
+                    $profile_pic_path = '' . $request->getUri() . '';
+                }
+                $comments[] = [
+                    'content' => $comment->content,
+                    'user_id' => $comment->user_id,
+                    'user_url' => $profile_pic_path,
+                    'user_name' => $currentUser->firstName . ' ' . $currentUser->lastName
+                ];
+            }
+            $data['comments'] = $comments;
             
             return response($data, 200);
         }
@@ -289,5 +308,21 @@ class GroupFunctions
         }
 
         return response($response, 200);
+    }
+
+    public static function comment($user, $group_id, $content) {
+        $group = Group::find($group_id);
+        if (!is_object($group)) {
+            return response('Group does not exist', 403);
+        }
+        $comment = new Comment();
+        $comment->content = $content;
+        $comment->user()->associate($user);
+        if ($comment->save()) {
+            $comment->groups()->attach($group->id);
+            return response(['comment_id' => $comment->id], 200);
+        } else {
+            return response(['status' => 'Error while saving'], 403);
+        }
     }
 }
