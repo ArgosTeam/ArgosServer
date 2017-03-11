@@ -37,7 +37,8 @@ class   PhotoTest extends TestCase
                             'users' => [],
                             'hashtags' => [],
                             'groups' => []
-                        ]
+                        ],
+                        'mode' => 'all'
                     ], [], [],
                     ['HTTP_Authorization' => 'Bearer ' . $token['access_token']]);
         print_r($response->getContent());
