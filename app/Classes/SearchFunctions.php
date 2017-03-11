@@ -17,8 +17,9 @@ class SearchFunctions {
     /*
     ** Search Users
     */
-    private static function getKnownUsers($user, $nameBegin, $self = false) {
+    private static function getKnownUsers($user, $nameBegin, $self = false, $exclude_ids = []) {
         $query = $user->getFriends()
+               ->whereNotIn('users.id', $exclude_ids)
                ->where(function ($query) use ($nameBegin) {
                    $query->where('firstName', 'like', $nameBegin . '%')
                          ->orWhere('lastName', 'like', $nameBegin . '%');
@@ -30,12 +31,12 @@ class SearchFunctions {
         return $query->get();
     }
 
-    private static function getUnknownUsers($user, $nameBegin, $limit, $self = false) {
+    private static function getUnknownUsers($user, $nameBegin, $limit, $self = false, $exclude_ids = []) {
         $ids = $user->getFriends()->get()->pluck('id');
         if ($self) {
             $ids[] = $user->id;
         }
-        return User::whereNotIn('users.id', $ids)
+        return User::whereNotIn('users.id', array_merge($ids, $exclude_ids))
             ->where(function ($query) use ($nameBegin) {
                 $query->where('firstName', 'like', $nameBegin . '%')
                       ->orWhere('lastName', 'like', $nameBegin . '%');
@@ -44,13 +45,14 @@ class SearchFunctions {
             ->get();
     }
     
-    private static function getUsers($user, $nameBegin, $knownOnly, $self = false) {
-        $users = SearchFunctions::getknownUsers($user, $nameBegin, $self);
+    private static function getUsers($user, $nameBegin, $knownOnly, $self = false, $exclude_ids = []) {
+        $users = SearchFunctions::getknownUsers($user, $nameBegin, $self, $exclude_ids);
         if (!$knownOnly && ($limit = 15 - $users->count()) > 0) {
             $users = $users->merge(SearchFunctions::getUnknownUsers($user,
                                                                     $nameBegin,
                                                                     $limit,
-                                                                    $self));
+                                                                    $self,
+                                                                    $exclude_ids));
         }
         return $users;
     }
@@ -61,7 +63,11 @@ class SearchFunctions {
                      ? Auth::user()
                      : User::find($user_id);
         
-        $users = SearchFunctions::getUsers($currentUser, $nameBegin, $knownOnly, $self);
+        $users = SearchFunctions::getUsers($currentUser,
+                                           $nameBegin,
+                                           $knownOnly,
+                                           $self,
+                                           $exclude_ids);
         $groups =  Group::where('name', 'like', $nameBegin . '%')
                 ->limit(15)
                 ->get();
