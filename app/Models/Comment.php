@@ -17,7 +17,12 @@ class Comment extends Model
 
     public function events() {
         return $this->belongsToMany(Event::class)
-            ->withTimestamps();;
+            ->withTimestamps();
+    }
+
+    public function groups() {
+        return $this->belongsToMany(Group::class)
+            ->withTimestamps();
     }
 
     public function photos() {
