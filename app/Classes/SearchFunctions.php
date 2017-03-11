@@ -55,7 +55,7 @@ class SearchFunctions {
         return $users;
     }
     
-    public static function  getContacts($user_id, $nameBegin, $knownOnly) {
+    public static function  getContacts($user_id, $nameBegin, $knownOnly, $exclude_ids) {
         $self = $user_id == -1 ? true : false;
         $currentUser = $self
                      ? Auth::user()
@@ -68,29 +68,53 @@ class SearchFunctions {
         $data = [];
         foreach ($users as $user) {
             $newEntry = [];
+
+            $profile_pic = $user->profile_pic()->first();
+            $profile_pic_path = null;
+
+            if (is_object($profile_pic)) {
+                $request = PhotoFunctions::getUrl($profile_pic);
+                $profile_pic_path = '' . $request->getUri() . '';
+            }
+            
             $newEntry['id'] = $user->id;
-            $newEntry['url'] = null;
+            $newEntry['url'] = $profile_pic_path;
             $newEntry['name'] = $user->firstName . ' ' . $user->lastName;
             $newEntry['type'] = 'user';
             if (is_object($user->pivot)) {
-                $newEntry['own'] = $user->pivot->own;
-                $newEntry['friend'] = $user->pivot->active;
-                $newEntry['pending'] = $newEntry['friend'] ? false : true;
+                $newEntry['is_contact'] = ($user->pivot->active
+                                            ? true : false);
             } else {
-                $newEntry['own'] = false;
-                $newEntry['friend'] = false;
-                $newEntry['pending'] = false;
+                $newEntry['is_contact'] = false;
             }
             $data[] = $newEntry;
         }
         foreach ($groups as $group) {
+            $user = $group->users()->find($currentUser->id);
             $newEntry = [];
+
+            $profile_pic = $group->profile_pic()->first();
+            $profile_pic_path = null;
+            
+            if (is_object($profile_pic)) {
+                $request = PhotoFunctions::getUrl($profile_pic, true);
+                $profile_pic_path = '' . $request->getUri() . '';
+            }
+            
             $newEntry['id'] = $group->id;
-            $newEntry['url'] = null;
+            $newEntry['url'] = $profile_pic_path;
             $newEntry['name'] = $group->name;
             $newEntry['public'] = $group->public;
             $newEntry['type'] = 'group';
             $newEntry['pending'] = false;
+
+            if (is_object($user)) {
+                $newEntry['is_contact'] = ($user->pivot->status == "accepted"
+                                           ? true : false);
+            } else {
+                $newEntry['is_contact'] = false;
+            }
+            
             $data[] = $newEntry;
         }
         return response($data, 200);
