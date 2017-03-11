@@ -110,7 +110,9 @@ class UserFunctions
         $keys = ['avatar', 'regular'];
         $response = [
             'profile_pic_avatar' => null,
-            'profile_pic_regular' => null
+            'profile_pic_regular' => null,
+            'name' => $user->firstName . ' ' . $user->lastName,
+            'user_id' => $user->id
         ]
         if (is_object($profile_pic)) {
             foreach ($keys as $key) {
