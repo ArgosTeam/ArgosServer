@@ -198,14 +198,40 @@ class fetchFunctions
                         break ;
                     }
 
-                    // //  Event fetch
-                    // if (is_object($location->group()->first())) {
+                    /*
+                    ** Event fetch
+                    */
+                    if (is_object($location->event()->first())) {
+                        $event = $location->event()->first();
+                        /*
+                        ** If the item selected in the grid is a photo
+                        ** Continue to try other locations at the same point
+                        ** To fill Array Photo on the first selected photo
+                        */
+                        if ($index != -1) {
+                            continue ;
+                        }
+
+                        $profile_pic = $event->profile_pic()->first();
+                        $profile_pic_path = null;
+            
+                        if (is_object($profile_pic)) {
+                            $request = PhotoFunctions::getUrl($profile_pic);
+                            $profile_pic_path = '' . $request->getUri() . '';
+                        }
                         
-                    // }
+                        // If an event is selected, break the loop
+                        $results[] = [
+                            'type' => 'event',
+                            'id' => $event->id,
+                            'name' => $event->name,
+                            'path' => $profile_pic_path,
+                            'lat' => $event->location->lat,
+                            'lng' => $event->location->lng
+                        ];
+                        break ;
+                    }
                 }
-
-                
-
             }
         }
         return $results;
