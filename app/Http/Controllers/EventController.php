@@ -81,4 +81,15 @@ class EventController extends Controller
         $event_id = $request->input('event_id');
         return EventFunctions::photos($user, $event_id);
     }
+
+    /*
+    ** Invite Users from all groups in groups_id
+    ** if user belongs to group
+    */
+    public function link_groups(Request $request) {
+        $user = Auth::user();
+        $groups_id = $request->input('groups_ids');
+        $event_id = $request->input('event_id');
+        return EventFunctions::link_groups($user, $groups_id, $event_id);
+    }
 }

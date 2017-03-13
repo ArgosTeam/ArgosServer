@@ -74,4 +74,14 @@ class GroupController extends Controller
         $content = $request->input('content');
         return GroupFunctions::comment($user, $group_id, $content);
     }
+
+    /*
+    ** Invite all users from a group to this group
+    */
+    public function link_groups(Request $request) {
+        $user = Auth::user();
+        $groups_id = $request->input('groups_ids');
+        $event_id = $request->input('group_id');
+        return GroupFunctions::link_groups($user, $groups_id, $group_id);
+    }
 }

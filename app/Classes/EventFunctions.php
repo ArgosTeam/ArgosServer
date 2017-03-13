@@ -75,11 +75,36 @@ class EventFunctions
             ** Notify Slack that an event has been created
             */
             $user->notify(new EventAdded($user, $event));
+
+            /*
+            ** Invite users associated to field invites in the new created event
+            ** Either { type:group, id:int }, either { type:user, id:int }
+            */
+            $groups_id = [];
+            $users_id = [];
+            if ($request->has('invites')
+                && !empty($invites = $request->input('invites'))) {
+                foreach ($invites as $item) {
+                    if ($item->type == 'group') {
+                        $groups_id[] = $item->id;
+                    }
+                    if ($item->type == 'user') {
+                        $users_id[] = $item->id;
+                    }
+                }
+                if (!empty($users_id)) {
+                    EventFunctions::invite($user, $event->id, $users_id);
+                }
+                if (!empty($groups_id)) {
+                    EventFunctions::link_groups($user, $groups_is, $event->id);
+                }
+            }
             
-            return response(['event_id' => $event->id], 200);
         } else {
             return response('error while saving event', 403);
         }
+        
+        return response(['event_id' => $event->id], 200);
     }
 
     public static function join($user, $event_id) {
@@ -341,5 +366,20 @@ class EventFunctions
         }
 
         return response($response, 200);
+    }
+
+    public static function link_groups($user, $groups_id, $event_id) {
+        $groups = Group::whereIn('groups.id', $groups_id)->get();
+        foreach ($groups as $group) {
+            if ($group->users->contains($user->id)) {
+                EventFunctions::invite($user,
+                                       $event_id,
+                                       $group->users()
+                                       ->where('users.id', '!=', $user->id)
+                                       ->get()->pluck('id'));
+            }
+        }
+
+        return response(['status' => 'Invites sent'], 200);
     }
 }
