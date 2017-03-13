@@ -66,11 +66,27 @@ class GroupFunctions
             $user->notify(new GroupAdded($user, $group));
             
             /*
-            ** Invite users associated to field contact in the new created group
+            ** Invite users associated to field invites in the new created group
+            ** Either { type:group, id:int }, either { type:user, id:int }
             */
-            if ($request->has('contacts')
-                && !empty($contacts = $request->input('contacts'))) {
-                GroupFunctions::invite($user, $group->id, $contacts);
+            $groups_id = [];
+            $users_id = [];
+            if ($request->has('invites')
+                && !empty($invites = $request->input('invites'))) {
+                foreach ($invites as $item) {
+                    if ($item->type == 'group') {
+                        $groups_id[] = $item->id;
+                    }
+                    if ($item->type == 'user') {
+                        $users_id[] = $item->id;
+                    }
+                }
+                if (!empty($users_id)) {
+                    GroupFunctions::invite($user, $group->id, $users_id);
+                }
+                if (!empty($groups_id)) {
+                    GroupFunctions::link_groups($user, $groups_is, $group->id);
+                }
             }
 
         } else {
@@ -324,5 +340,20 @@ class GroupFunctions
         } else {
             return response(['status' => 'Error while saving'], 403);
         }
+    }
+
+    public static function link_groups($user, $groups_id, $group_id) {
+        $groups = Group::whereIn('groups.id', $groups_id)->get();
+        foreach ($groups as $group) {
+            if ($group->users->contains($user->id)) {
+                GroupFunctions::invite($user,
+                                       $group_id,
+                                       $group->users()
+                                       ->where('users.id', '!=', $user->id)
+                                       ->get()->pluck('id'));
+            }
+        }
+
+        return response(['status' => 'Invites sent'], 200);
     }
 }
