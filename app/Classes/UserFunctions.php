@@ -2,7 +2,6 @@
 
 namespace App\Classes;
 
-
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Friend;
@@ -113,7 +112,7 @@ class UserFunctions
             'profile_pic_regular' => null,
             'name' => $user->firstName . ' ' . $user->lastName,
             'user_id' => $user->id
-        ]
+        ];
         if (is_object($profile_pic)) {
             foreach ($keys as $key) {
                 $response = PhotoFunctions::getUrl($profile_pic, $key);
