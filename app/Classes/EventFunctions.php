@@ -342,4 +342,19 @@ class EventFunctions
 
         return response($response, 200);
     }
+
+    public static function link_groups($user, $groups_id, $event_id) {
+        $groups = Group::whereIn('groups.id', $groups_id)->get();
+        foreach ($groups as $group) {
+            if ($group->users->contains($user->id)) {
+                EventFunctions::invite($user,
+                                       $event_id,
+                                       $group->users()
+                                       ->where('users.id', '!=', $user->id)
+                                       ->get()->pluck('id'));
+            }
+        }
+
+        return response(['status' => 'Invites sent'], 200);
+    }
 }

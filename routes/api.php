@@ -55,6 +55,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('/event/photos', 'EventController@photos');
     Route::post('/event/invite', 'EventController@invite');
     Route::post('/event/accept_invite', 'EventController@accept_invite');
+    Route::post('/event/groups/link', 'EventController@link_groups');
 
     /*
     ** Routes regarding search actions
