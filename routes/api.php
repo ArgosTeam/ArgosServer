@@ -87,6 +87,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/group/invite', 'GroupController@invite');
     Route::post('/group/accept_invite', 'GroupController@accept_invite');
     Route::post('/group/comment', 'GroupController@comment');
+    Route::post('/group/groups/link', 'GroupController@link_groups');
 
     /*
     ** Route regarding Notifications
