@@ -28,17 +28,13 @@ class SearchFunctions {
             $query->whereNotIn('users.id', $exclude_ids);
         }
 
-        if ($self) {
-            $query->where('users.id', '!=', $user->id);
-        }
+        $query->where('users.id', '!=', $user->id);
         return $query->get();
     }
 
     private static function getUnknownUsers($user, $nameBegin, $limit, $self = false, $exclude_ids = []) {
         $ids = $user->getFriends()->get()->pluck('id');
-        if ($self) {
-            $ids[] = $user->id;
-        }
+        $ids[] = $user->id;
         $query = User::where(function ($query) use ($nameBegin) {
                     $query->where('firstName', 'like', $nameBegin . '%')
                           ->orWhere('lastName', 'like', $nameBegin . '%');
