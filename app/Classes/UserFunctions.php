@@ -115,8 +115,8 @@ class UserFunctions
         ];
         if (is_object($profile_pic)) {
             foreach ($keys as $key) {
-                $response = PhotoFunctions::getUrl($profile_pic, $key);
-                $response['profile_pic_' . $key] = '' . $response->getUri() . '';
+                $request = PhotoFunctions::getUrl($profile_pic, $key);
+                $response['profile_pic_' . $key] = '' . $request->getUri() . '';
             }
         }
         return response($response, 200);
