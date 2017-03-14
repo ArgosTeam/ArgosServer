@@ -76,7 +76,7 @@
 
             <div class="content">
                 <div class="title m-b-md">
-                   Laravel {{ $environment }}
+                   Laravel {{ $environment }} updated
                 </div>
                 <div class="links">
                     <a href="https://laravel.com/docs">Documentation</a>
