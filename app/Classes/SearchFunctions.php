@@ -82,7 +82,7 @@ class SearchFunctions {
             $profile_pic_path = null;
 
             if (is_object($profile_pic)) {
-                $request = PhotoFunctions::getUrl($profile_pic);
+                $request = PhotoFunctions::getUrl($profile_pic, 'avatar');
                 $profile_pic_path = '' . $request->getUri() . '';
             }
             
@@ -106,7 +106,7 @@ class SearchFunctions {
             $profile_pic_path = null;
             
             if (is_object($profile_pic)) {
-                $request = PhotoFunctions::getUrl($profile_pic, 'macro');
+                $request = PhotoFunctions::getUrl($profile_pic, 'avatar');
                 $profile_pic_path = '' . $request->getUri() . '';
             }
             
@@ -163,7 +163,7 @@ class SearchFunctions {
             $profile_pic = $event->profile_pic()->first();
             $profile_pic_path = null;
             if (is_object($profile_pic)) {
-                $request = PhotoFunctions::getUrl($profile_pic);
+                $request = PhotoFunctions::getUrl($profile_pic, 'avatar');
                 $profile_pic_path = '' . $request->getUri() . '';
             }
             
@@ -188,7 +188,6 @@ class SearchFunctions {
         $user_groups = $user->groups()
                      ->where('name', 'like', $nameBegin . '%')
                      ->get();
-        // TODO : handling of group_photo
 
         $friends = $user->getFriends()
                  ->where('firstName', 'like', $nameBegin . '%')
@@ -212,7 +211,7 @@ class SearchFunctions {
         foreach ($photos as $photo) {
             $location = $photo->location()->first();
 
-            $request = PhotoFunctions::getUrl($photo);
+            $request = PhotoFunctions::getUrl($photo, 'regular');
             
             $response[] = [
                 'id' => $photo->id,

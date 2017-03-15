@@ -24,7 +24,7 @@ class UserFunctions
         $profile_pic_path = null;
 
         if (is_object($profile_pic)) {
-            $request = PhotoFunctions::getUrl($profile_pic, true);
+            $request = PhotoFunctions::getUrl($profile_pic, 'regular');
             $profile_pic_path = '' . $request->getUri() . '';
         }
         
@@ -90,7 +90,7 @@ class UserFunctions
         $response = [];
         foreach ($photos as $photo) {
 
-            $request = PhotoFunctions::getUrl($photo);
+            $request = PhotoFunctions::getUrl($photo, 'avatar');
             
             $response[] = [
                 'photo_id' => $photo->id,
