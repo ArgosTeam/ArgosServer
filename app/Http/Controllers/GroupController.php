@@ -90,4 +90,10 @@ class GroupController extends Controller
         $group_id = $request->input('group_id');
         return GroupFunctions::quit($user, $group_id);
     }
+
+    public function edit(Request $request) {
+        $user = Auth::user();
+        $data = $request->all();
+        return GroupFunctions::edit($user, $data);
+    }
 }

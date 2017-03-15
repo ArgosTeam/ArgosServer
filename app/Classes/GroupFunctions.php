@@ -368,4 +368,24 @@ class GroupFunctions
         }
         return response(['status' => 'Group does not exist'], 403);
     }
+
+    public static function edit($user, $data) {
+        $group = Group::find($data['group_id']);
+        if (is_object($group)) {
+            if ($group->users->contains($user->id)) {
+
+                $currentRelation = $group->users()
+                                 ->where('users.id', '=', $user->id)
+                                 ->first();
+                if ($currentRelation->pivot->admin) {
+                    // Edit
+
+                    return response(['status' => 'Edit successfull'], 200);
+                }
+                return response(['status' => 'User is not admin'], 403);
+            }
+            return response(['status' => 'User does not belong to group'], 403);
+        }
+        return response(['status' => 'Group does not exist'], 403);
+    }
 }

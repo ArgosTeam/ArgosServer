@@ -394,4 +394,24 @@ class EventFunctions
         }
         return response(['status' => 'Event does not exist'], 403);
     }
+
+    public static function edit($user, $data) {
+        $event = Event::find($data['event_id']);
+        if (is_object($event)) {
+            if ($event->users->contains($user->id)) {
+
+                $currentRelation = $event->users()
+                                 ->where('users.id', '=', $user->id)
+                                 ->first();
+                if ($currentRelation->pivot->admin) {
+                    // Edit
+
+                    return response(['status' => 'Edit successfull'], 200);
+                }
+                return response(['status' => 'User is not admin'], 403);
+            }
+            return response(['status' => 'User does not belong to event'], 403);
+        }
+        return response(['status' => 'Event does not exist'], 403);
+    }
 }
