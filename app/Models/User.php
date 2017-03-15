@@ -80,7 +80,7 @@ class User extends Authenticatable
     }
 
     public function routeNotificationForSlack() {
-        return 'https://hooks.slack.com/services/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';
+        return env('SLACK_WEBHOOK');
     }
 
     /**
