@@ -382,4 +382,16 @@ class EventFunctions
 
         return response(['status' => 'Invites sent'], 200);
     }
+
+    public static function quit($user, $event_id) {
+        $event = Event::find($event_id);
+        if (is_object($event)) {
+            if ($event->users->contains($user->id)) {
+                $event->users()->detach($user->id);
+                return response(['status' => 'Event quit successfully'], 200);
+            }
+            return response(['status' => 'User does not belong to event'], 403);
+        }
+        return response(['status' => 'Event does not exist'], 403);
+    }
 }
