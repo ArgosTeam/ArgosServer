@@ -84,4 +84,16 @@ class GroupController extends Controller
         $event_id = $request->input('group_id');
         return GroupFunctions::link_groups($user, $groups_id, $group_id);
     }
+
+    public function quit(Request $request) {
+        $user = Auth::user();
+        $group_id = $request->input('group_id');
+        return GroupFunctions::quit($user, $group_id);
+    }
+
+    public function edit(Request $request) {
+        $user = Auth::user();
+        $data = $request->all();
+        return GroupFunctions::edit($user, $data);
+    }
 }

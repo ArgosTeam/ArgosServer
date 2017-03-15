@@ -92,4 +92,16 @@ class EventController extends Controller
         $event_id = $request->input('event_id');
         return EventFunctions::link_groups($user, $groups_id, $event_id);
     }
+
+    public function quit(Request $request) {
+        $user = Auth::user();
+        $event_id = $request->input('event_id');
+        return EventFunctions::quit($user, $event_id);
+    }
+
+    public function edit(Request $request) {
+        $user = Auth::user();
+        $data = $request->all();
+        return EventFunctions::edit($user, $data);
+    }
 }
