@@ -58,6 +58,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/event/groups/link', 'EventController@link_groups');
     Route::post('/event/quit', 'EventController@quit');
     Route::post('/event/edit', 'EventController@edit');
+    Route::post('/event/refuse_invite', 'EventController@refuse_invite');
 
     /*
     ** Routes regarding search actions
@@ -92,6 +93,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/group/groups/link', 'GroupController@link_groups');
     Route::post('/group/quit', 'GroupController@quit');
     Route::post('/group/edit', 'GroupController@edit');
+    Route::post('/group/refuse_invite', 'GroupController@refuse_invite');
 
     /*
     ** Route regarding Notifications

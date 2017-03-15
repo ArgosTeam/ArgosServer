@@ -133,13 +133,27 @@ class EventFunctions
                         $invitedUser = User::find($user_id);
                         $invitedUser->notify(new EventInvite($user, $event, 'database'));
                         $user->notify(new EventInvite($invitedUser, $event, 'slack'));
-                        // TODO : Add InvitedEvent Notification
                     }
                 }
 
                 return response(['status' => 'Invites sent'], 200);
             }
             return response(['status' => 'Access refused'], 403);
+        }
+        return response(['status' => 'Event does not exist'], 403);
+    }
+
+    public static function refuseInvite($user, $event_id) {
+        $event = Event::find($event_id);
+        if (is_object($event)) {
+            $event->users()->detach($user->id);
+
+            $admin = $event->users()
+                   ->where('admin', '=', true)
+                   ->first();
+
+            // TODO : Notify slack and admin that invited
+            return response(['status' => 'Invite refused'], 200);
         }
         return response(['status' => 'Event does not exist'], 403);
     }
@@ -195,7 +209,7 @@ class EventFunctions
         $profile_pic_path = null;
  
         if (is_object($profile_pic)) {
-            $request = PhotoFunctions::getUrl($profile_pic, 'macro');
+            $request = PhotoFunctions::getUrl($profile_pic, 'regular');
             $profile_pic_path = '' . $request->getUri() . '';
         }
         
@@ -236,7 +250,7 @@ class EventFunctions
         $profile_pica = $admin->profile_pic()->first();
         $profile_pica_path = null;
         if (is_object($profile_pica)) {
-            $request = PhotoFunctions::getUrl($profile_pica);
+            $request = PhotoFunctions::getUrl($profile_pica, 'avatar');
             $profile_pica_path = ''
                                . $request->getUri()
                                . '';
@@ -250,7 +264,7 @@ class EventFunctions
             $profile_pic = $currentUser->profile_pic()->first();
             $profile_pic_path = null;
             if (is_object($profile_pic)) {
-                $request = PhotoFunctions::getUrl($profile_pic);
+                $request = PhotoFunctions::getUrl($profile_pic, 'regular');
                 $profile_pic_path = '' . $request->getUri() . '';
             }
             $comments[] = [
@@ -352,7 +366,7 @@ class EventFunctions
         $response = [];
         foreach ($event->photos as $photo) {
 
-            $request = PhotoFunctions::getUrl($photo);
+            $request = PhotoFunctions::getUrl($photo, 'regular');
             
             $response[] = [
                 'photo_id' => $photo->id,

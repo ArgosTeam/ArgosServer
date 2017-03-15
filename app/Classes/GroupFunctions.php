@@ -144,6 +144,21 @@ class GroupFunctions
         return response(['status' => 'Group does not exist'], 403);
     }
 
+    public static function refuseInvite($user, $group_id) {
+        $group = Group::find($group_id);
+        if (is_object($group)) {
+            $group->users()->detach($user->id);
+
+            $admin = $group->users()
+                   ->where('admin', '=', true)
+                   ->first();
+
+            // TODO : Notify slack and admin that invited
+            return response(['status' => 'Invite refused'], 200);
+        }
+        return response(['status' => 'Group does not exist'], 403);
+    }
+    
     public static function acceptInvite($user, $group_id) {
         $group = Group::find($group_id);
         if (is_object($group)) {
@@ -189,7 +204,7 @@ class GroupFunctions
             $profile_pic_path = null;
             
             if (is_object($profile_pic)) {
-                $request = PhotoFunctions::getUrl($profile_pic, 'macro');
+                $request = PhotoFunctions::getUrl($profile_pic, 'regular');
                 $profile_pic_path = '' . $request->getUri() . '';
             }
             
@@ -225,7 +240,7 @@ class GroupFunctions
                 $profile_pic = $currentUser->profile_pic()->first();
                 $profile_pic_path = null;
                 if (is_object($profile_pic)) {
-                    $request = PhotoFunctions::getUrl($profile_pic);
+                    $request = PhotoFunctions::getUrl($profile_pic, 'avatar');
                     $profile_pic_path = '' . $request->getUri() . '';
                 }
                 $comments[] = [
@@ -310,7 +325,7 @@ class GroupFunctions
         $response = [];
         foreach ($group->photos as $photo) {
 
-            $request = PhotoFunctions::getUrl($photo);
+            $request = PhotoFunctions::getUrl($photo, 'regular');
             
             $response[] = [
                 'photo_id' => $photo->id,

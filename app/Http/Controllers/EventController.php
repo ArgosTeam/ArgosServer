@@ -36,6 +36,12 @@ class EventController extends Controller
         return EventFunctions::invite($user, $event_id, $users_id);
     }
 
+    public function refuse_invite(Request $request) {
+        $user = Auth::user();
+        $event_id = $request->input('event_id');
+        return EventFunctions::refuseInvite($user, $event_id);
+    }
+
     public function accept_invite(Request $request) {
         $user = Auth::user();
         $event_id = $request->input('event_id');

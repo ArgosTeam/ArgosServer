@@ -58,9 +58,9 @@ class PhotoFunctions
         /*
         ** Upload through storage -> AWS S3
         */
-        $full = Image::make($image)->rotate(-90);
-        $avatar = Image::make($image)->resize(60, 60)->rotate(-90);
-        $regular = Image::make($image)->resize(120, 120)->rotate(-90);
+        $full = Image::make($image);
+        $avatar = Image::make($image)->resize(60, 60);
+        $regular = Image::make($image)->resize(120, 120);
         $full = $full->stream()->__toString();
         $avatar = $avatar->stream()->__toString();
         $regular = $regular->stream()->__toString();
@@ -164,7 +164,7 @@ class PhotoFunctions
             return response('Photo not found', 403);
         }
 
-        $request = PhotoFunctions::getUrl($photo);
+        $request = PhotoFunctions::getUrl($photo, 'macro');
 
         $hashtags = [];
         foreach ($photo->hashtags()->get() as $hashtag) {
@@ -183,7 +183,7 @@ class PhotoFunctions
             $profile_pic = $currentUser->profile_pic()->first();
             $profile_pic_path = null;
             if (is_object($profile_pic)) {
-                $request = PhotoFunctions::getUrl($profile_pic);
+                $request = PhotoFunctions::getUrl($profile_pic, 'avatar');
                 $profile_pic_path = '' . $request->getUri() . '';
             }
             $comments[] = [

@@ -155,7 +155,7 @@ class fetchFunctions
                     if (is_object($location->photo()->first())) {
                         $photo = $location->photo()->first();
 
-                        $request = PhotoFunctions::getUrl($photo);
+                        $request = PhotoFunctions::getUrl($photo, 'avatar');
                         
                         if ($main) {
                             $results[] = [
@@ -198,7 +198,7 @@ class fetchFunctions
                         $profile_pic_path = null;
             
                         if (is_object($profile_pic)) {
-                            $request = PhotoFunctions::getUrl($profile_pic);
+                            $request = PhotoFunctions::getUrl($profile_pic, 'avatar');
                             $profile_pic_path = '' . $request->getUri() . '';
                         }
                         
@@ -232,7 +232,7 @@ class fetchFunctions
                         $profile_pic_path = null;
             
                         if (is_object($profile_pic)) {
-                            $request = PhotoFunctions::getUrl($profile_pic);
+                            $request = PhotoFunctions::getUrl($profile_pic, 'avatar');
                             $profile_pic_path = '' . $request->getUri() . '';
                         }
                         
