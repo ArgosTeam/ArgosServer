@@ -74,7 +74,7 @@ class SearchFunctions {
         $groups =  Group::where('name', 'like', $nameBegin . '%')
                 ->limit(15)
                 ->get();
-        $data = [];
+        $data = ['users' => [], 'groups' => []];
         foreach ($users as $user) {
             $newEntry = [];
 
@@ -87,7 +87,7 @@ class SearchFunctions {
             }
             
             $newEntry['id'] = $user->id;
-            $newEntry['url'] = $profile_pic_path;
+            $newEntry['profile_pic'] = $profile_pic_path;
             $newEntry['name'] = $user->firstName . ' ' . $user->lastName;
             $newEntry['type'] = 'user';
             if (is_object($user->pivot)) {
@@ -96,7 +96,7 @@ class SearchFunctions {
             } else {
                 $newEntry['is_contact'] = false;
             }
-            $data[] = $newEntry;
+            $data['users'][] = $newEntry;
         }
         foreach ($groups as $group) {
             $user = $group->users()->find($currentUser->id);
@@ -111,12 +111,10 @@ class SearchFunctions {
             }
             
             $newEntry['id'] = $group->id;
-            $newEntry['url'] = $profile_pic_path;
+            $newEntry['profile_pic'] = $profile_pic_path;
             $newEntry['name'] = $group->name;
             $newEntry['public'] = $group->public;
-            $newEntry['type'] = 'group';
-            $newEntry['pending'] = false;
-
+    
             if (is_object($user)) {
                 $newEntry['is_contact'] = ($user->pivot->status == "accepted"
                                            ? true : false);
@@ -124,7 +122,7 @@ class SearchFunctions {
                 $newEntry['is_contact'] = false;
             }
             
-            $data[] = $newEntry;
+            $data['groups'][] = $newEntry;
         }
         return response($data, 200);
     }

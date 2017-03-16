@@ -73,14 +73,20 @@ class GroupFunctions
             $users_id = [];
             if ($request->has('invites')
                 && !empty($invites = $request->input('invites'))) {
-                foreach ($invites as $item) {
-                    if ($item->type == 'group') {
-                        $groups_id[] = $item->id;
-                    }
-                    if ($item->type == 'user') {
-                        $users_id[] = $item->id;
+
+
+                if (array_key_exists('users', $invites)) {
+                    foreach ($invites['users'] as $userInvited) {
+                        $users_id[] = $userInvited->id;
                     }
                 }
+
+                if (array_key_exists('groups', $invites)) {
+                    foreach ($invites['users'] as $groupInvited) {
+                        $users_id[] = $groupInvited->id;
+                    }
+                }
+                
                 if (!empty($users_id)) {
                     GroupFunctions::invite($user, $group->id, $users_id);
                 }
@@ -211,6 +217,7 @@ class GroupFunctions
             $data['group_id'] = $group_id;
             $data['profile_pic'] = $profile_pic_path;
             $data['name'] = $group->name;
+            $data['public'] = $group->public;
             $data['hashtags'] = [];
             $hashtags = $group->hashtags()->get();
             foreach ($hashtags as $hashtag) {

@@ -216,6 +216,7 @@ class EventFunctions
         $data['name'] = $event->name;
         $data['profile_pic'] = $profile_pic_path;
         $data['description'] = $event->description;
+        $data['public'] = $event->public;
         $data['hashtags'] = [];
         foreach ($event->hashtags()->get() as $hashtag) {
             $data['hashtags'][] = [
