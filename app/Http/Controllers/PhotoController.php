@@ -22,7 +22,7 @@ class PhotoController extends Controller
 
     public function comment(Request $request) {
         $user = Auth::user();
-        $photo_id = $request->input('photo_id');
+        $photo_id = $request->input('id');
         $content = $request->input('content');
         PhotoFunctions::comment($user, $photo_id, $content);
     }

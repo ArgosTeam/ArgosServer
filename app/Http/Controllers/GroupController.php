@@ -76,7 +76,7 @@ class GroupController extends Controller
 
     public function comment(Request $request) {
         $user = Auth::user();
-        $group_id = $request->input('group_id');
+        $group_id = $request->input('id');
         $content = $request->input('content');
         return GroupFunctions::comment($user, $group_id, $content);
     }
