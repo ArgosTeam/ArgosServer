@@ -66,7 +66,7 @@ class GroupAdded extends Notification
     public function toSlack($notifiable) {
         return (new SlackMessage)
             ->success()
-            ->content($this->user->firstName . ' ' . $this->user->lastName
+            ->content($this->user->firstname . ' ' . $this->user->lastname
                       . ' ' . $this->user->phone
                       . ' just created a group: '
                       . $this->group->name);

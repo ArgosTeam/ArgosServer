@@ -79,14 +79,14 @@ class GroupPhotoAdded extends Notification
             'group_name' => $this->group->name,
             'photo_id' => $this->photo->id,
             'from_user_id' => $this->user->id,
-            'from_user_name' => $this->user->firstName . ' ' . $this->user->lastName
+            'from_user_name' => $this->user->firstname . ' ' . $this->user->lastname
         ];
     }
 
     public function toSlack($notifiable) {
         $url = $this->path;
         return (new SlackMessage)
-            ->content($notifiable->firstName . ' ' . $notifiable->lastName
+            ->content($notifiable->firstname . ' ' . $notifiable->lastname
                       . ' ' . $notifiable->phone
                       . ' added a picture to group : '
                       . $this->group->name)

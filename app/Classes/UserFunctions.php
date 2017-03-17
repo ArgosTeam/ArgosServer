@@ -32,8 +32,8 @@ class UserFunctions
         $response['id'] = $userProfile->id;
         $response['nickname'] = '';
         $response['profile_pic'] = $profile_pic_path;
-        $response['name'] = $userProfile->firstName;
-        $response['surname'] = $userProfile->lastName;
+        $response['name'] = $userProfile->firstname;
+        $response['surname'] = $userProfile->lastname;
         $response['university'] = '';
         $response['master'] = '';
         $response['stats'] = '';
@@ -110,7 +110,7 @@ class UserFunctions
         $response = [
             'profile_pic_avatar' => null,
             'profile_pic_regular' => null,
-            'name' => $user->firstName . ' ' . $user->lastName,
+            'name' => $user->firstname . ' ' . $user->lastname,
             'user_id' => $user->id
         ];
         if (is_object($profile_pic)) {

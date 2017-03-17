@@ -16,12 +16,15 @@ class CreateUsersTable extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->increments('id');
-            $table->string('firstName');
-            $table->string('lastName');
-            $table->enum('sex', ['male', 'female', 'unsure']);
-            $table->string('email');
+            $table->string('firstname')
+                ->nullable();
+            $table->string('lastname')
+                ->nullable();
+            $table->enum('sex', ['male', 'female', 'neutral']);
+            $table->string('email')
+                ->nullable();
             $table->string('phone');
-            $table->string('username');
+            $table->string('nickname');
             $table->string('password');
             $table->integer('profile_pic_id')
                 ->unsigned()
@@ -31,6 +34,8 @@ class CreateUsersTable extends Migration
                 ->references('id')
                 ->on('photos')
                 ->onDelete('cascade');
+
+            $table->date('dob');
             
             $table->string('remember_token')
                 ->nullable();

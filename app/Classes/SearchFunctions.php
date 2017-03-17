@@ -20,8 +20,8 @@ class SearchFunctions {
     private static function getKnownUsers($user, $nameBegin, $self = false, $exclude_ids = []) {
         $query = $user->getFriends()
                ->where(function ($query) use ($nameBegin) {
-                   $query->where('firstName', 'like', $nameBegin . '%')
-                         ->orWhere('lastName', 'like', $nameBegin . '%');
+                   $query->where('firstname', 'like', $nameBegin . '%')
+                         ->orWhere('lastname', 'like', $nameBegin . '%');
                });
 
         if (!empty($exclude_ids)) {
@@ -36,8 +36,8 @@ class SearchFunctions {
         $ids = $user->getFriends()->get()->pluck('id');
         $ids[] = $user->id;
         $query = User::where(function ($query) use ($nameBegin) {
-                    $query->where('firstName', 'like', $nameBegin . '%')
-                          ->orWhere('lastName', 'like', $nameBegin . '%');
+                    $query->where('firstname', 'like', $nameBegin . '%')
+                          ->orWhere('lastname', 'like', $nameBegin . '%');
         })
                ->limit(15);
 
@@ -88,7 +88,7 @@ class SearchFunctions {
             
             $newEntry['id'] = $user->id;
             $newEntry['profile_pic'] = $profile_pic_path;
-            $newEntry['name'] = $user->firstName . ' ' . $user->lastName;
+            $newEntry['name'] = $user->firstname . ' ' . $user->lastname;
             $newEntry['type'] = 'user';
             if (is_object($user->pivot)) {
                 $newEntry['is_contact'] = ($user->pivot->active
@@ -188,8 +188,8 @@ class SearchFunctions {
                      ->get();
 
         $friends = $user->getFriends()
-                 ->where('firstName', 'like', $nameBegin . '%')
-                 ->orWhere('lastName', 'like', $nameBegin . '%')
+                 ->where('firstname', 'like', $nameBegin . '%')
+                 ->orWhere('lastname', 'like', $nameBegin . '%')
                  ->get();
 
         $hashtags = Hashtag::where('name', 'like', $nameBegin . '%')

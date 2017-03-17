@@ -254,7 +254,7 @@ class GroupFunctions
                     'content' => $comment->content,
                     'user_id' => $comment->user_id,
                     'user_url' => $profile_pic_path,
-                    'user_name' => $currentUser->firstName . ' ' . $currentUser->lastName
+                    'user_name' => $currentUser->firstname . ' ' . $currentUser->lastname
                 ];
             }
             $data['comments'] = $comments;

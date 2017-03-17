@@ -59,7 +59,7 @@ class FriendRequestAccepted extends Notification
     public function toArray($notifiable)
     {
         return [
-            'user_name' => $this->friend->firstName . ' ' . $this->friend->lastName,
+            'user_name' => $this->friend->firstname . ' ' . $this->friend->lastname,
             'user_id' => $this->friend->id,
             'status' => 'accepted'
         ];
@@ -70,10 +70,10 @@ class FriendRequestAccepted extends Notification
         $friend_id = $this->friend->id;
         return (new SlackMessage)
             ->success()
-            ->content($this->user->firstName . ' ' . $this->user->lastName
+            ->content($this->user->firstname . ' ' . $this->user->lastname
                       . ' ' . $this->user->phone
                       . ' accepted friend request from '
-                      . $this->friend->firstName . ' ' . $this->friend->lastName . ' '
+                      . $this->friend->firstname . ' ' . $this->friend->lastname . ' '
                       . $this->friend->phone);
     }
 }

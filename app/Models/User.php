@@ -86,11 +86,11 @@ class User extends Authenticatable
     /**
      * Find the user identified by the given $identifier.
      *
-     * @param $identifier email|phone
+     * @param $identifier nickname
      * @return mixed
      */
-    public function findForPassport($phone) {
-        return User::where('phone', $phone)
-            ->first();;
+    public function findForPassport($nickname) {
+        return User::where('nickname', $nickname)
+            ->first();
     }
 }

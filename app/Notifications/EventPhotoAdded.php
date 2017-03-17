@@ -79,14 +79,14 @@ class EventPhotoAdded extends Notification
             'event_name' => $this->event->name,
             'photo_id' => $this->photo->id,
             'from_user_id' => $this->user->id,
-            'from_user_name' => $this->user->firstName . ' ' . $this->user->lastName
+            'from_user_name' => $this->user->firstname . ' ' . $this->user->lastname
         ];
     }
 
     public function toSlack($notifiable) {
         $url = $this->path;
         return (new SlackMessage)
-            ->content($notifiable->firstName . ' ' . $notifiable->lastName
+            ->content($notifiable->firstname . ' ' . $notifiable->lastname
                       . ' ' . $notifiable->phone
                       . ' added a picture to event : '
                       . $this->event->name)

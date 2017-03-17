@@ -60,8 +60,8 @@ class FriendRequest extends Notification
     {
         return [
             'from_user_id' => $this->friend->id,
-            'from_user_name' => $this->friend->firstName
-                                . ' ' . $this->friend->lastName
+            'from_user_name' => $this->friend->firstname
+                                . ' ' . $this->friend->lastname
         ];
     }
 
@@ -70,10 +70,10 @@ class FriendRequest extends Notification
         $friend_id = $this->friend->id;
         return (new SlackMessage)
             ->success()
-            ->content($this->user->firstName . ' ' . $this->user->lastName . ' '
+            ->content($this->user->firstname . ' ' . $this->user->lastname . ' '
                       . $this->user->phone
                       . ' sent a friend request to '
-                      . $this->friend->firstName . ' ' . $this->friend->lastName
+                      . $this->friend->firstname . ' ' . $this->friend->lastname
                       . ' ' . $this->friend->phone);
     }
 }
