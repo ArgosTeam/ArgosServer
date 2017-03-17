@@ -59,7 +59,7 @@ class FriendRequestRejected extends Notification
     public function toArray($notifiable)
     {
         return [
-            'user_name' => $this->friend->firstname . ' ' . $this->friend->lastname,
+            'user_name' => $this->friend->nickname,
             'user_id' => $this->friend->id,
             'status' => 'refused'
         ];
@@ -70,10 +70,10 @@ class FriendRequestRejected extends Notification
         $friend_id = $this->friend->id;
         return (new SlackMessage)
             ->success()
-            ->content($this->user->firstname . ' ' . $this->user->lastname
+            ->content($this->user->nickname
                       . ' ' . $this->user->phone
                       . ' refused friend request from '
-                      . $this->friend->firstname . ' ' . $this->friend->lastname . ' '
+                      . $this->friend->nickname . ' '
                       . $this->friend->phone);
     }
 }

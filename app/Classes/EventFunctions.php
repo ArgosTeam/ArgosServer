@@ -257,7 +257,7 @@ class EventFunctions
                                . '';
         }
         $data['admin_url'] = $profile_pica_path;
-        $data['admin_name'] = $admin->firstname . ' ' . $admin->lastname;
+        $data['admin_name'] = $admin->nickname;
 
         $comments = [];
         foreach ($event->comments()->get() as $comment) {
@@ -272,7 +272,7 @@ class EventFunctions
                 'content' => $comment->content,
                 'user_id' => $comment->user_id,
                 'user_url' => $profile_pic_path,
-                'user_name' => $currentUser->firstname . ' ' . $currentUser->lastname
+                'user_name' => $currentUser->nickname
             ];
         }
 

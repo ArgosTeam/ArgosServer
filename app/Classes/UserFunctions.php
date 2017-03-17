@@ -32,8 +32,9 @@ class UserFunctions
         $response['id'] = $userProfile->id;
         $response['nickname'] = '';
         $response['profile_pic'] = $profile_pic_path;
-        $response['name'] = $userProfile->firstname;
-        $response['surname'] = $userProfile->lastname;
+        $response['nickname'] = $userProfile->nickname;
+        $response['firstname'] = '';
+        $response['lastname'] = '';
         $response['university'] = '';
         $response['master'] = '';
         $response['stats'] = '';
@@ -41,6 +42,10 @@ class UserFunctions
             $response['friend'] = $friendShip->active;
             $response['pending'] = !$friendShip->active;
             $response['own'] = $friendShip->own;
+            if ($friendShip->active) {
+                $response['firstname'] = $userProfile->firstname;
+                $response['lastname'] = $userProfile->lastname;
+            }
         } else {
             $response['friend'] = false;
             $response['pending'] = false;
@@ -110,7 +115,9 @@ class UserFunctions
         $response = [
             'profile_pic_avatar' => null,
             'profile_pic_regular' => null,
-            'name' => $user->firstname . ' ' . $user->lastname,
+            'nickname' => $user->nickname,
+            'firstname' => $user->firstname,
+            'lastname' => $user->lastname,
             'user_id' => $user->id
         ];
         if (is_object($profile_pic)) {

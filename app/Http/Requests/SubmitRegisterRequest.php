@@ -24,13 +24,11 @@ class SubmitRegisterRequest extends FormRequest
     public function rules()
     {
         return [
-            'email' => 'required',
-            'firstname' => 'required',
-            'lastname' => 'required',
-            'username' => '',
+            'nickname' => 'required',
+            'dob' => 'required',
             'phone' => 'required',
             'sex' => 'required',
-            'password' => 'required',
+            'password' => 'required'
         ];
     }
 }

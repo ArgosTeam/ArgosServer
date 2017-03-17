@@ -66,7 +66,7 @@ class EventAdded extends Notification
     public function toSlack($notifiable) {
         return (new SlackMessage)
             ->success()
-            ->content($this->user->firstname . ' ' . $this->user->lastname
+            ->content($this->user->nickname
                       . ' ' . $this->user->phone
                       . ' just created an event: '
                       . $this->event->name);

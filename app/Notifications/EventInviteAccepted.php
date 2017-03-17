@@ -61,7 +61,7 @@ class EventInviteAccepted extends Notification
     {
         return [
             'from_user_id' => $this->user->id,
-            'from_user_name' => $this->user->firstname,
+            'from_user_nickname' => $this->user->nickname,
             'event_id' => $this->event->id,
             'event_name' => $this->event->name,
             'status' => 'accepted'
@@ -71,10 +71,10 @@ class EventInviteAccepted extends Notification
     public function toSlack($notifiable) {
         return (new SlackMessage)
             ->success()
-            ->content($notifiable->firstname . ' ' . $notifiable->lastname
+            ->content($notifiable->nickname
                       . ' ' . $notifiable->phone
                       . ' accepted invite from '
-                      . $this->user->firstname . ' ' . $this->user->lastname
+                      . $this->user->nickname
                       . ' ' . $this->user->phone . ' to join event : '
                       . $this->event->name);
     }

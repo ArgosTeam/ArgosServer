@@ -73,7 +73,7 @@ class NewPublicPicture extends Notification
     {
         return [
             'from_user_id' => $this->user->id,
-            'from_user_name' => $this->user->firstname . ' ' . $this->user->lastname,
+            'from_user_nickname' => $this->user->nickname,
             'path' => $this->path,
             'photo_id' => $this->photo->id
         ];
@@ -89,7 +89,7 @@ class NewPublicPicture extends Notification
         $url = $this->path;
         return (new SlackMessage)
             ->success()
-            ->content($this->user->firstname . ' ' . $this->user->lastname . ' '
+            ->content($this->user->nickname . ' '
                       . $this->user->phone
                       . ' uploaded a public picture.')
             ->attachment(function ($attachment) use ($url) {

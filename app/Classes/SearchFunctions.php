@@ -20,8 +20,7 @@ class SearchFunctions {
     private static function getKnownUsers($user, $nameBegin, $self = false, $exclude_ids = []) {
         $query = $user->getFriends()
                ->where(function ($query) use ($nameBegin) {
-                   $query->where('firstname', 'like', $nameBegin . '%')
-                         ->orWhere('lastname', 'like', $nameBegin . '%');
+                   $query->where('nickname', 'like', $nameBegin . '%');
                });
 
         if (!empty($exclude_ids)) {
@@ -36,8 +35,7 @@ class SearchFunctions {
         $ids = $user->getFriends()->get()->pluck('id');
         $ids[] = $user->id;
         $query = User::where(function ($query) use ($nameBegin) {
-                    $query->where('firstname', 'like', $nameBegin . '%')
-                          ->orWhere('lastname', 'like', $nameBegin . '%');
+            $query->where('nickname', 'like', $nameBegin . '%');
         })
                ->limit(15);
 
@@ -88,11 +86,15 @@ class SearchFunctions {
             
             $newEntry['id'] = $user->id;
             $newEntry['profile_pic'] = $profile_pic_path;
-            $newEntry['name'] = $user->firstname . ' ' . $user->lastname;
+            $newEntry['nickname'] = $user->nickname;
+            $newEntry['firstname'] = '';
+            $newEntry['lastname'] = '';
             $newEntry['type'] = 'user';
             if (is_object($user->pivot)) {
                 $newEntry['is_contact'] = ($user->pivot->active
                                             ? true : false);
+                $newEntry['firstname'] = $user->firstname;
+                $newEntry['lastname'] = $user->lastname;
             } else {
                 $newEntry['is_contact'] = false;
             }
@@ -188,8 +190,7 @@ class SearchFunctions {
                      ->get();
 
         $friends = $user->getFriends()
-                 ->where('firstname', 'like', $nameBegin . '%')
-                 ->orWhere('lastname', 'like', $nameBegin . '%')
+                 ->where('nickname', 'like', $nameBegin . '%')
                  ->get();
 
         $hashtags = Hashtag::where('name', 'like', $nameBegin . '%')
