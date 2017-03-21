@@ -158,7 +158,7 @@ class PhotoFunctions
         return (response(['photo_id' => $photo->id], 200));
     }
 
-    public static function getMacro($user, $photo_id) {
+    public static function getInfos($user, $photo_id) {
         $photo = Photo::find($photo_id);
         if (!is_object($photo)) {
             return response('Photo not found', 403);
@@ -166,44 +166,21 @@ class PhotoFunctions
 
         $request = PhotoFunctions::getUrl($photo, 'macro');
 
-        $hashtags = [];
-        foreach ($photo->hashtags()->get() as $hashtag) {
-            $hashtags[] = [
-                'id' => $hashtag->id,
-                'name' => $hashtag->name
-            ];
-        }
-
-        /*
-        ** Get Comments related to Photo
-        */
-        $comments = [];
-        foreach($photo->comments()->get() as $comment) {
-            $currentUser = User::find($comment->user_id);
-            $profile_pic = $currentUser->profile_pic()->first();
-            $profile_pic_path = null;
-            if (is_object($profile_pic)) {
-                $request = PhotoFunctions::getUrl($profile_pic, 'avatar');
-                $profile_pic_path = '' . $request->getUri() . '';
-            }
-            $comments[] = [
-                'content' => $comment->content,
-                'user_id' => $comment->user_id,
-                'user_url' => $profile_pic_path,
-                'user_name' => $currentUser->nickname
-            ];
-        }
-
         /*
         ** Return Data with requested parameters
         */
+        $originUser = User::find($photo->origin_user_id);
+        $profile_pic_path = null;
+        if (is_object($profile_pic = $originUser->profile_pic()->first())) {
+            $requestOrigin = PhotoFunctions::getUrl($profile_pic);
+        }
         $data = [
             'id' => $photo->id,
             'url' => '' . $request->getUri() . '',
             'description' => $photo->description,
-            'hashtags' => $hashtags,
-            'comments' => $comments,
-            'rights' => []
+            'admin_url' => '' . $requestOrigin->getUri() . '',
+            'admin_id' => $originUser->id,
+            'admin_nickname' => $originUser->nickname
         ];
 
         return response($data, 200);

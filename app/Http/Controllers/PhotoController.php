@@ -14,7 +14,7 @@ class PhotoController extends Controller
         return PhotoFunctions::uploadUserImage($data);
     }
 
-    public function macro(Request $request) {
+    public function infos(Request $request) {
         $photo_id = $request->input('id');
         $user = Auth::user();
         return PhotoFunctions::getMacro($user, $photo_id);
