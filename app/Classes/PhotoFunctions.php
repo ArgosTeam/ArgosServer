@@ -173,12 +173,13 @@ class PhotoFunctions
         $profile_pic_path = null;
         if (is_object($profile_pic = $originUser->profile_pic()->first())) {
             $requestOrigin = PhotoFunctions::getUrl($profile_pic);
+            $profile_pic_path = '' . $requestOrigin->getUri() . '';
         }
         $data = [
             'id' => $photo->id,
             'url' => '' . $request->getUri() . '',
             'description' => $photo->description,
-            'admin_url' => '' . $requestOrigin->getUri() . '',
+            'admin_url' => $profile_pic_path,
             'admin_id' => $originUser->id,
             'admin_nickname' => $originUser->nickname
         ];

@@ -218,46 +218,35 @@ class GroupFunctions
             $data['profile_pic'] = $profile_pic_path;
             $data['name'] = $group->name;
             $data['public'] = $group->public;
-            $data['hashtags'] = [];
-            $hashtags = $group->hashtags()->get();
-            foreach ($hashtags as $hashtag) {
-                $data['hashtags'] = [
-                    'id' => $hashtag->id,
-                    'name' => $hashtag->name
-                ];
-            }
             $data['address'] = $group->address;
             $data['date'] = $group->created_at;
+            $data['lat'] = $group->location->lat;
+            $data['lng'] = $group->location->lng;
 
             $belong =$group->users()
                     ->where('users.id', '=', $user->id)
                     ->first();
             
             if (is_object($belong)) {
-                $data['belong'] = true;
                 $data['admin'] = $belong->pivot->admin;
             } else {
                 $data['belong'] = false;
-                $data['admin'] = false;
             }
 
-            $comments = [];
-            foreach ($group->comments()->get() as $comment) {
-                $currentUser = User::find($comment->user_id);
-                $profile_pic = $currentUser->profile_pic()->first();
-                $profile_pic_path = null;
-                if (is_object($profile_pic)) {
-                    $request = PhotoFunctions::getUrl($profile_pic, 'avatar');
-                    $profile_pic_path = '' . $request->getUri() . '';
-                }
-                $comments[] = [
-                    'content' => $comment->content,
-                    'user_id' => $comment->user_id,
-                    'user_url' => $profile_pic_path,
-                    'user_name' => $currentUser->nickname
-                ];
+
+            $admin = $group->users()
+                   ->where('admin', true)
+                   ->first();
+
+            $profile_pic_path = null;
+            if (is_object($profile_pic = $admin->profile_pic()->first())) {
+                $request = PhotoFunctions::getUrl($profile_pic);
+                $profile_pic_path = '' . $request->getUri() . '';
             }
-            $data['comments'] = $comments;
+
+            $data['admin_id'] = $admin->id;
+            $data['admin_nickname'] = $admin->nickname;
+            $data['admin_url'] = $profile_pic_path;
             
             return response($data, 200);
         }

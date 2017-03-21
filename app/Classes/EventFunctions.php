@@ -217,31 +217,25 @@ class EventFunctions
         $data['profile_pic'] = $profile_pic_path;
         $data['description'] = $event->description;
         $data['public'] = $event->public;
-        $data['hashtags'] = [];
-        foreach ($event->hashtags()->get() as $hashtag) {
-            $data['hashtags'][] = [
-                'id' => $hashtag->id,
-                'name' => $hashtag->name
-            ];
-        }
         $data['date'] = $event->start;
         $data['expires'] = $event->expires;
         $data['address'] = '';
+        $data['public'] = $event->public;
+        $data['lat'] = $event->location->lat;
+        $data['lng'] = $event->location->lng;
+        $data['count'] = $event->users()
+                       ->where('status', 'accepted')
+                       ->get()
+                       ->count();
 
         $belong = $user->events()
                 ->where('events.id', '=', $event_id)
                 ->first();
         
         if (is_object($belong)) {
-            $data['participate'] = ($belong->pivot->status === 'accepted' ? true : false);
-            $data['pending'] = ($belong->pivot->status === 'pending' ? true : false);
-            $data['invited'] = ($belong->pivot->status === 'invited' ? true : false);
-            $data['admin'] = $belong->pivot->admin;
+            $data['belong'] = ($belong->pivot->status === 'accepted' ? true : false);
         } else {
-            $data['participate'] = false;
-            $data['pending'] = false;
-            $data['invited'] = false;
-            $data['admin'] = false;
+            $data['belong'] = false;
         }
         
         $admin = $event->users()
@@ -258,25 +252,6 @@ class EventFunctions
         }
         $data['admin_url'] = $profile_pica_path;
         $data['admin_name'] = $admin->nickname;
-
-        $comments = [];
-        foreach ($event->comments()->get() as $comment) {
-            $currentUser = User::find($comment->user_id);
-            $profile_pic = $currentUser->profile_pic()->first();
-            $profile_pic_path = null;
-            if (is_object($profile_pic)) {
-                $request = PhotoFunctions::getUrl($profile_pic, 'regular');
-                $profile_pic_path = '' . $request->getUri() . '';
-            }
-            $comments[] = [
-                'content' => $comment->content,
-                'user_id' => $comment->user_id,
-                'user_url' => $profile_pic_path,
-                'user_name' => $currentUser->nickname
-            ];
-        }
-
-        $data['comments'] = $comments;
         
         return response($data, 200);
     }
