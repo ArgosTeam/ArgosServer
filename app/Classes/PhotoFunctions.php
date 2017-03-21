@@ -203,4 +203,82 @@ class PhotoFunctions
         }
     }
 
+    public static function getRelatedContacts($user,
+                                              $photo_id,
+                                              $known_only,
+                                              $name_begin,
+                                              $exclude) {
+        $photo = Photo::find($photo_id);
+
+        $groups = $photo->groups();
+        $users = $photo->users();
+        if ($known_only) {
+            $groups->whereIn('groups.id',
+                             $user->groups()
+                             ->where('status', 'accepted')
+                             ->get()
+                             ->pluck('id'));
+            $users->whereIn('users.id',
+                            $user->getFriends()
+                            ->get()
+                            ->pluck('id'));
+        }
+
+        if ($name_begin) {
+            $groups->where('name', 'like', '%' . $name_begin);
+            $users->where('nickname', 'like', '%' . $name_begin);
+        }
+
+        $groups = $groups->get();
+        $users = $users->get();
+        
+        if (is_object($photo)) {
+            $response = ['groups' => [], 'users' => []];
+            foreach ($groups as $group) {
+                $profile_pic_path = null;
+                $profile_pic = $group->profile_pic()->first();
+                if (is_object($profile_pic)) {
+                    $request = PhotoFunctions::getUrl($profile_pic);
+                    $profile_pic_path = '' . $request->getUri() . '';
+                }
+                $response['groups'][] = [
+                    'id' => $group->id,
+                    'profile_pic' => $profile_pic_path,
+                    'name' => $group->name,
+                    'is_contact' => ($group->users->contains($user->id)
+                                     ? true : false)
+                ];
+            }
+
+            foreach ($users as $contact) {
+                $profile_pic_path = null;
+                $profile_pic = $contact->profile_pic()->first();
+                if (is_object($profile_pic)) {
+                    $request = PhotoFunctions::getUrl($profile_pic);
+                    $profile_pic_path = '' . $request->getUri() . '';
+                }
+
+                $firstname = null;
+                $lastname = null;
+                $is_contact = false;
+                if ($user->getFriends->contains($user->id)) {
+                    $firstname = $contact->firstname;
+                    $lastname = $contact->lastname;
+                    $is_contact = true;
+                }
+                
+                $response['users'][] = [
+                    'id' => $contact->id,
+                    'profile_pic' => $profile_pic_path,
+                    'nickname' => $contact->nickname,
+                    'firstname' => $firstname,
+                    'lastname' => $lastname,
+                    'is_contact' => $is_contact
+                ];
+            }
+
+            
+        }
+        return response(['status' => 'Photo does not exists']);
+    }
 }
