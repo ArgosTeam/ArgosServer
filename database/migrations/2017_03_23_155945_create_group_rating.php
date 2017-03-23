@@ -38,8 +38,6 @@ class CreateGroupRating extends Migration
                 ->onDelete('cascade');
             
             $table->timestamps();
-            
-            $table->timestamps();
         });
     }
 
