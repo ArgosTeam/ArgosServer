@@ -133,8 +133,8 @@ class UserFunctions
                                               $user_id,
                                               $name_begin,
                                               $exclude) {
-
-        $currentUser = User::find($user_id);
+        
+        $currentUser = $user_id == -1 ? $user : User::find($user_id);
         $groups = $currentUser->groups()
                 ->where('status', 'accepted');
         $users = $currentUser->getFriends();
