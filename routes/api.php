@@ -54,6 +54,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('/user/photos', 'UserController@photos');
     Route::get('/user/session', 'UserController@session');
     Route::get('/user/contacts', 'UserController@contacts');
+    Route::get('/user/events', 'UserController@events');
 
     /*
     ** Routes regarding events actions
@@ -120,6 +121,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('/group/infos', 'GroupController@infos');
     Route::get('/group/photos', 'GroupController@photos');
     Route::get('/group/contacts', 'GroupController@contacts');
+    Route::get('/group/events', 'GroupController@events');
 
     /*
     ** Route regarding Notifications

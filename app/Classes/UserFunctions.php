@@ -197,4 +197,41 @@ class UserFunctions
         }
         return response(['status' => 'Group does not exists'], 403);
     }
+
+    public static function events($user,
+                                  $name_begin,
+                                  $exclude) {
+        if (is_object($user)) {
+            $response = [];
+            $events = $user->events();
+            if ($name_begin) {
+                $events->where('name', 'like', '%' . $name_begin);
+            }
+            $events = $events->get();
+            
+            foreach ($events as $event) {
+
+                $profile_pic_path = null;
+                $profile_pic = $event->profile_pic()->first();
+                if (is_object($profile_pic)) {
+                    $request = PhotoFunctions::getUrl($profile_pic);
+                    $profile_pic_path = '' . $request->getUri() . '';
+                }
+                
+                $response[] = [
+                    'event_id' => $event->id,
+                    'profile_pic' => $profile_pic_path,
+                    'event_name' => $event->name,
+                    'invited' => ($event->pivot->status == 'invited')
+                                  ? true : false),
+                    'accepted' => ($event->pivot->status == 'accepted')
+                                   ? true : false)
+                ];
+            }
+
+            return response($response, 200);
+        }
+        
+        return response(['status' => 'User does not exist'], 403);
+    }
 }

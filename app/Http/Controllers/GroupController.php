@@ -103,4 +103,15 @@ class GroupController extends Controller
                                                   $name_begin,
                                                   $exclude);
     }
+
+    public function events(Request $request) {
+        $group_id = $request->input('id');
+        $user = Auth::user();
+        $name_begin = $request->input('name_begin');
+        $exclude = $request->input('excludes');
+        return GroupFunctions::events($user,
+                                      $group_id,
+                                      $name_begin,
+                                      $exclude);
+    }
 }
