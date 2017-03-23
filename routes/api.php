@@ -132,4 +132,9 @@ Route::group(['middleware' => 'auth:api'], function () {
     
     /* GET */
     Route::get('/notifs', 'NotificationController@getNotifications');
+
+    /*
+    ** API dynamic tools
+    */
+    Route::get('/check/nickname', 'ToolsController@checkNickname');
 });
