@@ -277,8 +277,9 @@ class PhotoFunctions
                 ];
             }
 
+            return response($response, 200);
             
         }
-        return response(['status' => 'Photo does not exists']);
+        return response(['status' => 'Photo does not exists'], 403);
     }
 }
