@@ -132,4 +132,16 @@ Route::group(['middleware' => 'auth:api'], function () {
     
     /* GET */
     Route::get('/notifs', 'NotificationController@getNotifications');
+
+
+    /*
+    ** Rating
+    */
+    Route::post('/rate', 'RatingController@rate');
+
+    
+    /*
+    ** API dynamic tools
+    */
+    Route::get('/check/nickname', 'ToolsController@checkNickname');
 });

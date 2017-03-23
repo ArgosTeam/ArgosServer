@@ -222,9 +222,9 @@ class UserFunctions
                     'event_id' => $event->id,
                     'profile_pic' => $profile_pic_path,
                     'event_name' => $event->name,
-                    'invited' => ($event->pivot->status == 'invited')
+                    'invited' => ($event->pivot->status == 'invited'
                                   ? true : false),
-                    'accepted' => ($event->pivot->status == 'accepted')
+                    'accepted' => ($event->pivot->status == 'accepted'
                                    ? true : false)
                 ];
             }

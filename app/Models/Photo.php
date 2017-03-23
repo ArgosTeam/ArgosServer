@@ -50,4 +50,9 @@ class Photo extends Model
     public function group_profile_pic() {
         return $this->hasOne(Group::class, 'profile_pic_id');
     }
+
+    public function ratings() {
+        return $this->belongsTo(PhotoRating::class)
+            ->withTimestamps();
+    }
 }

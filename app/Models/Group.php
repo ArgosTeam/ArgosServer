@@ -53,4 +53,9 @@ class Group extends Model
         return $this->belongsToMany(Event::class)
             ->withTimestamps();
     }
+
+    public function ratings() {
+        return $this->belongsTo(GroupRating::class)
+            ->withTimestamps();
+    }
 }
