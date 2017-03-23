@@ -55,11 +55,7 @@ class Group extends Model
     }
 
     public function ratings() {
-        return $this->belongsToMany(RatingType::class,
-                                    'group_rating',
-                                    'group_id',
-                                    'rating_type_id')
-            ->withPivot('rate')
-            ->withTimestamps();;
+        return $this->belongsTo(GroupRating::class)
+            ->withTimestamps();
     }
 }

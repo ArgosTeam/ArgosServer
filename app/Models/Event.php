@@ -49,11 +49,7 @@ class Event extends Model
     }
 
     public function ratings() {
-        return $this->belongsToMany(RatingType::class,
-                                    'event_rating',
-                                    'event_id',
-                                    'rating_type_id')
-            ->withPivot('rate')
+        return $this->belongsTo(EventRating::class)
             ->withTimestamps();
     }
 }

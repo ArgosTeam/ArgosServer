@@ -52,11 +52,7 @@ class Photo extends Model
     }
 
     public function ratings() {
-        return $this->belongsToMany(RatingType::class,
-                                    'photo_rating',
-                                    'photo_id',
-                                    'rating_type_id')
-            ->withPivot('rate')
-            ->withTimestamps();;
+        return $this->belongsTo(PhotoRating::class)
+            ->withTimestamps();
     }
 }

@@ -1,4 +1,3 @@
-
 <?php
 
 use Illuminate\Support\Facades\Schema;
@@ -31,7 +30,12 @@ class CreateEventRating extends Migration
                 ->on('rating_types')
                 ->onDelete('cascade');
 
-            $table->integer('rate');
+            $table->integer('user_id')->unsigned();
+            
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users')
+                ->onDelete('cascade');
             
             $table->timestamps();
         });
