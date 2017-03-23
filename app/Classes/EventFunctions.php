@@ -49,22 +49,6 @@ class EventFunctions
         $event->location()->associate($location);
         
         if ($event->save()) {
-            if ($request->has('hashtags')) {
-                /*
-                ** Create hashtag if not exist
-                ** Associate hashtag to event
-                */
-                foreach ($request->input('hashtags') as $name) {
-                    $hashtag = Hashtag::where('name', '=', $name)
-                             ->first();
-                    if (!is_object($hashtag)) {
-                        $hashtag = Hashtag::create([
-                            'name' => $name
-                        ]);
-                    }
-                    $hashtag->events()->attach($event->id);
-                }
-            }
             
             $user->events()->attach($event->id, [
                 'status' => 'accepted',
@@ -217,31 +201,25 @@ class EventFunctions
         $data['profile_pic'] = $profile_pic_path;
         $data['description'] = $event->description;
         $data['public'] = $event->public;
-        $data['hashtags'] = [];
-        foreach ($event->hashtags()->get() as $hashtag) {
-            $data['hashtags'][] = [
-                'id' => $hashtag->id,
-                'name' => $hashtag->name
-            ];
-        }
         $data['date'] = $event->start;
         $data['expires'] = $event->expires;
         $data['address'] = '';
+        $data['public'] = $event->public;
+        $data['lat'] = $event->location->lat;
+        $data['lng'] = $event->location->lng;
+        $data['count'] = $event->users()
+                       ->where('status', 'accepted')
+                       ->get()
+                       ->count();
 
         $belong = $user->events()
                 ->where('events.id', '=', $event_id)
                 ->first();
         
         if (is_object($belong)) {
-            $data['participate'] = ($belong->pivot->status === 'accepted' ? true : false);
-            $data['pending'] = ($belong->pivot->status === 'pending' ? true : false);
-            $data['invited'] = ($belong->pivot->status === 'invited' ? true : false);
-            $data['admin'] = $belong->pivot->admin;
+            $data['belong'] = ($belong->pivot->status === 'accepted' ? true : false);
         } else {
-            $data['participate'] = false;
-            $data['pending'] = false;
-            $data['invited'] = false;
-            $data['admin'] = false;
+            $data['belong'] = false;
         }
         
         $admin = $event->users()
@@ -258,25 +236,6 @@ class EventFunctions
         }
         $data['admin_url'] = $profile_pica_path;
         $data['admin_name'] = $admin->nickname;
-
-        $comments = [];
-        foreach ($event->comments()->get() as $comment) {
-            $currentUser = User::find($comment->user_id);
-            $profile_pic = $currentUser->profile_pic()->first();
-            $profile_pic_path = null;
-            if (is_object($profile_pic)) {
-                $request = PhotoFunctions::getUrl($profile_pic, 'regular');
-                $profile_pic_path = '' . $request->getUri() . '';
-            }
-            $comments[] = [
-                'content' => $comment->content,
-                'user_id' => $comment->user_id,
-                'user_url' => $profile_pic_path,
-                'user_name' => $currentUser->nickname
-            ];
-        }
-
-        $data['comments'] = $comments;
         
         return response($data, 200);
     }
@@ -371,12 +330,7 @@ class EventFunctions
             
             $response[] = [
                 'photo_id' => $photo->id,
-                'lat' => $photo->location->lat,
-                'lng' => $photo->location->lng,
-                'description' => $photo->description,
-                'path' => '' . $request->getUri() . '',
-                'public' => $photo->public,
-                'origin_user_id' => $photo->origin_user_id
+                'path' => '' . $request->getUri() . ''
             ];
         }
 
@@ -386,6 +340,9 @@ class EventFunctions
     public static function link_groups($user, $groups_id, $event_id) {
         $groups = Group::whereIn('groups.id', $groups_id)->get();
         foreach ($groups as $group) {
+
+            $group->events()->attach($event_id);
+            
             if ($group->users->contains($user->id)) {
                 EventFunctions::invite($user,
                                        $event_id,
@@ -428,5 +385,74 @@ class EventFunctions
             return response(['status' => 'User does not belong to event'], 403);
         }
         return response(['status' => 'Event does not exist'], 403);
+    }
+
+    public static function getRelatedContacts($user,
+                                              $event_id,
+                                              $name_begin,
+                                              $exclude) {
+        $event = Event::find($event_id);
+
+        $groups = $event->groups();
+        $users = $event->users()
+               ->where('status', 'accepted');
+
+        if ($name_begin) {
+            $groups->where('name', 'like', '%' . $name_begin);
+            $users->where('nickname', 'like', '%' . $name_begin);
+        }
+
+        $groups = $groups->get();
+        $users = $users->get();
+        
+        if (is_object($group)) {
+            $response = ['groups' => [], 'users' => []];
+            foreach ($groups as $group) {
+                $profile_pic_path = null;
+                $profile_pic = $group->profile_pic()->first();
+                if (is_object($profile_pic)) {
+                    $request = PhotoFunctions::getUrl($profile_pic);
+                    $profile_pic_path = '' . $request->getUri() . '';
+                }
+                $response['groups'][] = [
+                    'id' => $group->id,
+                    'profile_pic' => $profile_pic_path,
+                    'name' => $group->name,
+                    'is_contact' => ($group->users->contains($user->id)
+                                     ? true : false)
+                ];
+            }
+
+            foreach ($users as $contact) {
+                $profile_pic_path = null;
+                $profile_pic = $contact->profile_pic()->first();
+                if (is_object($profile_pic)) {
+                    $request = PhotoFunctions::getUrl($profile_pic);
+                    $profile_pic_path = '' . $request->getUri() . '';
+                }
+
+                $firstname = null;
+                $lastname = null;
+                $is_contact = false;
+                if ($user->getFriends->contains($user->id)) {
+                    $firstname = $contact->firstname;
+                    $lastname = $contact->lastname;
+                    $is_contact = true;
+                }
+                
+                $response['users'][] = [
+                    'id' => $contact->id,
+                    'profile_pic' => $profile_pic_path,
+                    'nickname' => $contact->nickname,
+                    'firstname' => $firstname,
+                    'lastname' => $lastname,
+                    'is_contact' => $is_contact
+                ];
+            }
+
+            return response($response, 200);
+            
+        }
+        return response(['status' => 'Group does not exists'], 403);
     }
 }

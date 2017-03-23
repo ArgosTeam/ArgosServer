@@ -14,10 +14,10 @@ class PhotoController extends Controller
         return PhotoFunctions::uploadUserImage($data);
     }
 
-    public function macro(Request $request) {
+    public function infos(Request $request) {
         $photo_id = $request->input('id');
         $user = Auth::user();
-        return PhotoFunctions::getMacro($user, $photo_id);
+        return PhotoFunctions::getInfos($user, $photo_id);
     }
 
     public function comment(Request $request) {
@@ -25,5 +25,18 @@ class PhotoController extends Controller
         $photo_id = $request->input('id');
         $content = $request->input('content');
         PhotoFunctions::comment($user, $photo_id, $content);
+    }
+
+    public function contacts(Request $request) {
+        $photo_id = $request->input('id');
+        $known_only = $request->input('known_only');
+        $name_begin = $request->input('name_begin');
+        $exclude = $request->input('exclude');
+        $user = Auth::user();
+        return PhotoFunctions::getRelatedContacts($user,
+                                                  $photo_id,
+                                                  $known_only,
+                                                  $name_begin,
+                                                  $exclude);
     }
 }

@@ -51,7 +51,7 @@ class GroupController extends Controller
 
     public function photos(Request $request) {
         $user = Auth::user();
-        $group_id = $request->input('group_id');
+        $group_id = $request->input('id');
         return GroupFunctions::photos($user, $group_id);
     }
 
@@ -81,16 +81,6 @@ class GroupController extends Controller
         return GroupFunctions::comment($user, $group_id, $content);
     }
 
-    /*
-    ** Invite all users from a group to this group
-    */
-    public function link_groups(Request $request) {
-        $user = Auth::user();
-        $groups_id = $request->input('groups_ids');
-        $event_id = $request->input('group_id');
-        return GroupFunctions::link_groups($user, $groups_id, $group_id);
-    }
-
     public function quit(Request $request) {
         $user = Auth::user();
         $group_id = $request->input('group_id');
@@ -101,5 +91,16 @@ class GroupController extends Controller
         $user = Auth::user();
         $data = $request->all();
         return GroupFunctions::edit($user, $data);
+    }
+
+    public function contacts(Request $request) {
+        $group_id = $request->input('id');
+        $name_begin = $request->input('name_begin');
+        $exclude = $request->input('exclude');
+        $user = Auth::user();
+        return GroupFunctions::getRelatedContacts($user,
+                                                  $group_id,
+                                                  $name_begin,
+                                                  $exclude);
     }
 }

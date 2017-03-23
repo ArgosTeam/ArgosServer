@@ -84,7 +84,7 @@ class EventController extends Controller
 
     public function photos(Request $request) {
         $user = Auth::user();
-        $event_id = $request->input('event_id');
+        $event_id = $request->input('id');
         return EventFunctions::photos($user, $event_id);
     }
 
@@ -109,5 +109,16 @@ class EventController extends Controller
         $user = Auth::user();
         $data = $request->all();
         return EventFunctions::edit($user, $data);
+    }
+
+    public function contacts(Request $request) {
+        $event_id = $request->input('id');
+        $name_begin = $request->input('name_begin');
+        $exclude = $request->input('exclude');
+        $user = Auth::user();
+        return EventFunctions::getRelatedContacts($user,
+                                                  $event_id,
+                                                  $name_begin,
+                                                  $exclude);
     }
 }

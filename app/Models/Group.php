@@ -11,6 +11,14 @@ class Group extends Model
         'name', 'public', 'description', 'address'
     ];
 
+
+    /*
+    ** Relationship set based on group_id
+    */
+    public function groups() {
+        return $this->belongsToMany(Group::class, 'group_groups', 'group_id', 'linked_group_id')
+            ->withTimestamps();
+    }
     
     public function photos() {
         return $this->belongsToMany(Photo::class)
@@ -38,6 +46,11 @@ class Group extends Model
 
     public function comments() {
         return $this->belongsToMany(Comment::class)
+            ->withTimestamps();
+    }
+    
+    public function events() {
+        return $this->belongsToMany(Event::class)
             ->withTimestamps();
     }
 }
