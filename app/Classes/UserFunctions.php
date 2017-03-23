@@ -128,4 +128,73 @@ class UserFunctions
         }
         return response($response, 200);
     }
+
+    public static function getRelatedContacts($user,
+                                              $user_id,
+                                              $name_begin,
+                                              $exclude) {
+
+        $currentUser = User::find($user_id);
+        $groups = $currentUser->groups()
+                ->where('status', 'accepted');
+        $users = $currentUser->getFriends();
+
+        if ($name_begin) {
+            $groups->where('name', 'like', '%' . $name_begin);
+            $users->where('nickname', 'like', '%' . $name_begin);
+        }
+
+        $groups = $groups->get();
+        $users = $users->get();
+        
+        if (is_object($group)) {
+            $response = ['groups' => [], 'users' => []];
+            foreach ($groups as $groupContact) {
+                $profile_pic_path = null;
+                $profile_pic = $groupContact->profile_pic()->first();
+                if (is_object($profile_pic)) {
+                    $request = PhotoFunctions::getUrl($profile_pic);
+                    $profile_pic_path = '' . $request->getUri() . '';
+                }
+                $response['groups'][] = [
+                    'id' => $groupContact->id,
+                    'profile_pic' => $profile_pic_path,
+                    'name' => $groupContact->name,
+                    'is_contact' => ($groupContact->users->contains($user->id)
+                                     ? true : false)
+                ];
+            }
+
+            foreach ($users as $contact) {
+                $profile_pic_path = null;
+                $profile_pic = $contact->profile_pic()->first();
+                if (is_object($profile_pic)) {
+                    $request = PhotoFunctions::getUrl($profile_pic);
+                    $profile_pic_path = '' . $request->getUri() . '';
+                }
+
+                $firstname = null;
+                $lastname = null;
+                $is_contact = false;
+                if ($contact->getFriends->contains($user->id)) {
+                    $firstname = $contact->firstname;
+                    $lastname = $contact->lastname;
+                    $is_contact = true;
+                }
+                
+                $response['users'][] = [
+                    'id' => $contact->id,
+                    'profile_pic' => $profile_pic_path,
+                    'nickname' => $contact->nickname,
+                    'firstname' => $firstname,
+                    'lastname' => $lastname,
+                    'is_contact' => $is_contact
+                ];
+            }
+
+            return response($response, 200);
+            
+        }
+        return response(['status' => 'Group does not exists'], 403);
+    }
 }

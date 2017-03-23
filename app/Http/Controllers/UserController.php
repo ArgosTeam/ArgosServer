@@ -43,4 +43,17 @@ class UserController extends Controller
         $user = Auth::user();
         return UserFunctions::getSession($user);
     }
+
+    public function contacts(Request $request) {
+        $user_id = $request->input('id');
+        $name_begin = $request->input('name_begin');
+        $exclude = $request->input('exclude');
+        $user = ($user_id = -1
+                 ? Auth::user()
+                 : User::find($user_id));
+        return EventFunctions::getRelatedContacts($user,
+                                                  $user_id,
+                                                  $name_begin,
+                                                  $exclude);
+    }
 }

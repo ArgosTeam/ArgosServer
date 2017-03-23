@@ -391,24 +391,13 @@ class GroupFunctions
 
     public static function getRelatedContacts($user,
                                               $group_id,
-                                              $known_only,
                                               $name_begin,
                                               $exclude) {
         $group = Group::find($group_id);
 
         $groups = $group->groups();
-        $users = $group->users();
-        if ($known_only) {
-            $groups->whereIn('groups.id',
-                             $user->groups()
-                             ->where('status', 'accepted')
-                             ->get()
-                             ->pluck('id'));
-            $users->whereIn('users.id',
-                            $user->getFriends()
-                            ->get()
-                            ->pluck('id'));
-        }
+        $users = $group->users()
+               ->where('status', 'accepted');
 
         if ($name_begin) {
             $groups->where('name', 'like', '%' . $name_begin);
@@ -420,18 +409,18 @@ class GroupFunctions
         
         if (is_object($group)) {
             $response = ['groups' => [], 'users' => []];
-            foreach ($groups as $group) {
+            foreach ($groups as $groupContact) {
                 $profile_pic_path = null;
-                $profile_pic = $group->profile_pic()->first();
+                $profile_pic = $groupContact->profile_pic()->first();
                 if (is_object($profile_pic)) {
                     $request = PhotoFunctions::getUrl($profile_pic);
                     $profile_pic_path = '' . $request->getUri() . '';
                 }
                 $response['groups'][] = [
-                    'id' => $group->id,
+                    'id' => $groupContact->id,
                     'profile_pic' => $profile_pic_path,
-                    'name' => $group->name,
-                    'is_contact' => ($group->users->contains($user->id)
+                    'name' => $groupContact->name,
+                    'is_contact' => ($groupContact->users->contains($user->id)
                                      ? true : false)
                 ];
             }

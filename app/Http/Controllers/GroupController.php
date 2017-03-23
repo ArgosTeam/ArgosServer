@@ -95,13 +95,11 @@ class GroupController extends Controller
 
     public function contacts(Request $request) {
         $group_id = $request->input('id');
-        $known_only = $request->input('known_only');
         $name_begin = $request->input('name_begin');
         $exclude = $request->input('exclude');
         $user = Auth::user();
         return GroupFunctions::getRelatedContacts($user,
-                                                  $photo_id,
-                                                  $known_only,
+                                                  $group_id,
                                                   $name_begin,
                                                   $exclude);
     }

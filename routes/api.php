@@ -53,6 +53,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('/user/infos', 'UserController@infos');
     Route::get('/user/photos', 'UserController@photos');
     Route::get('/user/session', 'UserController@session');
+    Route::get('/user/contacts', 'UserController@contacts')
 
     /*
     ** Routes regarding events actions
