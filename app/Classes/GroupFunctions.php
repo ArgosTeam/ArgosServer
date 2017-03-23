@@ -450,6 +450,49 @@ class GroupFunctions
             return response($response, 200);
             
         }
+        
         return response(['status' => 'Group does not exists'], 403);
+    }
+
+    public static function events($user,
+                                  $group_id,
+                                  $name_begin,
+                                  $exclude) {
+        $group = Group::find($group_id);
+        if (is_object($group)) {
+            $response = [];
+            $events = $group->events();
+            if ($name_begin) {
+                $events->where('name', 'like', '%' . $name_begin);
+            }
+            $events = $events->get();
+            
+            foreach ($events as $event) {
+
+                $profile_pic_path = null;
+                $profile_pic = $event->profile_pic()->first();
+                if (is_object($profile_pic)) {
+                    $request = PhotoFunctions::getUrl($profile_pic);
+                    $profile_pic_path = '' . $request->getUri() . '';
+                }
+                $pivot = $user->events()
+                       ->where('status', 'accepted')
+                       ->where('events.id', $event->id)
+                       ->first();
+                $response[] = [
+                    'event_id' => $event->id,
+                    'profile_pic' => $profile_pic_path,
+                    'event_name' => $event->name,
+                    'invited' => ((is_object($pivot) && $pivot->status == 'invited')
+                                  ? true : false),
+                    'accepted' => ((is_object($pivot) && $pivot->status == 'accepted')
+                                   ? true : false)
+                ];
+            }
+
+            return response($response, 200);
+        }
+        
+        return response(['status' => 'Group does not exist'], 403);
     }
 }
