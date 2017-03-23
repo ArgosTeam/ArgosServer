@@ -49,22 +49,6 @@ class EventFunctions
         $event->location()->associate($location);
         
         if ($event->save()) {
-            if ($request->has('hashtags')) {
-                /*
-                ** Create hashtag if not exist
-                ** Associate hashtag to event
-                */
-                foreach ($request->input('hashtags') as $name) {
-                    $hashtag = Hashtag::where('name', '=', $name)
-                             ->first();
-                    if (!is_object($hashtag)) {
-                        $hashtag = Hashtag::create([
-                            'name' => $name
-                        ]);
-                    }
-                    $hashtag->events()->attach($event->id);
-                }
-            }
             
             $user->events()->attach($event->id, [
                 'status' => 'accepted',
@@ -356,6 +340,9 @@ class EventFunctions
     public static function link_groups($user, $groups_id, $event_id) {
         $groups = Group::whereIn('groups.id', $groups_id)->get();
         foreach ($groups as $group) {
+
+            $group->events()->attach($event_id);
+            
             if ($group->users->contains($user->id)) {
                 EventFunctions::invite($user,
                                        $event_id,

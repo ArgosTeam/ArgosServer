@@ -42,4 +42,9 @@ class Event extends Model
         return $this->belongsToMany(Photo::class)
             ->withTimestamps();
     }
+
+    public function groups() {
+        return $this->belongsToMany(Group::class)
+            ->withTimestamps();
+    }
 }

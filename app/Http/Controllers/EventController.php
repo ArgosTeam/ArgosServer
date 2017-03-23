@@ -110,4 +110,17 @@ class EventController extends Controller
         $data = $request->all();
         return EventFunctions::edit($user, $data);
     }
+
+    public function contacts(Request $request) {
+        $event_id = $request->input('id');
+        $known_only = $request->input('known_only');
+        $name_begin = $request->input('name_begin');
+        $exclude = $request->input('exclude');
+        $user = Auth::user();
+        return EventFunctions::getRelatedContacts($user,
+                                                  $photo_id,
+                                                  $known_only,
+                                                  $name_begin,
+                                                  $exclude);
+    }
 }
