@@ -307,12 +307,7 @@ class GroupFunctions
             
             $response[] = [
                 'photo_id' => $photo->id,
-                'lat' => $photo->location->lat,
-                'lng' => $photo->location->lng,
-                'description' => $photo->description,
-                'path' => '' . $request->getUri() . '',
-                'public' => $photo->public,
-                'origin_user_id' => $photo->origin_user_id
+                'path' => '' . $request->getUri() . ''
             ];
         }
 
