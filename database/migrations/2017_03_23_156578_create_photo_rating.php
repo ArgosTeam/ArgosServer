@@ -29,6 +29,8 @@ class CreatePhotoRating extends Migration
                 ->references('id')
                 ->on('rating_types')
                 ->onDelete('cascade');
+
+            $table->integer('rate');
             
             $table->timestamps();
         });

@@ -47,4 +47,13 @@ class Event extends Model
         return $this->belongsToMany(Group::class)
             ->withTimestamps();
     }
+
+    public function ratings() {
+        return $this->belongsToMany(RatingType::class,
+                                    'event_rating',
+                                    'event_id',
+                                    'rating_type_id')
+            ->withPivot('rate')
+            ->withTimestamps();
+    }
 }
