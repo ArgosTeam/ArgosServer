@@ -151,6 +151,7 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     /* GET */
     Route::get('/comments/event', 'CommentController@event');
-
+    Route::get('/comments/photo', 'CommentController@photo');
+    Route::get('/comments/group', 'CommentController@group');
     
 });
