@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class RatingType extends Model
 {
     protected $table = 'rating_types';
+    protected $fillable = ['name'];
     
     public function event_ratings() {
         return $this->hasMany(EventRating::class)
