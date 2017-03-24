@@ -100,8 +100,8 @@ class PhotoFunctions
         ** Create new location, each upload image from user is geolocalised
         */
         $location = new Location();
-        $location->lat = $data['latitude'];
-        $location->lng = $data['longitude'];
+        $location->lat = $data['lat'];
+        $location->lng = $data['lng'];
         $location->save();
 
         /*
@@ -109,23 +109,6 @@ class PhotoFunctions
         */
         $photo->location()->associate($location);
         $photo->save();
-
-        /*
-        ** Create hashtag if not exist
-        ** Associate hashtag to photo
-        */
-        if (is_array($data['hashtags'])) {
-            foreach ($data['hashtags'] as $name) {
-                $hashtag = Hashtag::where('name', '=', $name)
-                         ->first();
-                if (!is_object($hashtag)) {
-                    $hashtag = Hashtag::create([
-                        'name' => $name
-                    ]);
-                }
-                $hashtag->photos()->attach($photo->id);
-            }
-        }
 
         /*
         ** Link user to photo

@@ -144,4 +144,13 @@ Route::group(['middleware' => 'auth:api'], function () {
     ** API dynamic tools
     */
     Route::get('/check/nickname', 'ToolsController@checkNickname');
+
+    /*
+    ** Routes regarding comments
+    */
+
+    /* GET */
+    Route::get('/comments/event', 'CommentController@event');
+
+    
 });
