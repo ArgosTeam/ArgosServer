@@ -29,13 +29,11 @@ class PhotoController extends Controller
 
     public function contacts(Request $request) {
         $photo_id = $request->input('id');
-        $known_only = $request->input('known_only');
         $name_begin = $request->input('name_begin');
         $exclude = $request->input('exclude');
         $user = Auth::user();
         return PhotoFunctions::getRelatedContacts($user,
                                                   $photo_id,
-                                                  $known_only,
                                                   $name_begin,
                                                   $exclude);
     }

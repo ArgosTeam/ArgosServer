@@ -188,24 +188,12 @@ class PhotoFunctions
 
     public static function getRelatedContacts($user,
                                               $photo_id,
-                                              $known_only,
                                               $name_begin,
                                               $exclude) {
         $photo = Photo::find($photo_id);
 
         $groups = $photo->groups();
         $users = $photo->users();
-        if ($known_only) {
-            $groups->whereIn('groups.id',
-                             $user->groups()
-                             ->where('status', 'accepted')
-                             ->get()
-                             ->pluck('id'));
-            $users->whereIn('users.id',
-                            $user->getFriends()
-                            ->get()
-                            ->pluck('id'));
-        }
 
         if ($name_begin) {
             $groups->where('name', 'like', '%' . $name_begin);
