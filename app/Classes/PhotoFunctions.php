@@ -117,7 +117,7 @@ class PhotoFunctions
             'admin' => true
         ]);
 
-        $ids = array_key_exists('rights', $data) ? $data['rights'] : [];
+        $ids = array_key_exists('invites', $data) ? $data['invites'] : [];
         $users_to_share = User::whereIn('id', $ids)->get();
 
         foreach ($users_to_share as $shared) {
