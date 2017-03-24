@@ -15,11 +15,6 @@ use App\Notifications\GroupInviteAccepted;
 class GroupFunctions
 {
     public static function add($user, $request) {
-        $group = Group::where('name', '=', $request->input('name'))
-               ->first();
-        if (is_object($group)) {
-            return response('This group name already exists', 403);
-        }
         
         if(is_object($user)) {
 
@@ -373,7 +368,16 @@ class GroupFunctions
                                  ->where('users.id', '=', $user->id)
                                  ->first();
                 if ($currentRelation->pivot->admin) {
-                    // Edit
+                    if (array_key_exist('name', $data)) {
+                        $group->name = $data['name'];
+                    }
+                    if (array_key_exist('description', $data)) {
+                        $group->description = $data['description'];
+                    }
+                    if (array_key_exist('address', $data)) {
+                        $group->address = $data['address'];
+                    }
+                    $group->save();
 
                     return response(['status' => 'Edit successfull'], 200);
                 }

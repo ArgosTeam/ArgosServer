@@ -24,12 +24,6 @@ class EventFunctions
 
         $data = $request->all();
 
-        $event = Event::where('name', '=', $data['name'])
-               ->first();
-        if (is_object($event)) {
-            return response('Event alreay exists', 403);
-        }
-
         $event = new Event();
         $event->name = $data['name'];
         $event->description = $data['description'];
@@ -376,8 +370,21 @@ class EventFunctions
                                  ->where('users.id', '=', $user->id)
                                  ->first();
                 if ($currentRelation->pivot->admin) {
-                    // Edit
+                    if (array_key_exist('name', $data)) {
+                        $event->name = $data['name'];
+                    }
+                    if (array_key_exist('description', $data)) {
+                        $event->description = $data['description'];
+                    }
+                    if (array_key_exist('start', $data)) {
+                        $event->address = $data['start'];
+                    }
+                    if (array_key_exist('expires', $data)) {
+                        $event->address = $data['expires'];
+                    }
 
+                    $event->save();
+                    
                     return response(['status' => 'Edit successfull'], 200);
                 }
                 return response(['status' => 'User is not admin'], 403);
