@@ -21,7 +21,7 @@ class CreateRatingTypes extends Migration
             $table->engine = 'InnoDB';
 
             $table->increments('id');
-            $table->enum('name', );
+            $table->enum('name', $types);
             $table->timestamps();
         });
 
