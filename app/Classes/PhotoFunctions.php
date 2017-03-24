@@ -155,7 +155,7 @@ class PhotoFunctions
         $originUser = User::find($photo->origin_user_id);
         $profile_pic_path = null;
         if (is_object($profile_pic = $originUser->profile_pic()->first())) {
-            $requestOrigin = PhotoFunctions::getUrl($profile_pic);
+            $requestOrigin = PhotoFunctions::getUrl($profile_pic, 'macro');
             $profile_pic_path = '' . $requestOrigin->getUri() . '';
         }
         $data = [
