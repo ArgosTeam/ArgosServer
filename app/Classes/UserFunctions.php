@@ -147,7 +147,7 @@ class UserFunctions
         $groups = $groups->get();
         $users = $users->get();
         
-        if (is_object($group)) {
+        if (is_object($currentUser)) {
             $response = ['groups' => [], 'users' => []];
             foreach ($groups as $groupContact) {
                 $profile_pic_path = null;
