@@ -48,9 +48,7 @@ class UserController extends Controller
         $user_id = $request->input('id');
         $name_begin = $request->input('name_begin');
         $exclude = $request->input('exclude');
-        $user = ($user_id = -1
-                 ? Auth::user()
-                 : User::find($user_id));
+        $user = Auth::user();
         return UserFunctions::getRelatedContacts($user,
                                                  $user_id,
                                                  $name_begin,
