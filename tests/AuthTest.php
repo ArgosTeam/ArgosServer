@@ -15,6 +15,7 @@ class AuthTest extends TestCase
     ** Test of AuthController@registerManual
     */
     public function testRegisterManual() {
+        $dob = date('Y-m-d G:i:s', strtotime('+4 days'));
         $data = [
             'csrf_token' => csrf_token(),
             'grant_type' => 'password',
@@ -22,10 +23,11 @@ class AuthTest extends TestCase
             'client_secret' => 'H9c9USUmSWsw2yxqxrnPbXl8sPvRfDCxztFc7xZ8',
             'phone' => '06111111111',
             'nickname' => 'aure.girard@gmail.com',
+            'dob' => $dob,
             'password' => 'toto',
             'password_confirm' => 'toto',
             'sex' => 'male',
-            'scope' => '*'x
+            'scope' => '*'
         ];
         $response = $this->json(
             'POST',
@@ -37,6 +39,7 @@ class AuthTest extends TestCase
     }
 
     public function testRegisterManual2() {
+        $dob = date('Y-m-d G:i:s', strtotime('+4 days'));
         $data = [
             'csrf_token' => csrf_token(),
             'grant_type' => 'password',
@@ -46,6 +49,7 @@ class AuthTest extends TestCase
             'nickname' => 'aure.girardeau@gmail.com',
             'password' => 'toto',
             'password_confirm' => 'toto',
+            'dob' => $dob,
             'sex' => 'male',
             'scope' => '*'
         ];
