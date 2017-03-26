@@ -16,4 +16,12 @@ class LocationController extends Controller
         return response(['status' => 'ok'], 200);
     }
 
+    public function reverse_geocoding(Request $request) {
+        $lat = $request->input('lat');
+        $lng = $request->input('lng');
+        $reversed = app('geocoder')->reverse($lat, $lng)->get();
+        Log::info('REVERSED : ' . print_r($reversed));
+        return response(['status' => 'ok'], 200);
+    }
+
 }
