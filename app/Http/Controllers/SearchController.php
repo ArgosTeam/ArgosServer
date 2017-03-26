@@ -11,37 +11,6 @@ use App\Classes\SearchFunctions;
 
 class SearchController extends Controller
 {
-    //
-
-    public function process(Request $request){
-
-        $search = "%" . $request->q . "%";
-
-        $hashTags = Hashtag::where('name', 'LIKE', $search)->take(10)->get();
-
-        $data = [];
-        foreach ($hashTags as $tag) {
-            $tempArray = [];
-            $tempArray["id"] = $tag->id;
-            $tempArray["text"] = strtolower($tag->name);
-            $data["results"][] = $tempArray;
-        }
-
-        return $data;
-
-    }
-
-    public function selectData() {
-        return DropdownFunctions::generalSelect();
-    }
-
-    public function contacts(Request $request) {
-        $user_id = $request->input("id");
-        $nameBegin = $request->input("name_begin");
-        $knownOnly = $request->input("known_only");
-        $exclude_ids = $request->has("excludes") ? $request->input("excludes") : [];
-        return SearchFunctions::getContacts($user_id, $nameBegin, $knownOnly, $exclude_ids);
-    }
 
     public function events(Request $request) {
         $user_id = $request->input('id') == -1
@@ -60,5 +29,11 @@ class SearchController extends Controller
         $user = User::find($user_id);
         $nameBegin = $request->input("name_begin");
         return SearchFunctions::photos($user, $nameBegin);
+    }
+
+    public function search(Request $request) {
+        $user = Auth::user();
+        $data = $request->all();
+        return SearchFunctions::globalSearch($user, $data);
     }
 }
