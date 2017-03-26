@@ -86,6 +86,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     /* GET */
     Route::get('/search/events', 'SearchController@events');
     Route::get('/search/photos', 'SearchController@photos');
+    Route::get('/search/global', 'SearchController@search');
 
 
     /*
