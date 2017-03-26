@@ -154,7 +154,7 @@ class SearchFunctions {
         $merge_ids = array_merge($ids->all(), $exclude);
         $query = $user->groups()
                ->where('public', true)
-               ->whereNotIn($merge_ids);
+               ->whereNotIn('groups.id', $merge_ids);
         if ($nameBegin) {
             $query->where('groups.name', 'like', '%' . $nameBegin);   
         }
@@ -205,7 +205,7 @@ class SearchFunctions {
         $merge_ids = array_merge($ids->all(), $exclude);
         $query = $user->events()
                ->where('public', true)
-               ->whereNotIn($merge_ids);
+               ->whereNotIn('events.id', $merge_ids);
         if ($nameBegin) {
             $query->where('events.name', 'like', '%' . $nameBegin);   
         }
