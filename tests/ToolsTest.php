@@ -32,3 +32,4 @@ class NotificationTest extends TestCase {
         print_r($response->getContent());
         $this->assertEquals(200, $response->status());
     }
+}
