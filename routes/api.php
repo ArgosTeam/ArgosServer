@@ -132,6 +132,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     
     /* GET */
     Route::get('/notifs', 'NotificationController@getNotifications');
+    Route::get('/notif/count', 'NotificationController@count');
 
 
     /*

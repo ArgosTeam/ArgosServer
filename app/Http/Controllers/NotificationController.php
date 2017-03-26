@@ -42,4 +42,30 @@ class NotificationController extends Controller
         }
         return response(['status' => 'success'], 200);
     }
+
+    public function count(Request $request) {
+        $user = Auth::user();
+        $prefix = "App\Notifications\\" ;
+        $notificationsUsers = $user->notifications()
+                            ->whereIn('type', [$prefix . 'FriendRequest',
+                                               $prefix . 'FriendRequestAccepted',
+                                               $prefix . 'FriendRequestRejected',
+                                               $prefix . 'GroupInvite',
+                                               $prefix . 'GroupInviteAccepted'])
+                            ->count();
+        $notificationsPhotos = $user->notifications()
+                             ->whereIn('type', [$prefix . 'NewPublicPicture',
+                                                $prefix . 'NewPrivatePicture'])
+                             ->count();
+        $notificationsEvents = $user->notifications()
+                             ->whereIn('type', [$prefix . 'EventInvite',
+                                                $prefix . 'EventInviteAccepted'])
+                             ->count();
+
+        return response([
+            'photo' => $notificationsPhotos,
+            'user' => $notificationsUsers,
+            'event' => $notificationsEvents],200);
+                            
+    }
 }
