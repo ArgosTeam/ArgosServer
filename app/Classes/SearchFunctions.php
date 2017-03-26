@@ -13,122 +13,6 @@ use App\Classes\PhotoFunctions;
 
 class SearchFunctions {
 
-
-    /*
-    ** Search Users
-    */
-    private static function getKnownUsers($user, $nameBegin, $self = false, $exclude_ids = []) {
-        $query = $user->getFriends()
-               ->where(function ($query) use ($nameBegin) {
-                   $query->where('nickname', 'like', $nameBegin . '%');
-               });
-
-        if (!empty($exclude_ids)) {
-            $query->whereNotIn('users.id', $exclude_ids);
-        }
-
-        $query->where('users.id', '!=', $user->id);
-        return $query->get();
-    }
-
-    private static function getUnknownUsers($user, $nameBegin, $limit, $self = false, $exclude_ids = []) {
-        $ids = $user->getFriends()->get()->pluck('id');
-        $ids[] = $user->id;
-        $query = User::where(function ($query) use ($nameBegin) {
-            $query->where('nickname', 'like', $nameBegin . '%');
-        })
-               ->limit(15);
-
-        $merge_ids = array_merge($ids->all(), $exclude_ids);
-        if (!empty($merge_ids)) {
-            $query->whereNotIn('users.id', $merge_ids);
-        }
-        return $query->get();
-    }
-    
-    private static function getUsers($user, $nameBegin, $knownOnly, $self = false, $exclude_ids = []) {
-        $users = SearchFunctions::getknownUsers($user, $nameBegin, $self, $exclude_ids);
-        if (!$knownOnly && ($limit = 15 - $users->count()) > 0) {
-            $users = $users->merge(SearchFunctions::getUnknownUsers($user,
-                                                                    $nameBegin,
-                                                                    $limit,
-                                                                    $self,
-                                                                    $exclude_ids));
-        }
-        return $users;
-    }
-    
-    public static function  getContacts($user_id, $nameBegin, $knownOnly, $exclude_ids = []) {
-        $self = $user_id == -1 ? true : false;
-        $currentUser = $self
-                     ? Auth::user()
-                     : User::find($user_id);
-        
-        $users = SearchFunctions::getUsers($currentUser,
-                                           $nameBegin,
-                                           $knownOnly,
-                                           $self,
-                                           $exclude_ids);
-        $groups =  Group::where('name', 'like', $nameBegin . '%')
-                ->limit(15)
-                ->get();
-        $data = ['users' => [], 'groups' => []];
-        foreach ($users as $user) {
-            $newEntry = [];
-
-            $profile_pic = $user->profile_pic()->first();
-            $profile_pic_path = null;
-
-            if (is_object($profile_pic)) {
-                $request = PhotoFunctions::getUrl($profile_pic, 'avatar');
-                $profile_pic_path = '' . $request->getUri() . '';
-            }
-            
-            $newEntry['id'] = $user->id;
-            $newEntry['profile_pic'] = $profile_pic_path;
-            $newEntry['nickname'] = $user->nickname;
-            $newEntry['firstname'] = '';
-            $newEntry['lastname'] = '';
-            $newEntry['type'] = 'user';
-            if (is_object($user->pivot)) {
-                $newEntry['is_contact'] = ($user->pivot->active
-                                            ? true : false);
-                $newEntry['firstname'] = $user->firstname;
-                $newEntry['lastname'] = $user->lastname;
-            } else {
-                $newEntry['is_contact'] = false;
-            }
-            $data['users'][] = $newEntry;
-        }
-        foreach ($groups as $group) {
-            $user = $group->users()->find($currentUser->id);
-            $newEntry = [];
-
-            $profile_pic = $group->profile_pic()->first();
-            $profile_pic_path = null;
-            
-            if (is_object($profile_pic)) {
-                $request = PhotoFunctions::getUrl($profile_pic, 'avatar');
-                $profile_pic_path = '' . $request->getUri() . '';
-            }
-            
-            $newEntry['id'] = $group->id;
-            $newEntry['profile_pic'] = $profile_pic_path;
-            $newEntry['name'] = $group->name;
-            $newEntry['public'] = $group->public;
-    
-            if (is_object($user)) {
-                $newEntry['is_contact'] = ($user->pivot->status == "accepted"
-                                           ? true : false);
-            } else {
-                $newEntry['is_contact'] = false;
-            }
-            
-            $data['groups'][] = $newEntry;
-        }
-        return response($data, 200);
-    }
-
     /*
     ** Search Events
     */
@@ -220,6 +104,229 @@ class SearchFunctions {
                 'lat' => $location->lat,
                 'lng' => $location->lng
             ];
+        }
+
+        return response($response, 200);
+    }
+
+    private static function getKnownUsers($user, $nameBegin, $limit, $self = false, $exclude_ids = []) {
+        $query = $user->getFriends()
+               ->where(function ($query) use ($nameBegin) {
+                   $query->where('nickname', 'like', $nameBegin . '%');
+               });
+        if (!empty($exclude_ids)) {
+            $query->whereNotIn('users.id', $exclude_ids);
+        }
+        $query->where('users.id', '!=', $user->id)
+            ->limit($limit);
+        return $query->get();
+    }
+    
+    private static function getUnknownUsers($user, $nameBegin, $limit, $self = false, $exclude_ids = []) {
+        $ids = $user->getFriends()->get()->pluck('id');
+        $ids[] = $user->id;
+        $query = User::where(function ($query) use ($nameBegin) {
+            $query->where('nickname', 'like', $nameBegin . '%');
+        })
+               ->limit(15);
+        $merge_ids = array_merge($ids->all(), $exclude_ids);
+        if (!empty($merge_ids)) {
+            $query->whereNotIn('users.id', $merge_ids);
+        }
+        return $query->get();
+    }
+
+    private static function getUsers($user,
+                                     $nameBegin,
+                                     $count,
+                                     $knownOnly = false,
+                                     $self = false,
+                                     $exclude_ids = []) {
+        $users = SearchFunctions::getknownUsers($user, $nameBegin, $count, $self, $exclude_ids);
+        if (!$knownOnly && ($limit = $count - $users->count()) > 0) {
+            $users = $users->merge(SearchFunctions::getUnknownUsers($user,
+                                                                    $nameBegin,
+                                                                    $limit,
+                                                                    $self,
+                                                                    $exclude_ids));
+        }
+        return $users;
+    }
+
+    private static function getKnownGroups($user,
+                                           $nameBegin,
+                                           $count,
+                                           $exclude) {
+        $query = $user->groups()
+               ->where('status', 'accepted');
+        if ($nameBegin) {
+            $query->where('groups.name', 'like', '%' . $nameBegin);
+        }
+        if (!empty($exclude)) {
+            $query->whereNotIn('groups.id', $exclude);
+        }
+        $query->limit($count);
+        return $query->get();
+    }
+
+    private static function getUnknownGroups($user,
+                                             $nameBegin,
+                                             $count,
+                                             $exclude) {
+        $ids = $user->groups()
+             ->where('status', 'accepted')
+             ->get()
+             ->pluck('id');
+        $merge_ids = array_merge($ids->all(), $exclude);
+        $query = $user->groups()
+               ->where('public', true)
+               ->whereNotIn($merge_ids);
+        if ($nameBegin) {
+            $query->where('groups.name', 'like', '%' . $nameBegin);   
+        }
+        $query->limit($count);
+        return $query->get();
+    }
+    
+    public static function getGroups($user,
+                                     $nameBegin,
+                                     $count,
+                                     $knownOnly = false,
+                                     $exclude) {
+        $groups = SearchFunctions::getknownGroups($user, $nameBegin, $count, $exclude);
+        $count -= $groups->count();
+        if (!$knownOnly && $count > 0) {
+            $groups = $groups->merge(SearchFunctions::getUnknownGroups($user,
+                                                                       $nameBegin,
+                                                                       $count,
+                                                                       $exclude));
+        }
+        return $groups;
+    }
+
+    private static function getKnownEvents($user,
+                                           $nameBegin,
+                                           $count,
+                                           $exclude) {
+        $query = $user->events()
+               ->where('status', 'accepted');
+        if ($nameBegin) {
+            $query->where('events.name', 'like', '%' . $nameBegin);
+        }
+        if (!empty($exclude)) {
+            $query->whereNotIn('events.id', $exclude);
+        }
+        $query->limit($count);
+        return $query->get();
+    }
+
+    private static function getUnknownEvents($user,
+                                             $nameBegin,
+                                             $count,
+                                             $exclude) {
+        $ids = $user->events()
+             ->where('status', 'accepted')
+             ->get()
+             ->pluck('id');
+        $merge_ids = array_merge($ids->all(), $exclude);
+        $query = $user->events()
+               ->where('public', true)
+               ->whereNotIn($merge_ids);
+        if ($nameBegin) {
+            $query->where('events.name', 'like', '%' . $nameBegin);   
+        }
+        $query->limit($count);
+        return $query->get();
+    }
+    
+    public static function getEvents($user,
+                                     $nameBegin,
+                                     $count,
+                                     $knownOnly = false,
+                                     $exclude) {
+        $events = SearchFunctions::getknownEvents($user, $nameBegin, $count, $exclude);
+        $count -= $events->count();
+        if (!$knownOnly && $count > 0) {
+            $events = $events->merge(SearchFunctions::getUnknownEvents($user,
+                                                                       $nameBegin,
+                                                                       $count,
+                                                                       $exclude));
+        }
+        return $events;
+    }
+    
+    public static function globalSearch($user, $data) {
+        $name_begin = $data['name_begin'];
+        $mode = $data['mode'];
+        $exclude = array_key_exists('exclude', $data) ? $data['exclude'] : [];
+
+        $count = env('GLOBAL_SEARCH_COUNT');
+
+        $response = [];
+        if ($mode == 'users') {
+            $users = SearchFunctions::getUsers($user,
+                                               $name_begin,
+                                               $count,
+                                               false,
+                                               true,
+                                               $exclude);
+            foreach ($users as $item) {
+                $profile_pic_path = null;
+                $profile_pic = $item->profile_pic()->first();
+                if (is_object($profile_pic)) {
+                    $request = PhotoFunctions::getUrl($profile_pic);
+                    $profile_pic_path = '' . $request->getUri() . '';
+                }
+                $response[] = [
+                    'id' => $item->id,
+                    'profile_pic' => $profile_pic_path,
+                    'name' => $item->nickname
+                ];
+            }
+        }
+
+        if ($mode == 'groups') {
+            $groups = SearchFunctions::getGroups($user,
+                                                 $name_begin
+                                                 $count,
+                                                 false,
+                                                 $exclude);
+
+            foreach ($groups as $item) {
+                $profile_pic_path = null;
+                $profile_pic = $item->profile_pic()->first();
+                if (is_object($profile_pic)) {
+                    $request = PhotoFunctions::getUrl($profile_pic);
+                    $profile_pic_path = '' . $request->getUri() . '';
+                }
+                $response[] = [
+                    'id' => $item->id,
+                    'profile_pic' => $profile_pic_path,
+                    'name' => $item->name
+                ];
+            }
+        }
+
+        if ($mode == 'events') {
+            $events = SearchFunctions::getEvents($user,
+                                                 $name_begin
+                                                 $count,
+                                                 false,
+                                                 $exclude);
+
+            foreach ($events as $item) {
+                $profile_pic_path = null;
+                $profile_pic = $item->profile_pic()->first();
+                if (is_object($profile_pic)) {
+                    $request = PhotoFunctions::getUrl($profile_pic);
+                    $profile_pic_path = '' . $request->getUri() . '';
+                }
+                $response[] = [
+                    'id' => $item->id,
+                    'profile_pic' => $profile_pic_path,
+                    'name' => $item->name
+                ];
+            }
         }
 
         return response($response, 200);
