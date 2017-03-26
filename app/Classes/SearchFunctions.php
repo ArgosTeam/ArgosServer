@@ -12,35 +12,9 @@ use Illuminate\Support\Facades\Input;
 use App\Classes\PhotoFunctions;
 
 class SearchFunctions {
-
-    /*
-    ** Search Events
-    */
-    
-    private static function getKnownEvents($user, $nameBegin) {
-        return $user->events()
-            ->where('events.name', 'like', $nameBegin . '%')
-            ->limit(30)
-            ->get();
-    }
-
-    private static function getUnknownEvents($user, $nameBegin, $limit) {
-        return Event::where('id', '!=', $user->events->pluck('id'))
-            ->where('events.name', 'like', $nameBegin . '%')
-            ->limit($limit)
-            ->get();
-    }
-    
-    private static function getEvents($user, $nameBegin, $knownOnly) {
-        $events = SearchFunctions::getknownEvents($user, $nameBegin);
-        if (!$knownOnly && ($limit = 30 - $events->count()) > 0) {
-            $events = $events->merge(SearchFunctions::getUnknownEvents($user, $nameBegin, $limit));
-        }
-        return $events;
-    }
     
     public static function  events($currentUser, $nameBegin, $knownOnly) {
-        $events = SearchFunctions::getEvents($currentUser, $nameBegin, $knownOnly);
+        $events = SearchFunctions::getEvents($currentUser, $nameBegin, 16, $knownOnly, []);
         $data = [];
         
         foreach ($events as $event) {
