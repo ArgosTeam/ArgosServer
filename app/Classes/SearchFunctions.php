@@ -258,7 +258,18 @@ class SearchFunctions {
     public static function globalSearch($user, $data) {
         $name_begin = $data['name_begin'];
         $mode = $data['mode'];
-        $exclude = array_key_exists('exclude', $data) ? $data['exclude'] : [];
+        $exclude = array_key_exists('exclude', $data)
+                 ? $data['exclude'] : [];
+
+        if (!array_key_exists('users', $exclude)) {
+            $exclude['users'] = [];
+        }
+        if (!array_key_exists('groups', $exclude)) {
+            $exclude['groups'] = [];
+        }
+        if (!array_key_exists('events', $exclude)) {
+            $exclude['events'] = [];
+        }
 
         $count = env('GLOBAL_SEARCH_COUNT');
 
@@ -269,7 +280,7 @@ class SearchFunctions {
                                                $count,
                                                false,
                                                true,
-                                               $exclude);
+                                               $exclude['users']);
             foreach ($users as $item) {
                 $profile_pic_path = null;
                 $profile_pic = $item->profile_pic()->first();
@@ -290,7 +301,7 @@ class SearchFunctions {
                                                  $name_begin
                                                  $count,
                                                  false,
-                                                 $exclude);
+                                                 $exclude['groups']);
 
             foreach ($groups as $item) {
                 $profile_pic_path = null;
@@ -312,7 +323,7 @@ class SearchFunctions {
                                                  $name_begin
                                                  $count,
                                                  false,
-                                                 $exclude);
+                                                 $exclude['events']);
 
             foreach ($events as $item) {
                 $profile_pic_path = null;
