@@ -20,14 +20,12 @@ class AuthTest extends TestCase
             'grant_type' => 'password',
             'client_id' => '2',
             'client_secret' => 'H9c9USUmSWsw2yxqxrnPbXl8sPvRfDCxztFc7xZ8',
-            'phone' => 'aure.girard@gmail.com',
-            'email' => 'aure.girard@gmail.com',
-            'firstname' => 'test',
-            'lastname' => 'test',
+            'phone' => '06111111111',
+            'nickname' => 'aure.girard@gmail.com',
             'password' => 'toto',
             'password_confirm' => 'toto',
             'sex' => 'male',
-            'scope' => '*'
+            'scope' => '*'x
         ];
         $response = $this->json(
             'POST',
@@ -44,10 +42,8 @@ class AuthTest extends TestCase
             'grant_type' => 'password',
             'client_id' => '2',
             'client_secret' => 'H9c9USUmSWsw2yxqxrnPbXl8sPvRfDCxztFc7xZ8',
-            'phone' => 'aure.girardeau@gmail.com',
-            'email' => 'aure.girardeau@gmail.com',
-            'firstname' => 'Aurelien',
-            'lastname' => 'Girardeau',
+            'phone' => '0450202809',
+            'nickname' => 'aure.girardeau@gmail.com',
             'password' => 'toto',
             'password_confirm' => 'toto',
             'sex' => 'male',
