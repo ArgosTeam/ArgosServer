@@ -298,7 +298,7 @@ class SearchFunctions {
 
         if ($mode == 'groups') {
             $groups = SearchFunctions::getGroups($user,
-                                                 $name_begin
+                                                 $name_begin,
                                                  $count,
                                                  false,
                                                  $exclude['groups']);
@@ -320,7 +320,7 @@ class SearchFunctions {
 
         if ($mode == 'events') {
             $events = SearchFunctions::getEvents($user,
-                                                 $name_begin
+                                                 $name_begin,
                                                  $count,
                                                  false,
                                                  $exclude['events']);
