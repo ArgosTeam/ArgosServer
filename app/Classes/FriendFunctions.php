@@ -51,4 +51,9 @@ class FriendFunctions
         return response(['status' => 'success'], 200);
     }
 
+    public static function cancel($user, $friend, $own = false) {
+        $user->friends()->detach($friend->id);
+        return response(['status' => 'success'], 200);
+    }
+
 }

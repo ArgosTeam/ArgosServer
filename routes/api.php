@@ -97,8 +97,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/friend/add', 'FriendController@add');
     Route::post('/friend/accept', 'FriendController@accept');
     Route::post('/friend/refuse', 'FriendController@refuse');
-    Route::post('/friend/delete', 'FriendController@delete');
-
+    Route::post('/friend/cancel', 'FriendController@cancel');
 
     /*
     ** Route regarding groups actions
