@@ -89,13 +89,24 @@ class EventFunctions
         $event = Event::find($event_id);
         if (is_object($event)
             && !$user->events->contains($event_id)) {
-            $user->events()->attach($event_id, [
-                'status' => 'pending',
-                'admin' => false
-            ]);
-            return response('Join request sent', 200);
+            if ($event->public) {
+                $pivot = [
+                    'status' => 'accepted',
+                    'admin' => false
+                ];
+                $status = 'Event joined successfully';
+            } else {
+                $pivot = [
+                    'status' => 'pending',
+                    'admin' => false
+                ];
+                $status = 'Join request sent, waiting for accept';
+            }
+            
+            $user->events()->attach($event_id, $pivot);
+            return response(['status' => $status], 200);
         }
-        return response('Event does not exist or invite already exists', 403);
+        return response(['status' => 'Event does not exist or invite already exists'], 403);
     }
 
     public static function invite($user, $event_id, $users_id) {
