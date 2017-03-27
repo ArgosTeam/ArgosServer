@@ -190,7 +190,7 @@ class fetchFunctions
                         ** Continue to try other locations at the same point
                         ** To fill Array Photo on the first selected photo
                         */
-                        if ($index != -1) {
+                        if (!$main) {
                             continue ;
                         }
 
@@ -211,6 +211,7 @@ class fetchFunctions
                             'lat' => $group->location->lat,
                             'lng' => $group->location->lng
                         ];
+                        $index += 1;
                         break ;
                     }
 
@@ -224,7 +225,7 @@ class fetchFunctions
                         ** Continue to try other locations at the same point
                         ** To fill Array Photo on the first selected photo
                         */
-                        if ($index != -1) {
+                        if (!$main) {
                             continue ;
                         }
 
@@ -245,6 +246,7 @@ class fetchFunctions
                             'lat' => $event->location->lat,
                             'lng' => $event->location->lng
                         ];
+                        $index += 1;
                         break ;
                     }
                 }
