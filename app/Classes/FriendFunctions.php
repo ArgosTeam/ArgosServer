@@ -40,15 +40,20 @@ class FriendFunctions
     }
 
     public static function refuse($user, $friend, $own = false) {
-        $user->friends()->detach($friend->id);
+        $pivot = $user->friends()->where('users.id', $friend->id)->first();
+        if (is_object($pivot) && !$pivot->pivot->active) {
+            $user->friends()->detach($friend->id);
 
-        if ($own) {
-            $user->notify(new FriendRequestRejected($user, $friend, 'slack'));
-        } else {
-            $user->notify(new FriendRequestRejected($user, $friend, 'database'));
+            if ($own) {
+                $user->notify(new FriendRequestRejected($user, $friend, 'slack'));
+            } else {
+                $user->notify(new FriendRequestRejected($user, $friend, 'database'));
+            }
+        
+            return response(['status' => 'success'], 200);
         }
         
-        return response(['status' => 'success'], 200);
+        return response(['status' => 'Access denied'], 403);
     }
 
     public static function cancel($user, $friend, $own = false) {
