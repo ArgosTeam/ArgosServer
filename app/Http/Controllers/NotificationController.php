@@ -52,14 +52,17 @@ class NotificationController extends Controller
                                                $prefix . 'FriendRequestRejected',
                                                $prefix . 'GroupInvite',
                                                $prefix . 'GroupInviteAccepted'])
+                            ->get()
                             ->count();
         $notificationsPhotos = $user->notifications()
                              ->whereIn('type', [$prefix . 'NewPublicPicture',
                                                 $prefix . 'NewPrivatePicture'])
+                             ->get()
                              ->count();
         $notificationsEvents = $user->notifications()
                              ->whereIn('type', [$prefix . 'EventInvite',
                                                 $prefix . 'EventInviteAccepted'])
+                             ->get()
                              ->count();
 
         return response([
