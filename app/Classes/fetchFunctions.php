@@ -20,11 +20,11 @@ class fetchFunctions
     
     public static function fetch($data) {
         
-        $poly[0] = explode(",",str_replace(["LatLng(", ")"], " ", $data["farLeft"]));
-        $poly[1] = explode(",",str_replace(["LatLng(", ")"], " ", $data["farRight"]));
-        $poly[2] = explode(",",str_replace(["LatLng(", ")"], " ", $data["nearLeft"]));
-        $poly[3] = explode(",",str_replace(["LatLng(", ")"], " ", $data["nearRight"]));
-        $poly[4] = explode(",",str_replace(["LatLng(", ")"], " ", $data["farLeft"]));
+        $poly[0] = explode(",",str_replace(["LngLat(", ")"], " ", $data["farLeft"]));
+        $poly[1] = explode(",",str_replace(["LngLat(", ")"], " ", $data["farRight"]));
+        $poly[2] = explode(",",str_replace(["LngLat(", ")"], " ", $data["nearLeft"]));
+        $poly[3] = explode(",",str_replace(["LngLat(", ")"], " ", $data["nearRight"]));
+        $poly[4] = explode(",",str_replace(["LngLat(", ")"], " ", $data["farLeft"]));
 
 
         $cells = [
@@ -50,10 +50,10 @@ class fetchFunctions
         for($i = 0; $i < 8; $i++){
             for($a = 0; $a < 4; $a++){
 
-                $leftTop = (((float)$poly[2][0]) + ($height * ($i + 1))) . " " . (((float)$poly[2][1]) + ($width * $a));
-                $rightTop = (((float)$poly[2][0]) + ($height * ($i + 1))) . " " . (((float)$poly[2][1]) + ($width * ($a + 1)));
-                $rightBttm = (((float)$poly[2][0]) + ($height * ($i))) . " " . (((float)$poly[2][1]) + ($width * ($a + 1)));
-                $leftBttm = (((float)$poly[2][0]) + ($height * $i)) . " " . (((float)$poly[2][1]) + ($width * ($a)));
+                $leftTop = (((float)$poly[2][1]) + ($height * ($i + 1))) . " " . (((float)$poly[2][0]) + ($width * $a));
+                $rightTop = (((float)$poly[2][1]) + ($height * ($i + 1))) . " " . (((float)$poly[2][0]) + ($width * ($a + 1)));
+                $rightBttm = (((float)$poly[2][1]) + ($height * ($i))) . " " . (((float)$poly[2][0]) + ($width * ($a + 1)));
+                $leftBttm = (((float)$poly[2][1]) + ($height * $i)) . " " . (((float)$poly[2][0]) + ($width * ($a)));
 
                 $cells[$i][$a] = [$leftTop, $rightTop, $rightBttm, $leftBttm, $leftTop];
             }
