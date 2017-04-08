@@ -1,3 +1,5 @@
+<?
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -17,7 +19,7 @@ class RatingController extends Controller
 
     public function rate(Request $request) {
         $user = Auth::user();
-        $type = RatingType::where('name' => $request->input('type'))
+        $type = RatingType::where('name', $request->input('type'))
               ->first();
         $id = $request->input('id');
 
