@@ -86,13 +86,13 @@ class fetchFunctions
         $vDownY = -$farLeftY + $poly[2][1];
         
         for ($v = 0; $v < $splitV; $v++) {
-            for ($h = 0; $h < $spliH; $h++) {
+            for ($h = 0; $h < $splitH; $h++) {
 
                 // Create string as model : "lat lng" for sql query 
-                $leftTop = $farLeftX + $vRightX * ($h / $splitH) . ' ' . $farLeftY + $vDownY * ($v / $splitV);
-                $rightTop = $farLeftX + $vRightX * (($h + 1) / $splitH) . ' ' . $farLeftY + $vDownY * ($v / $splitV);
-                $rightBttm = $farLeftX + $vRightX * (($h + 1) / $splitH) . ' ' . $farLeftY + $vDownY * (($v + 1) / $splitV);
-                $leftBttm = $farLeftX + $vRightX * ($h / $splitH) . ' ' . $farLeftY + $vDownY * (($v + 1) / $splitV);
+                $leftTop = (float)($farLeftX + $vRightX * (float)($h / $splitH) . ' ' . $farLeftY + $vDownY * (float)($v / $splitV));
+                $rightTop = (float)($farLeftX + $vRightX * (float)((float)($h + 1) / $splitH) . ' ' . $farLeftY + $vDownY * (float)($v / $splitV));
+                $rightBttm = (float)($farLeftX + $vRightX * (float)((float)($h + 1) / $splitH) . ' ' . $farLeftY + $vDownY * (float)((float)($v + 1) / $splitV));
+                $leftBttm = (float)($farLeftX + $vRightX * (float)($h / $splitH) . ' ' . $farLeftY + $vDownY * (float)((float)($v + 1) / $splitV));
             }
 
             $cells[$v][$h] = [$leftTop, $rightTop, $rightBttm, $leftBttm, $leftTop]; // Double leftTop for sql polygon request
