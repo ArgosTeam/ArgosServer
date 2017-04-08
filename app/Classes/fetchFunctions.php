@@ -80,10 +80,10 @@ class fetchFunctions
         /*
         ** Set up vectors 
         */
-        $vRightX = $poly[1][0] - $farLeftX;
-        $vRightY = -$farLeftY + $poly[1][1];
-        $vDownX = $poly[2][0] - $farLeftX;
-        $vDownY = -$farLeftY + $poly[2][1];
+        $vRightX = (float)$poly[1][0] - $farLeftX;
+        $vRightY = -$farLeftY + (float)$poly[1][1];
+        $vDownX = (float)$poly[2][0] - $farLeftX;
+        $vDownY = -$farLeftY + (float)$poly[2][1];
         
         for ($v = 0; $v < $splitV; $v++) {
             for ($h = 0; $h < $splitH; $h++) {
