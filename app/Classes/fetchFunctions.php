@@ -22,10 +22,10 @@ class fetchFunctions
 
         // pol
         
-        $poly[0] = explode(",", $data["farLeft"]));
-        $poly[1] = explode(",", $data["farRight"]));
-        $poly[2] = explode(",", $data["nearLeft"]));
-        $poly[3] = explode(",", $data["nearRight"]));
+        $poly[0] = explode(",", $data["farLeft"]);
+        $poly[1] = explode(",", $data["farRight"]);
+        $poly[2] = explode(",", $data["nearLeft"]);
+        $poly[3] = explode(",", $data["nearRight"]);
 
         $cells = [
             [
