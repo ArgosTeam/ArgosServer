@@ -19,5 +19,5 @@ Route::group(['middleware' => 'web'], function () {
 
     Route::post('/register', 'AuthController@registerManual');
     
-
+    Route::get('/check/nickname', 'ToolsController@checkNickname');
 });

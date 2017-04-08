@@ -143,7 +143,6 @@ Route::group(['middleware' => 'auth:api'], function () {
     /*
     ** API dynamic tools
     */
-    Route::get('/check/nickname', 'ToolsController@checkNickname');
     Route::get('/location/geocoding', 'LocationController@geocoding');
 
     /*
