@@ -63,12 +63,12 @@ class fetchFunctions
 
 
         /*
-        ** Let (A,x,y) x,y being vectors -> x(1, 0), y(0, -1) -> simulate lat/lng
+        ** Let (A,x,y) x,y being vectors -> x(1, 0), y(0, 1) -> simulate lat/lng
         ** If farleft point A is A(i, j), Let M(q,w)
         ** AM = (q - i)x + (w - j)y
         ** Example with horizontal split :
         **   If M = farRight(k, l)
-        **   AM = (k - i)x + (l - j)y, reminder : y vector, ||y|| = -1
+        **   AM = (k - i)x + (l - j)y
         **   So vector AM = Ax + By, A = k - i, B = j - l
         ** Then multiply vector by associated conf in order to split the screen
         */
@@ -82,9 +82,9 @@ class fetchFunctions
         ** Set up vectors 
         */
         $vRightX = $poly[1][1] - $farLeftX;
-        $vRightY = $farLeftY - $poly[1][0]; //Multiplied by -1 cause ||y|| = -1
+        $vRightY = -$farLeftY + $poly[1][0];
         $vDownX = $poly[2][1] - $farLeftX;
-        $vDownY = $farLeftY - $poly[2][0];
+        $vDownY = -$farLeftY + $poly[2][0];
         
         for ($v = 0; $v < $splitV; $v++) {
             for ($h = 0; $h < $spliH; $h++) {
