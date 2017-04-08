@@ -88,7 +88,8 @@ class fetchFunctions
         
         for ($v = 0; $v < $splitV; $v++) {
             for ($h = 0; $h < $spliH; $h++) {
-                
+
+                // Create string as model : "lat lng" for sql query 
                 $leftTop = $farLeftX + $vRightX * ($h / $splitH) . ' ' . $farLeftY + $vDownY * ($v / $splitV);
                 $rightTop = $farLeftX + $vRightX * (($h + 1) / $splitH) . ' ' . $farLeftY + $vDownY * ($v / $splitV);
                 $rightBttm = $farLeftX + $vRightX * (($h + 1) / $splitH) . ' ' . $farLeftY + $vDownY * (($v + 1) / $splitV);
