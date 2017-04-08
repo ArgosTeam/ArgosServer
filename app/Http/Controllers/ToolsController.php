@@ -19,5 +19,4 @@ class ToolsController extends Controller
         }
         return response(['available' => true], 200);
     }
-    
 }
