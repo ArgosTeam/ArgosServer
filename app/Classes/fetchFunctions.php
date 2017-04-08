@@ -19,13 +19,13 @@ class fetchFunctions
 {
     
     public static function fetch($data) {
+
+        // pol
         
         $poly[0] = explode(",",str_replace(["LngLat(", ")"], " ", $data["farLeft"]));
         $poly[1] = explode(",",str_replace(["LngLat(", ")"], " ", $data["farRight"]));
         $poly[2] = explode(",",str_replace(["LngLat(", ")"], " ", $data["nearLeft"]));
         $poly[3] = explode(",",str_replace(["LngLat(", ")"], " ", $data["nearRight"]));
-        $poly[4] = explode(",",str_replace(["LngLat(", ")"], " ", $data["farLeft"]));
-
 
         $cells = [
             [
@@ -43,20 +43,59 @@ class fetchFunctions
             ]
         ];
 
-        $width = ((float)$poly[0][0] - (float)$poly[3][0])/4;
-        $height = ((float)$poly[3][1] - (float)$poly[0][1])/8;
+        /*
+        ** Calculation of width and height distances
+        */
+        // $width = sqrt(
+        //     pow(
+        //         ((float)$poly[0][0] - (float)$poly[1][0]),
+        //         2)
+        //     + pow(
+        //         ((float)$poly[0][1] - (float)$poly[1][1]),
+        //         2));
+        // $height = sqrt(
+        //     pow(
+        //         ((float)$poly[0][0] - (float)$poly[2][0]),
+        //         2)
+        //     + pow(
+        //         ((float)$poly[0][1] - (float)$poly[2][1]),
+        //         2));
 
 
-        for($i = 0; $i < 8; $i++){
-            for($a = 0; $a < 4; $a++){
+        /*
+        ** Let (A,x,y) x,y being vectors -> x(1, 0), y(0, -1) -> simulate lat/lng
+        ** If farleft point A is A(i, j), Let M(q,w)
+        ** AM = (q - i)x + (w - j)y
+        ** Example with horizontal split :
+        **   If M = farRight(k, l)
+        **   AM = (k - i)x + (l - j)y, reminder : y vector, ||y|| = -1
+        **   So vector AM = Ax + By, A = k - i, B = j - l
+        ** Then multiply vector by associated conf in order to split the screen
+        */
+        $farLeftY = (float)$poly[0][0];
+        $farLeftX = (float)$poly[0][1];
+        $farRightY = (float)$poly[3][0];
+        $splitV = 8;
+        $splitH = 4;
 
-                $leftTop = (((float)$poly[2][1]) + ($height * ($i + 1))) . " " . (((float)$poly[2][0]) + ($width * $a));
-                $rightTop = (((float)$poly[2][1]) + ($height * ($i + 1))) . " " . (((float)$poly[2][0]) + ($width * ($a + 1)));
-                $rightBttm = (((float)$poly[2][1]) + ($height * ($i))) . " " . (((float)$poly[2][0]) + ($width * ($a + 1)));
-                $leftBttm = (((float)$poly[2][1]) + ($height * $i)) . " " . (((float)$poly[2][0]) + ($width * ($a)));
-
-                $cells[$i][$a] = [$leftTop, $rightTop, $rightBttm, $leftBttm, $leftTop];
+        /*
+        ** Set up vectors 
+        */
+        $vRightX = $poly[1][1] - $farLeftX;
+        $vRightY = $farLeftY - $poly[1][0]; //Multiplied by -1 cause ||y|| = -1
+        $vDownX = $poly[2][1] - $farLeftX;
+        $vDownY = $farLeftY - $poly[2][0];
+        
+        for ($v = 0; $v < $splitV; $v++) {
+            for ($h = 0; $h < $spliH; $h++) {
+                
+                $leftTop = $farLeftX + $vRightX * ($h / $splitH) . ' ' . $farLeftY + $vDownY * ($v / $splitV);
+                $rightTop = $farLeftX + $vRightX * (($h + 1) / $splitH) . ' ' . $farLeftY + $vDownY * ($v / $splitV);
+                $rightBttm = $farLeftX + $vRightX * (($h + 1) / $splitH) . ' ' . $farLeftY + $vDownY * (($v + 1) / $splitV);
+                $leftBttm = $farLeftX + $vRightX * ($h / $splitH) . ' ' . $farLeftY + $vDownY * (($v + 1) / $splitV);
             }
+
+            $cells[$v][$h] = [$leftTop, $rightTop, $rightBttm, $leftBttm, $leftTop]; // Double leftTop for sql polygon request
         }
 
         $filter = array_key_exists('filter', $data) ? $data['filter'] : [];
@@ -76,6 +115,7 @@ class fetchFunctions
 
     public static function fetchAll($cells, $filter, $mode) {
         $results = [];
+        $user = Auth::user();
 
         $index = -1;
         foreach ($cells AS $row) {
@@ -92,7 +132,6 @@ class fetchFunctions
                     /*
                     ** Base of photos request, add conditions on locations to be in the screen
                     ** Group and User are 2 separated filters, for more clarity
-                    ** 2 variables photos_users and photos_groups are used
                     */
                     
                     $query_locations_photos_users = clone $query_base_locations;
@@ -220,11 +259,16 @@ class fetchFunctions
                     */
                     if (is_object($location->event()->first())) {
                         $event = $location->event()->first();
+
                         /*
                         ** If the item selected in the grid is a photo
                         ** Continue to try other locations at the same point
                         ** To fill Array Photo on the first selected photo
                         */
+
+                        if (!$event->public && !$event->users->contains($user->id)) {
+                            continue ;
+                        }
                         if (!$main) {
                             continue ;
                         }
