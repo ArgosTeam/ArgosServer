@@ -22,10 +22,10 @@ class fetchFunctions
 
         // pol
         
-        $poly[0] = explode(",",str_replace(["LngLat(", ")"], " ", $data["farLeft"]));
-        $poly[1] = explode(",",str_replace(["LngLat(", ")"], " ", $data["farRight"]));
-        $poly[2] = explode(",",str_replace(["LngLat(", ")"], " ", $data["nearLeft"]));
-        $poly[3] = explode(",",str_replace(["LngLat(", ")"], " ", $data["nearRight"]));
+        $poly[0] = explode(" ", $data["farLeft"]));
+        $poly[1] = explode(" ", $data["farRight"]));
+        $poly[2] = explode(" ", $data["nearLeft"]));
+        $poly[3] = explode(" ", $data["nearRight"]));
 
         $cells = [
             [
@@ -72,19 +72,18 @@ class fetchFunctions
         **   So vector AM = Ax + By, A = k - i, B = j - l
         ** Then multiply vector by associated conf in order to split the screen
         */
-        $farLeftY = (float)$poly[0][0];
-        $farLeftX = (float)$poly[0][1];
-        $farRightY = (float)$poly[3][0];
+        $farLeftY = (float)$poly[0][1];
+        $farLeftX = (float)$poly[0][0];
         $splitV = 8;
         $splitH = 4;
 
         /*
         ** Set up vectors 
         */
-        $vRightX = $poly[1][1] - $farLeftX;
-        $vRightY = -$farLeftY + $poly[1][0];
-        $vDownX = $poly[2][1] - $farLeftX;
-        $vDownY = -$farLeftY + $poly[2][0];
+        $vRightX = $poly[1][0] - $farLeftX;
+        $vRightY = -$farLeftY + $poly[1][1];
+        $vDownX = $poly[2][0] - $farLeftX;
+        $vDownY = -$farLeftY + $poly[2][1];
         
         for ($v = 0; $v < $splitV; $v++) {
             for ($h = 0; $h < $spliH; $h++) {
