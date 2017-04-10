@@ -89,10 +89,25 @@ class fetchFunctions
             for ($h = 0; $h < $splitH; $h++) {
 
                 // Create string as model : "lat lng" for sql query 
-                $leftTop = ($farLeftX + $vRightX * (float)$h / (float)$splitH) . ' ' . ($farLeftY + $vDownY * (float)$v / (float)$splitV);
-                $rightTop = ($farLeftX + $vRightX * ((float)$h + (float)1) / (float)$splitH) . ' ' . ($farLeftY + $vDownY * (float)$v / (float)$splitV);
-                $rightBttm = ($farLeftX + $vRightX * ((float)$h + (float)1) / (float)$splitH) . ' ' . ($farLeftY + $vDownY * ((float)$v + (float)1) / (float)$splitV);
-                $leftBttm = ($farLeftX + $vRightX * (float)$h / (float)$splitH) . ' ' . ($farLeftY + $vDownY * ((float)$v + (float)1) / (float)$splitV);
+                $leftTop = ($farLeftX + $vRightX * (float)$h / (float)$splitH
+                            + $vDownX * (float)$v / (float)$splitV) . ' '
+                         . ($farLeftY + $vRightY * (float)$h / (float)$splitH
+                            + $vDownY * (float)$v / (float)$splitV);
+            
+                $rightTop = ($farLeftX + $vRightX * ((float)$h + (float)1) / (float)$splitH
+                             + $vDownX * (float)$v / (float)$splitV) . ' '
+                          . ($farLeftY + $vRightY * ((float)$h + (float)1) / (float)$splitH
+                             + $vDownY * (float)$v / (float)$splitV);
+                
+                $rightBttm = ($farLeftX + $vRightX * ((float)$h + (float)1) / (float)$splitH
+                              + $vDownX * ((float)$v + (float)1) / (float)$splitV) . ' '
+                           . ($farLeftY + $vRightY * ((float)$h + (float)1)
+                              + $vDownY * ((float)$v + (float)1) / (float)$splitV);
+                
+                $leftBttm = ($farLeftX + $vRightX * (float)$h / (float)$splitH
+                             + $vDownX * ((float)$v + (float)1) / (float)$splitV) . ' '
+                          . ($farLeftY + $vRightY * (float)$h / (float)$splitH
+                             + $vDownY * ((float)$v + (float)1) / (float)$splitV);
 
                 $cells[$v][$h] = [$leftTop, $rightTop, $rightBttm, $leftBttm, $leftTop]; // Double leftTop for sql polygon request
             }
