@@ -93,9 +93,10 @@ class fetchFunctions
                 $rightTop = ($farLeftX + $vRightX * ((float)$h + (float)1) / (float)$splitH) . ' ' . ($farLeftY + $vDownY * (float)$v / (float)$splitV);
                 $rightBttm = ($farLeftX + $vRightX * ((float)$h + (float)1) / (float)$splitH) . ' ' . ($farLeftY + $vDownY * ((float)$v + (float)1) / (float)$splitV);
                 $leftBttm = ($farLeftX + $vRightX * (float)$h / (float)$splitH) . ' ' . ($farLeftY + $vDownY * ((float)$v + (float)1) / (float)$splitV);
+
+                $cells[$v][$h] = [$leftTop, $rightTop, $rightBttm, $leftBttm, $leftTop]; // Double leftTop for sql polygon request
             }
 
-            $cells[$v][$h] = [$leftTop, $rightTop, $rightBttm, $leftBttm, $leftTop]; // Double leftTop for sql polygon request
         }
 
         $filter = array_key_exists('filter', $data) ? $data['filter'] : [];
