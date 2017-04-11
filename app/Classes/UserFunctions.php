@@ -95,7 +95,7 @@ class UserFunctions
         $response = [];
         foreach ($photos as $photo) {
 
-            $request = PhotoFunctions::getUrl($photo, 'avatar');
+            $request = PhotoFunctions::getUrl($photo, 'regular');
             
             $response[] = [
                 'photo_id' => $photo->id,

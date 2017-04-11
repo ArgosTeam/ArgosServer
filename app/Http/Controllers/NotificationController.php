@@ -12,12 +12,10 @@ class NotificationController extends Controller
         $user = Auth::user();
 
         $response = [];
-        $notifications = $user->notifications()
-                       ->groupBy('notifiable_id')
-                       ->having('read_at', '!=', null)
+        $notifications = $user->unreadNotifications()
                        ->get();
-        Log::info('NOTIFICATIONS : ' . print_r($notifications, true));
-        
+
+        $response = [];
         // foreach ($notifications as $notification) {
         //     $response[] = [
         //         'notification_id' => $notification->id,

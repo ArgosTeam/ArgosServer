@@ -25,16 +25,16 @@ class PhotoFunctions
         $client = $s3->getDriver()->getAdapter()->getClient();
         $expiry = "+10 minutes";
 
-        $key = '';
+        $key = env('S3_PREFIX');
         switch ($type) {
           case "avatar":
-              $key = "avatar-" . $photo->path;
+              $key += "avatar-" . $photo->path;
               break ;
           case "regular":
-              $key = "regular-" . $photo->path;
+              $key += "regular-" . $photo->path;
               break;
           case "macro":
-              $key = $photo->path;
+              $key += $photo->path;
               break;
         }
         $command = $client->getCommand('GetObject', [
@@ -49,7 +49,7 @@ class PhotoFunctions
         /*
         ** Create new Photo
         */
-        $path =  'images/' . time() . '.jpg';
+        $path =  'images/' . time() . $user->id . '.jpg';
         $photo = new Photo();
         $photo->path = $path;
         $photo->origin_user_id = $user->id;
@@ -59,20 +59,20 @@ class PhotoFunctions
         ** Upload through storage -> AWS S3
         */
         $full = Image::make($image);
-        $avatar = Image::make($image)->resize(60, 60);
-        $regular = Image::make($image)->resize(120, 120);
+        $avatar = Image::make($image)->resize(80, 80);
+        $regular = Image::make($image)->resize(155, 155);
         $full = $full->stream()->__toString();
         $avatar = $avatar->stream()->__toString();
         $regular = $regular->stream()->__toString();
 
         //Upload Photo
-        Storage::disk('s3')->put($path, $full, 'public');
+        Storage::disk('s3')->put(env('S3_PREFIX') . $path, $full, 'public');
 
         //Upload avatar
-        Storage::disk('s3')->put('avatar-' . $path, $avatar, 'public');
+        Storage::disk('s3')->put(env('S3_PREFIX') . 'avatar-' . $path, $avatar, 'public');
         
         //Upload Regular size
-        Storage::disk('s3')->put('regular-' . $path, $regular, 'public');
+        Storage::disk('s3')->put(env('S3_PREFIX') . 'regular-' . $path, $regular, 'public');
         
         return $photo;
     }
