@@ -36,7 +36,7 @@ class EventPhotoAdded extends Notification
             'Bucket' => env('S3_BUCKET'),
             'Key'    => $photo->path,
         ]);
-        $request = $client->createPresignedRequest($command);
+        $request = $client->createPresignedRequest($command, $expiry);
 
         $this->path = '' . $request->getUri() . '';
     }
@@ -78,8 +78,7 @@ class EventPhotoAdded extends Notification
             'event_id' => $this->event->id,
             'event_name' => $this->event->name,
             'photo_id' => $this->photo->id,
-            'from_user_id' => $this->user->id,
-            'from_user_nickname' => $this->user->nickname
+            'user_id' => $this->user->id,
         ];
     }
 

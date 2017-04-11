@@ -59,7 +59,6 @@ class FriendRequestRejected extends Notification
     public function toArray($notifiable)
     {
         return [
-            'user_name' => $this->friend->nickname,
             'user_id' => $this->friend->id,
             'status' => 'refused'
         ];

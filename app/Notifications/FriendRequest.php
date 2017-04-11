@@ -59,8 +59,7 @@ class FriendRequest extends Notification
     public function toArray($notifiable)
     {
         return [
-            'from_user_id' => $this->friend->id,
-            'from_user_nickname' => $this->friend->nickname
+            'user_id' => $this->friend->id,
         ];
     }
 

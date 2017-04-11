@@ -32,9 +32,9 @@ class FriendFunctions
             'active' => true
         ]);
         if ($own) {
-            $user->notify(new FriendRequestAccepted($user, $friend, 'slack'));
-        } else {
             $user->notify(new FriendRequestAccepted($user, $friend, 'database'));
+        } else {
+            $user->notify(new FriendRequestAccepted($user, $friend, 'slack'));
         }
         return response(['status' => 'success'], 200);
     }
@@ -45,9 +45,9 @@ class FriendFunctions
             $user->friends()->detach($friend->id);
 
             if ($own) {
-                $user->notify(new FriendRequestRejected($user, $friend, 'slack'));
-            } else {
                 $user->notify(new FriendRequestRejected($user, $friend, 'database'));
+            } else {
+                $user->notify(new FriendRequestRejected($user, $friend, 'slack'));    
             }
         
             return response(['status' => 'success'], 200);
@@ -56,7 +56,7 @@ class FriendFunctions
         return response(['status' => 'Access denied'], 403);
     }
 
-    public static function cancel($user, $friend, $own = false) {
+    public static function cancel($user, $friend) {
         $user->friends()->detach($friend->id);
         return response(['status' => 'success'], 200);
     }

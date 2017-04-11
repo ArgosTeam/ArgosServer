@@ -60,8 +60,7 @@ class EventInviteAccepted extends Notification
     public function toArray($notifiable)
     {
         return [
-            'from_user_id' => $this->user->id,
-            'from_user_nickname' => $this->user->nickname,
+            'user_id' => $this->user->id,
             'event_id' => $this->event->id,
             'event_name' => $this->event->name,
             'status' => 'accepted'

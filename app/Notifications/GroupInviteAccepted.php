@@ -60,8 +60,7 @@ class GroupInviteAccepted extends Notification
     public function toArray($notifiable)
     {
         return [
-            'from_user_id' => $this->user->id,
-            'from_user_nickname' => $this->user->nickname,
+            'user_id' => $this->user->id,
             'group_id' => $this->group->id,
             'group_name' => $this->group->name,
             'status' => 'accepted'

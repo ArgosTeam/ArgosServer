@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use App\Models\User;
+use App\Classes\PhotoFunctions;
 
 class NotificationController extends Controller
 {
@@ -16,13 +17,33 @@ class NotificationController extends Controller
                        ->get();
 
         $response = [];
-        // foreach ($notifications as $notification) {
-        //     $response[] = [
-        //         'notification_id' => $notification->id,
-        //         'notification_type' => $notification->type,
-        //         'data' => $notification->data
-        //     ];
-        // }
+        foreach ($notifications as $notification) {
+            $data = json_decode($notification->data, true);
+            $userFrom = User::find($data['user_id']);
+
+            $profile_pic_path = null;
+            $profile_pic = $userFrom->profile_pic()->first();
+            if (is_object($profile_pic)) {
+                $request = PhotoFunctions::getUrl($profile_pic, 'regular');
+                $profile_pic_path = '' . $request->getUri() . '';
+            }
+            if (!array_key_exists((string)$userFrom->id, $response)) {
+                $response[(string)$userFrom->id] = [
+                    'id' => $userFrom->id,
+                    'nickname' => $userFrom->nickname,
+                    'profile_pic' => $profile_pic_path,
+                    'notifs' => []
+                ];
+            }
+
+            $type = str_replace('App\Notifications', '', $notification->type);
+            $response[(string)$userFrom->id]['notifs'][] = [
+                'notif_id' => $notification->id,
+                'type' => $type,
+                'data' => $notification->data,
+                'time' => $notification->created_at
+            ];
+        }
 
         return response($response, 200);
     }
