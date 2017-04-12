@@ -118,6 +118,9 @@ class UserFunctions
             'nickname' => $user->nickname,
             'firstname' => $user->firstname,
             'lastname' => $user->lastname,
+            'dob' => $dob,
+            'email' => $email,
+            'phone' => $phone,
             'user_id' => $user->id
         ];
         if (is_object($profile_pic)) {

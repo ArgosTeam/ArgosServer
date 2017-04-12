@@ -81,9 +81,9 @@ class fetchFunctions
         ** Set up vectors 
         */
         $vRightX = (float)$poly[1][1] - $farLeftX;
-        $vRightY = -$farLeftY + (float)$poly[1][0];
+        $vRightY = (float)$poly[1][0] - $farLeftY;
         $vDownX = (float)$poly[2][1] - $farLeftX;
-        $vDownY = -$farLeftY + (float)$poly[2][0];
+        $vDownY = (float)$poly[2][0] - $farLeftY;
         
         for ($v = 0; $v < $splitV; $v++) {
             for ($h = 0; $h < $splitH; $h++) {
@@ -101,7 +101,7 @@ class fetchFunctions
                 
                 $rightBttm = ($farLeftX + $vRightX * ((float)$h + (float)1) / (float)$splitH
                               + $vDownX * ((float)$v + (float)1) / (float)$splitV) . ' '
-                           . ($farLeftY + $vRightY * ((float)$h + (float)1)
+                           . ($farLeftY + $vRightY * ((float)$h + (float)1) / (float)$splitH
                               + $vDownY * ((float)$v + (float)1) / (float)$splitV);
                 
                 $leftBttm = ($farLeftX + $vRightX * (float)$h / (float)$splitH
