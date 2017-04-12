@@ -118,7 +118,7 @@ class UserFunctions
             'nickname' => $user->nickname,
             'firstname' => $user->firstname,
             'lastname' => $user->lastname,
-            'dob' => $dob,
+            'dob' => $user->dob,
             'email' => $email,
             'phone' => $phone,
             'user_id' => $user->id
