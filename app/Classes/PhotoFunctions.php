@@ -28,13 +28,13 @@ class PhotoFunctions
         $key = env('S3_PREFIX');
         switch ($type) {
           case "avatar":
-              $key += "avatar-" . $photo->path;
+              $key .= "avatar-" . $photo->path;
               break ;
           case "regular":
-              $key += "regular-" . $photo->path;
+              $key .= "regular-" . $photo->path;
               break;
           case "macro":
-              $key += $photo->path;
+              $key .= $photo->path;
               break;
         }
         $command = $client->getCommand('GetObject', [
