@@ -29,7 +29,7 @@ class NewPublicPicture extends Notification
             
         $command = $client->getCommand('GetObject', [
             'Bucket' => env('S3_BUCKET'),
-            'Key'    => $photo->path
+            'Key'    => env('S3_PREFIX') . 'avatar-' . $photo->path
         ]);
         $request = $client->createPresignedRequest($command, $expiry);
         $this->user = $user;
@@ -74,7 +74,9 @@ class NewPublicPicture extends Notification
         return [
             'user_id' => $this->user->id,
             'path' => $this->path,
-            'photo_id' => $this->photo->id
+            'photo_id' => $this->photo->id,
+            'lat' => $this->photo->location->lat,
+            'lng' => $this->photo->location->lng
         ];
     }
 
