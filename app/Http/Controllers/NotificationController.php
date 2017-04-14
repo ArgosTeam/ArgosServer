@@ -18,8 +18,8 @@ class NotificationController extends Controller
 
         $response = [];
         foreach ($notifications as $notification) {
-            $data = json_decode($notification->data, true);
             $userFrom = User::find($data['user_id']);
+            
 
             $profile_pic_path = null;
             $profile_pic = $userFrom->profile_pic()->first();
