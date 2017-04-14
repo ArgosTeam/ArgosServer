@@ -18,7 +18,7 @@ class NotificationController extends Controller
 
         $response = [];
         foreach ($notifications as $notification) {
-            $userFrom = User::find($data['user_id']);
+            $userFrom = User::find($notification->data['user_id']);
             
 
             $profile_pic_path = null;
