@@ -9,6 +9,8 @@ use App\Models\Photo;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use App\Classes\PhotoFunctions;
+use App\Notifications\Follow;
+use App\Notifications\Unfollow;
 
 class UserFunctions
 {
@@ -33,8 +35,6 @@ class UserFunctions
         $response['nickname'] = '';
         $response['profile_pic'] = $profile_pic_path;
         $response['nickname'] = $userProfile->nickname;
-        $response['firstname'] = '';
-        $response['lastname'] = '';
         $response['university'] = '';
         $response['master'] = '';
         $response['stats'] = '';
@@ -56,8 +56,27 @@ class UserFunctions
     }
 
     public static function follow($user, $user_id) {
-        if (is_object(User::find($user_id))) {
+        $followed = User::find($user_id);
+        if (is_object($followed)) {
+            if ($user->followed->contains($user_id)) {
+                return response(['status' => 'User alredy followed'], 403);
+            }
             $user->followed()->attach($user_id);
+            $user->notify(new Follow($followed, 'slack'));
+            $followed->notify(new Follow($user, 'database'));
+            return response(['status' => 'Success'], 200);
+        } else {
+            return response(['status' => 'User does not exist'], 403);
+        }
+    }
+
+    public static function unfollow($user, $user_id) {
+        if (is_object(User::find($user_id))) {
+            if (!$user->followed->contains($user_id)) {
+                return response(['status' => 'User is not followed'], 403);
+            }
+            $user->followed()->detach($user_id);
+            $user->notify(new Unfollow($followed, 'slack'));
             return response(['status' => 'Success'], 200);
         } else {
             return response(['status' => 'User does not exist'], 403);
