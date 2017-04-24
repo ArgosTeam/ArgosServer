@@ -18,7 +18,7 @@ class GroupController extends Controller
 
     public function join(Request $request) {
         $user = Auth::user();
-        $group_id = $request->input('group_id');
+        $group_id = $request->input('id');
         return GroupFunctions::join($user, $group_id);
     }
 

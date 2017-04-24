@@ -38,6 +38,8 @@ class UserFunctions
         $response['university'] = '';
         $response['master'] = '';
         $response['stats'] = '';
+        $response['firstname'] = '';
+        $response['lastname'] = '';
         if (is_object($friendShip)) {
             $response['friend'] = $friendShip->active;
             $response['pending'] = !$friendShip->active;
