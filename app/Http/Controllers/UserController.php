@@ -66,4 +66,9 @@ class UserController extends Controller
                                      $name_begin,
                                      $exclude);
     }
+
+    public function edit(Request $request) {  
+        $user = Auth::user();
+        return UserFunctions::edit($request->all());
+    }
 }

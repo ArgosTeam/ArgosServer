@@ -237,4 +237,31 @@ class UserFunctions
         
         return response(['status' => 'User does not exist'], 403);
     }
+
+    public static function edit($user, $data) {
+        if (array_key_exists('firstname', $data)) {
+            $user->firstname = $data['firstname'];
+        }
+        if (array_key_exists('lastname', $data)) {
+            $user->lastname = $data['lastname'];
+        }
+        if (array_key_exists('email', $data)) {
+            $user->email = $data['email'];
+        }
+        if (array_key_exists('phone', $data)) {
+            $user->phone = $data['phone'];
+        }
+        if (array_key_exists('sex', $data)) {
+            $user->sex = $data['sex'];
+        }
+        if (array_key_exists('dob', $data)) {
+            $user->dob = $data['dob'];
+        }
+        $user->save();
+        
+        if (array_key_exists('profile_pic', $data)) {
+            UserFunctions::profile_pic($user, $data['profile_pic']);
+        }
+        return response(['status' => 'Success'], 200);
+    }
 }
