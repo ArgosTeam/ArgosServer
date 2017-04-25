@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Intervention\Image\Facades\Image;
 use App\Models\User;
 use App\Models\Comment;
+use App\Models\Channel;
 use App\Classes\PhotoFunctions;
 use App\Notifications\EventAdded;
 use App\Notifications\EventInvite;
@@ -40,6 +41,12 @@ class EventFunctions
             "lng" => $data["lng"],
         ]);
         $location->save();
+
+        $channel = new Channel();
+        $channel->save();
+
+        $event->channel()->associate($channel);
+        
         $event->location()->associate($location);
         
         if ($event->save()) {

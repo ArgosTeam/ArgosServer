@@ -31,9 +31,11 @@ class GroupFunctions
             ]);
 
             $channel = new Channel();
+            $channel->save();
 
             $location->save();
             $group->location()->associate($location);
+            $group->channel()->associate($channel);
             $group->save();
 
             $user->groups()->attach($group->id, [
