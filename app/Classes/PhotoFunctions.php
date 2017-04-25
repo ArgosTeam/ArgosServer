@@ -59,8 +59,12 @@ class PhotoFunctions
         ** Upload through storage -> AWS S3
         */
         $full = Image::make($image);
-        $avatar = Image::make($image)->resize(80, 80);
-        $regular = Image::make($image)->resize(155, 155);
+        $avatar = Image::make($image)->resize(80, null, function ($constraint) {
+            $constraint->aspectRatio();
+        });
+        $regular = Image::make($image)->resize(155, null, function ($constraint) {
+            $constraint->aspectRatio();
+        });
         $full = $full->stream()->__toString();
         $avatar = $avatar->stream()->__toString();
         $regular = $regular->stream()->__toString();
