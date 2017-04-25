@@ -38,8 +38,8 @@ class UserFunctions
         $response['university'] = '';
         $response['master'] = '';
         $response['stats'] = '';
-        $response['firstname'] = '';
-        $response['lastname'] = '';
+        $response['firstname'] = null;
+        $response['lastname'] = null;
         $response['followers'] = $userProfile->followers()->get()->count();
         $response['following'] = $userProfile->followed()->get()->count();
 
