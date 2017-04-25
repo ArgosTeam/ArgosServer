@@ -101,7 +101,7 @@ class EventController extends Controller
 
     public function quit(Request $request) {
         $user = Auth::user();
-        $event_id = $request->input('event_id');
+        $event_id = $request->input('id');
         return EventFunctions::quit($user, $event_id);
     }
 
