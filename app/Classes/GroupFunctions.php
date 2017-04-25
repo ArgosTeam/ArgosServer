@@ -54,13 +54,13 @@ class GroupFunctions
 
                 if (array_key_exists('users', $invites)) {
                     foreach ($invites['users'] as $userInvited) {
-                        $users_id[] = $userInvited->id;
+                        $users_id[] = $userInvited;
                     }
                 }
 
                 if (array_key_exists('groups', $invites)) {
                     foreach ($invites['groups'] as $groupInvited) {
-                        $groups_id[] = $groupInvited->id;
+                        $groups_id[] = $groupInvited;
                     }
                 }
                 
@@ -319,7 +319,7 @@ class GroupFunctions
                 GroupFunctions::invite($user, $group->id, $users_id);
             }
             if (!empty($groups_id)) {
-                GroupFunctions::link_groups($user, $groups_id, $group->id);
+                GroupFunctions::link_groups($user, $groups_id, $group);
             }
         }
         return response(['status' => 'Group does not exist'], 403);
@@ -343,8 +343,8 @@ class GroupFunctions
                 
                 if ($groupToInvite->users->contains($user->id)) {
                     GroupFunctions::invite($user,
-                                           $group_id,
-                                           $group->users()
+                                           $group->id,
+                                           $groupToInvite->users()
                                            ->where('users.id', '!=', $user->id)
                                            ->get()->pluck('id'));
                 }
