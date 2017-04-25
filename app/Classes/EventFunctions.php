@@ -65,13 +65,13 @@ class EventFunctions
 
                 if (array_key_exists('users', $invites)) {
                     foreach ($invites['users'] as $userInvited) {
-                        $users_id[] = $userInvited->id;
+                        $users_id[] = $userInvited;
                     }
                 }
 
                 if (array_key_exists('groups', $invites)) {
                     foreach ($invites['groups'] as $groupInvited) {
-                        $groups_id[] = $groupInvited->id;
+                        $groups_id[] = $groupInvited;
                     }
                 }
                 
@@ -79,7 +79,7 @@ class EventFunctions
                     EventFunctions::invite($user, $event->id, $users_id);
                 }
                 if (!empty($groups_id)) {
-                    EventFunctions::link_groups($user, $groups_id, $event->id);
+                    EventFunctions::link_groups($user, $groups_id, $event);
                 }
             }
             
@@ -347,7 +347,7 @@ class EventFunctions
         return response($response, 200);
     }
 
-    public static function link_groups($user, $groups_id, $event_id) {
+    public static function link_groups($user, $groups_id, $event) {
         $groups = Group::whereIn('groups.id', $groups_id)->get();
         foreach ($groups as $group) {
 
@@ -361,7 +361,7 @@ class EventFunctions
             
                 if ($group->users->contains($user->id)) {
                     EventFunctions::invite($user,
-                                           $event_id,
+                                           $event->id,
                                            $group->users()
                                            ->where('users.id', '!=', $user->id)
                                            ->get()->pluck('id'));
