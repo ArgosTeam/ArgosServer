@@ -278,7 +278,9 @@ class GroupFunctions
             $request = PhotoFunctions::getUrl($photo, 'regular');
             
             $response[] = [
-                'photo_id' => $photo->id,
+                'id' => $photo->id,
+                'lat' => $photo->location->lat,
+                'lng' => $photo->location->lng,
                 'path' => '' . $request->getUri() . ''
             ];
         }
