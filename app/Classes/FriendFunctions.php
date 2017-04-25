@@ -24,6 +24,7 @@ class FriendFunctions
         } else {
             $user->notify(new FriendRequest($user, $friend, 'database'));
         }
+        $user->followed()->attach($friend->id);
         return response(['status' => 'success'], 200);
     }
 
