@@ -40,6 +40,19 @@ class UserFunctions
         $response['stats'] = '';
         $response['firstname'] = '';
         $response['lastname'] = '';
+        $response['followers'] = $userProfile->followers()->get()->count();
+        $response['following'] = $userProfile->followed()->get()->count();
+
+        $followPivot = $userProfile->followers()
+                     ->where('id', $user->id)
+                     ->first();
+
+        $followedPivot = $user->followers()
+                       ->where('id', $userProfile->id)
+                       ->first();
+        
+        $response['follow'] = is_object($followPivot);
+        $response['followed'] = is_object($followedPivot);
         if (is_object($friendShip)) {
             $response['friend'] = $friendShip->active;
             $response['pending'] = !$friendShip->active;
