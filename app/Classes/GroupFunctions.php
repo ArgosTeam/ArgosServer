@@ -200,7 +200,7 @@ class GroupFunctions
             $data['lng'] = $group->location->lng;
 
             $belong =$group->users()
-                    ->where('users.id', '=', $user->id)
+                    ->where('users.id', $user->id)
                     ->first();
 
             if (is_object($belong)) {

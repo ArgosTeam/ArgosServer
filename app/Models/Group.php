@@ -28,7 +28,7 @@ class Group extends Model
     public function users() {
         return $this->belongsToMany(User::class)
             ->withTimestamps()
-            ->withPivot('admin');
+            ->withPivot('admin', 'status');
     }
 
     public function location() {

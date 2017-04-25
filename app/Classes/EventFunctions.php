@@ -437,7 +437,7 @@ class EventFunctions
         $groups = $groups->get();
         $users = $users->get();
         
-        if (is_object($group)) {
+        if (is_object($event)) {
             $response = ['groups' => [], 'users' => []];
             foreach ($groups as $group) {
                 $profile_pic_path = null;
