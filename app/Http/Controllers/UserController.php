@@ -20,13 +20,13 @@ class UserController extends Controller
     public function follow(Request $request) {
         $user = Auth::user();
         $user_id = $request->input('id');
-        UserFunctions::follow($user, $user_id);
+        return UserFunctions::follow($user, $user_id);
     }
 
     public function unfollow(Request $request) {
         $user = Auth::user();
         $user_id = $request->input('id');
-        UserFunctions::unfollow($user, $user_id);
+        return UserFunctions::unfollow($user, $user_id);
     }
 
     public function profile_pic(Request $request) {
