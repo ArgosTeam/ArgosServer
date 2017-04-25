@@ -62,19 +62,24 @@ class EventFunctions
             $users_id = [];
             if ($request->has('invites')
                 && !empty($invites = $request->input('invites'))) {
-                foreach ($invites as $item) {
-                    if ($item->type == 'group') {
-                        $groups_id[] = $item->id;
-                    }
-                    if ($item->type == 'user') {
-                        $users_id[] = $item->id;
+
+                if (array_key_exists('users', $invites)) {
+                    foreach ($invites['users'] as $userInvited) {
+                        $users_id[] = $userInvited->id;
                     }
                 }
+
+                if (array_key_exists('groups', $invites)) {
+                    foreach ($invites['groups'] as $groupInvited) {
+                        $groups_id[] = $groupInvited->id;
+                    }
+                }
+                
                 if (!empty($users_id)) {
                     EventFunctions::invite($user, $event->id, $users_id);
                 }
                 if (!empty($groups_id)) {
-                    EventFunctions::link_groups($user, $groups_is, $event->id);
+                    EventFunctions::link_groups($user, $groups_id, $event->id);
                 }
             }
             
@@ -85,6 +90,8 @@ class EventFunctions
         return response(['event_id' => $event->id], 200);
     }
 
+    
+    
     public static function join($user, $event_id) {
         $event = Event::find($event_id);
         if (is_object($event)
@@ -291,35 +298,33 @@ class EventFunctions
         return response(['photo_id' => $photo->id], 200);
     }
 
-    public static function link_photo($user, $photo_id, $events_id) {
-        $events = Event::whereIn('events.id', $events_id)->get();
+    public static function link($user, $event_id, $invites) {
+        $event = Event::find($event_id);
+        if (is_object($event)) {
 
-        $photo = Photo::find($photo_id);
-        if (!is_object($photo)) {
-            return response('Photo does not exist');
-        }
-
-        if (!$photo->users->contains($user->id)) {
-            return response(['status' => 'This photo does not belong to you'], 403);
-        }
-        
-        foreach ($events as $event) {
-            if (!is_object($event)) {
-                return response(['status' => 'Event does not exists'], 403);
-            }
+            $users_id = [];
+            $groups_id = [];
             
-            if (!$event->users->contains($user->id)) {
-                return response(['status' => 'Access to event denied'], 403);
+            if (array_key_exists('users', $invites)) {
+                foreach ($invites['users'] as $userInvited) {
+                    $users_id[] = $userInvited->id;
+                }
             }
 
-            if (is_object($event->photos)
-                && $event->photos->contains($photo->id)) {
-                return response('Photo already linked to event', 403);
+            if (array_key_exists('groups', $invites)) {
+                foreach ($invites['groups'] as $groupInvited) {
+                    $groups_id[] = $groupInvited->id;
+                }
             }
-            $event->photos()->attach($photo->id);
+
+            if (!empty($users_id)) {
+                EventFunctions::invite($user, $event->id, $users_id);
+            }
+            if (!empty($groups_id)) {
+                EventFunctions::link_groups($user, $groups_id, $event->id);
+            }
         }
-        
-        return response(['status' => 'Photo linked to events'], 200);
+        return response(['status' => 'Event does not exist'], 403);
     }
 
     public static function photos($user, $event_id) {
@@ -346,14 +351,21 @@ class EventFunctions
         $groups = Group::whereIn('groups.id', $groups_id)->get();
         foreach ($groups as $group) {
 
-            $group->events()->attach($event_id);
+            $pivot = $group->users()
+                   ->where('users.id', $user->id)
+                   ->where('admin', true)
+                   ->first();
+            // User need to be admin
+            if (is_object($pivot)) {
+                $group->events()->attach($event_id);
             
-            if ($group->users->contains($user->id)) {
-                EventFunctions::invite($user,
-                                       $event_id,
-                                       $group->users()
-                                       ->where('users.id', '!=', $user->id)
-                                       ->get()->pluck('id'));
+                if ($group->users->contains($user->id)) {
+                    EventFunctions::invite($user,
+                                           $event_id,
+                                           $group->users()
+                                           ->where('users.id', '!=', $user->id)
+                                           ->get()->pluck('id'));
+                }
             }
         }
 
