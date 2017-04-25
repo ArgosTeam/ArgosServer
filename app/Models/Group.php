@@ -35,6 +35,10 @@ class Group extends Model
         return $this->belongsTo(Location::class);
     }
 
+    public function channel() {
+        return $this->belongsTo(Channel::class);
+    }
+
     public function hashtags() {
         return $this->belongsToMany(Hashtag::class)
             ->withTimestamps();

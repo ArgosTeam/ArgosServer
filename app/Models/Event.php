@@ -52,4 +52,8 @@ class Event extends Model
         return $this->belongsTo(EventRating::class)
             ->withTimestamps();
     }
+
+    public function channel() {
+        return $this->belongsTo(Channel::class);
+    }
 }

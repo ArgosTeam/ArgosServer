@@ -93,4 +93,19 @@ class User extends Authenticatable
         return $this->where('nickname', $nickname)
             ->first();
     }
+
+    /*
+    **
+    ** Messenger section
+    **
+    */
+
+    public function channels() {
+        return $this->belongsToMany(User::class);
+    }
+
+    public function channelWith($user_id) {
+        return $this->belongsToMany(User::class)
+            ->where('users.id', $user_id);
+    }
 }
