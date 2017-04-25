@@ -44,11 +44,11 @@ class UserFunctions
         $response['following'] = $userProfile->followed()->get()->count();
 
         $followPivot = $userProfile->followers()
-                     ->where('id', $user->id)
+                     ->where('users.id', $user->id)
                      ->first();
 
         $followedPivot = $user->followers()
-                       ->where('id', $userProfile->id)
+                       ->where('users.id', $userProfile->id)
                        ->first();
         
         $response['follow'] = is_object($followPivot);
