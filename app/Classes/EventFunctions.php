@@ -229,8 +229,10 @@ class EventFunctions
                 ->first();
         
         if (is_object($belong)) {
-            $data['belong'] = ($belong->pivot->status === 'accepted' ? true : false);
+            $data['invited'] = ($belong->pivot->status == 'invited');
+            $data['belong'] = ($belong->pivot->status == 'accepted');
         } else {
+            $data['invited'] = false;
             $data['belong'] = false;
         }
         

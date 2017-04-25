@@ -202,13 +202,14 @@ class GroupFunctions
             $belong =$group->users()
                     ->where('users.id', '=', $user->id)
                     ->first();
-            
+
             if (is_object($belong)) {
-                $data['admin'] = $belong->pivot->admin;
+                $data['invited'] = ($belong->pivot->status == 'invited');
+                $data['belong'] = ($belong->pivot->status == 'accepted');
             } else {
+                $data['invited'] = false;
                 $data['belong'] = false;
             }
-
 
             $admin = $group->users()
                    ->where('admin', true)
