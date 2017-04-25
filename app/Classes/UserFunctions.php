@@ -86,7 +86,8 @@ class UserFunctions
     }
 
     public static function unfollow($user, $user_id) {
-        if (is_object(User::find($user_id))) {
+        $followed = User::find($user_id);
+        if (is_object($followed)) {
             if (!$user->followed->contains($user_id)) {
                 return response(['status' => 'User is not followed'], 403);
             }
