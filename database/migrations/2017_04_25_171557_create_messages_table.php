@@ -17,13 +17,15 @@ class CreateMessagesTable extends Migration
             $table->increments('id');
 
             $table->string('content');
-            $table->integer('channel_id');
+            $table->integer('channel_id')
+                ->unsigned();
 
             $table->foreign('channel_id')
                 ->references('id')
                 ->on('channels');
 
-            $table->integer('user_id');
+            $table->integer('user_id')
+                ->unsigned();
 
             $table->foreign('user_id')
                 ->references('id')
