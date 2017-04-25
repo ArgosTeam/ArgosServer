@@ -45,7 +45,6 @@ class GroupFunctions
             
             /*
             ** Invite users associated to field invites in the new created group
-            ** Either { type:group, id:int }, either { type:user, id:int }
             */
             $groups_id = [];
             $users_id = [];
@@ -261,34 +260,6 @@ class GroupFunctions
         return response(['photo_id' => $photo->id], 200);
     }
 
-    public static function link_photo($user, $photo_id, $group_id) {
-        $groups = Group::whereIn('groups.id', $group_id)->get();
-
-        $photo = Photo::find($photo_id);
-        if (!is_object($photo)) {
-            return response('Photo does not exist');
-        }
-        if (!$photo->users->contains($user->id)) {
-            return response(['status' => 'This photo does not belong to you'], 403);
-        }
-
-        foreach ($groups as $group) {
-            if (!is_object($group)) {
-                return response(['status' => 'Group does not exists'], 403);
-            }
-            if (!$group->users->contains($user->id)) {
-                return response(['status' => 'Access to group denied'], 403);
-            }
-
-            if ($group->photos->contains($photo->id)) {
-                return response('Photo already linked to group', 403);
-            }
-            $group->photos()->attach($photo->id);
-        }
-
-        return response(['status' => 'Photo linked to group'], 200);
-    }
-
     public static function photos($user, $group_id) {
         $group = Group::find($group_id);
         if (!is_object($group)) {
@@ -325,22 +296,58 @@ class GroupFunctions
         }
     }
 
+    public static function link($user, $group_id, $invites) {
+        $group = Group::find($group_id);
+        if (is_object($group)) {
+
+            $users_id = [];
+            $groups_id = [];
+            
+            if (array_key_exists('users', $invites)) {
+                foreach ($invites['users'] as $userInvited) {
+                    $users_id[] = $userInvited->id;
+                }
+            }
+
+            if (array_key_exists('groups', $invites)) {
+                foreach ($invites['groups'] as $groupInvited) {
+                    $groups_id[] = $groupInvited->id;
+                }
+            }
+
+            if (!empty($users_id)) {
+                GroupFunctions::invite($user, $group->id, $users_id);
+            }
+            if (!empty($groups_id)) {
+                GroupFunctions::link_groups($user, $groups_id, $group->id);
+            }
+        }
+        return response(['status' => 'Group does not exist'], 403);
+    }
+    
     public static function link_groups($user, $groups_id, $group) {
         $groups = Group::whereIn('groups.id', $groups_id)->get();
         foreach ($groups as $groupToInvite) {
 
             /*
             ** Update both side contacts
+            ** Need to be admin
             */
-            $group->groups()->attach($groupToInvite->id);
-            $groupToInvite->groups()->attach($group->id);
-            
-            if ($groupToInvite->users->contains($user->id)) {
-                GroupFunctions::invite($user,
-                                       $group_id,
-                                       $group->users()
-                                       ->where('users.id', '!=', $user->id)
-                                       ->get()->pluck('id'));
+            $pivot = $groupToInvite->users()
+                   ->where('users.id', $user->id)
+                   ->where('admin', true)
+                   ->first();
+            if (is_object($pivot)) {
+                $group->groups()->attach($groupToInvite->id);
+                $groupToInvite->groups()->attach($group->id);
+                
+                if ($groupToInvite->users->contains($user->id)) {
+                    GroupFunctions::invite($user,
+                                           $group_id,
+                                           $group->users()
+                                           ->where('users.id', '!=', $user->id)
+                                           ->get()->pluck('id'));
+                }
             }
         }
 

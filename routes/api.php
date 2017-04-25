@@ -67,12 +67,12 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/event/accept_join', 'EventController@accept_join');
     Route::post('/event/comment', 'EventController@comment');
     Route::post('/event/profile_pic', 'EventController@profile_pic');
-    Route::post('/event/photo/link', 'EventController@link_photo');
     Route::post('/event/invite', 'EventController@invite');
     Route::post('/event/accept_invite', 'EventController@accept_invite');
     Route::post('/event/quit', 'EventController@quit');
     Route::post('/event/edit', 'EventController@edit');
     Route::post('/event/refuse_invite', 'EventController@refuse_invite');
+    Route::post('/event/link', 'EventController@link');
 
     /* GET */
     Route::get('/event/contacts', 'EventController@contacts');
@@ -109,13 +109,13 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/group/join', 'GroupController@join');
     Route::post('/group/accept_join', 'GroupController@accept_join');
     Route::post('/group/profile_pic', 'GroupController@profile_pic');
-    Route::post('/group/photo/link', 'GroupController@link_photo');
     Route::post('/group/invite', 'GroupController@invite');
     Route::post('/group/accept_invite', 'GroupController@accept_invite');
     Route::post('/group/refuse_invite', 'GroupController@refuse_invite');
     Route::post('/group/comment', 'GroupController@comment');
     Route::post('/group/quit', 'GroupController@quit');
     Route::post('/group/edit', 'GroupController@edit');
+    Route::post('/group/link', 'GroupController@link');
 
     /* GET */
     Route::get('/group/infos', 'GroupController@infos');

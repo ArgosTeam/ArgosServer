@@ -75,19 +75,19 @@ class EventController extends Controller
                                            $request->input('event_id'));
     }
 
-    public function link_photo(Request $request) {
-        $user = Auth::user();
-        $photo_id = $request->input('photo_id');
-        $events_id = $request->input('events_id');
-        return EventFunctions::link_photo($user, $photo_id, $events_id);
-    }
-
     public function photos(Request $request) {
         $user = Auth::user();
         $event_id = $request->input('id');
         return EventFunctions::photos($user, $event_id);
     }
 
+    public function link(Request $request) {
+        $user = Auth::user();
+        $event_id = $request->input('id');
+        $invites = $request->input('invites');
+        return EventFunctions::link($user, $event_id, $invites);
+    }
+    
     /*
     ** Invite Users from all groups in groups_id
     ** if user belongs to group
@@ -121,4 +121,6 @@ class EventController extends Controller
                                                   $name_begin,
                                                   $exclude);
     }
+
+    
 }
