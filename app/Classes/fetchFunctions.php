@@ -174,7 +174,7 @@ class fetchFunctions
                     ** Base of groups request
                     */
                     $query_locations_groups = clone $query_base_locations;
-                    fetchFunctions::addJoinGroupFilter($query_locations_groups, $filter['groups']);
+                    fetchFunctions::addJoinGroupFilter($query_locations_groups, $filter['groups'], $filter['users']);
                     
                     /*
                     ** Get Groups -- TODO : check rights to display info
@@ -188,7 +188,7 @@ class fetchFunctions
                 if ($mode == 'event'
                     || $mode == 'all') {
                     $query_locations_events = clone $query_base_locations;
-                    fetchFunctions::addJoinEventFilter($query_locations_events);
+                    fetchFunctions::addJoinEventFilter($query_locations_events, $filter['users']);
 
                     $locations_events = $query_locations_events
                                       ->latest()
@@ -249,6 +249,10 @@ class fetchFunctions
                             continue ;
                         }
 
+                        if (!$group->public && !$group->users->contains($user->id)) {
+                            continue ;
+                        }
+                        
                         $profile_pic = $group->profile_pic()->first();
                         $profile_pic_path = null;
             
@@ -349,7 +353,7 @@ class fetchFunctions
         });
     }
 
-    private static function addJoinGroupFilter($query, $groups_id) {
+    private static function addJoinGroupFilter($query, $groups_id, $users_id) {
         $query->whereHas('group', function ($query) use ($groups_id) {
             if (!empty($groups_id)) {
                 $query->whereIn('groups.id', $groups_id);
@@ -357,8 +361,15 @@ class fetchFunctions
         });
     }
 
-    private static function addJoinEventFilter($query) {
-        $query->whereHas('event');
+    private static function addJoinEventFilter($query, $users_id) {
+        $query->whereHas('event', function ($query) use ($users_id) {
+            if (!empty($users_id)) {
+                $query->where('status', 'accepted')
+                    ->whereHas('users', function ($subquery) use ($users_id) {
+                        $subquery->whereIn('users.id', $users_id);
+                    });
+            }
+        });
     }
     
 }
