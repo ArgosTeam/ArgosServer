@@ -57,13 +57,13 @@ class GroupController extends Controller
 
     public function refuse_invite(Request $request) {
         $user = Auth::user();
-        $group_id = $request->input('group_id');
+        $group_id = $request->input('id');
         return GroupFunctions::refuseInvite($user, $group_id);
     }
 
     public function accept_invite(Request $request) {
         $user = Auth::user();
-        $group_id = $request->input('group_id');
+        $group_id = $request->input('id');
         return GroupFunctions::acceptInvite($user, $group_id);
     }
 
@@ -83,7 +83,7 @@ class GroupController extends Controller
 
     public function quit(Request $request) {
         $user = Auth::user();
-        $group_id = $request->input('group_id');
+        $group_id = $request->input('id');
         return GroupFunctions::quit($user, $group_id);
     }
 

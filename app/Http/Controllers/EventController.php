@@ -18,7 +18,7 @@ class EventController extends Controller
 
     public function join(Request $request){
         $user = Auth::user();
-        $event_id = $request->input('event_id');
+        $event_id = $request->input('id');
         return EventFunctions::join($user, $event_id);
     }
 
@@ -38,13 +38,13 @@ class EventController extends Controller
 
     public function refuse_invite(Request $request) {
         $user = Auth::user();
-        $event_id = $request->input('event_id');
+        $event_id = $request->input('id');
         return EventFunctions::refuseInvite($user, $event_id);
     }
 
     public function accept_invite(Request $request) {
         $user = Auth::user();
-        $event_id = $request->input('event_id');
+        $event_id = $request->input('id');
         return EventFunctions::acceptInvite($user, $event_id);
     }
 
