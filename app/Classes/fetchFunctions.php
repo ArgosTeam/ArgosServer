@@ -162,9 +162,9 @@ class fetchFunctions
                     ** If users filter not applied, get all latest photos_users
                     */
                     $locations_photos_users = $query_locations_photos_users
-                                        ->latest()
-                                        ->limit(15)
-                                        ->get();
+                                            ->orderBy('created_at', 'desc')
+                                            ->limit(15)
+                                            ->get();
                     
                 }
 
