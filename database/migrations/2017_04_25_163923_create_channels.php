@@ -17,7 +17,6 @@ class CreateChannels extends Migration
             $table->engine = 'InnoDB';
 
             $table->increments('id');
-            $table->string('content');
             $table->timestamps();
         });
 

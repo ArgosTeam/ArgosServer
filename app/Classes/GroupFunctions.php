@@ -6,6 +6,7 @@ use App\Models\Hashtag;
 use App\Models\Photo;
 use App\Models\Location;
 use App\Models\Comment;
+use App\Models\Channel;
 use App\Classes\PhotoFunctions;
 use Illuminate\Support\Facades\Storage;
 use App\Notifications\GroupAdded;
@@ -28,6 +29,8 @@ class GroupFunctions
                 'lat' => $request->input('lat'),
                 'lng' => $request->input('lng')
             ]);
+
+            $channel = new Channel();
 
             $location->save();
             $group->location()->associate($location);
