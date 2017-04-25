@@ -364,9 +364,9 @@ class fetchFunctions
     private static function addJoinEventFilter($query, $users_id) {
         $query->whereHas('event', function ($query) use ($users_id) {
             if (!empty($users_id)) {
-                $query->where('status', 'accepted')
                     ->whereHas('users', function ($subquery) use ($users_id) {
-                        $subquery->whereIn('users.id', $users_id);
+                        $subquery->whereIn('users.id', $users_id)
+                            ->where('event_user.status', 'accepted');
                     });
             }
         });
