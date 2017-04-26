@@ -273,4 +273,29 @@ class PhotoFunctions
         }
         return response(['status' => 'Photo does not exists'], 403);
     }
+
+    public static function edit($user, $data) {
+        $photo = Photo::find($data['id']);
+        if (is_object($photo)) {
+            $pivot = $photo->users()
+                   ->where('users.id', $user->id)
+                   ->where('admin', true)
+                   ->first();
+            if (is_object($pivot)) {
+                if (array_key_exists('description', $data)) {
+                    $photo->description = $data['description'];
+                }
+                if (array_key_exists('public', $data)) {
+                    $photo->public = $data['public'];
+                }
+                $photo->save();
+
+                return response(['status' => 'Edit successfull'], 200);
+            }
+
+            return response(['status' => 'Access forbidden'], 403);
+        }
+
+        return response(['status' => 'Photo does not exist'], 403);
+    }
 }

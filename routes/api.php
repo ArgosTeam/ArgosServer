@@ -37,6 +37,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     /* POST */
     Route::post('/photo/upload',    'PhotoController@uploadUserImage');
     Route::post('/photo/comment', 'PhotoController@comment');
+    Route::post('/photo/edit', 'PhotoController@edit');
 
     /* GET */
     Route::get('/photo/infos', 'PhotoController@infos');

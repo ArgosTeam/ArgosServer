@@ -37,4 +37,10 @@ class PhotoController extends Controller
                                                   $name_begin,
                                                   $exclude);
     }
+
+    public function edit(Request $request) {
+        $user = Auth::user();
+        $data = $request->all();
+        return PhotoFunctions::edit($user, $data);
+    }
 }

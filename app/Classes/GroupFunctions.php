@@ -390,9 +390,16 @@ class GroupFunctions
                     if (array_key_exist('description', $data)) {
                         $group->description = $data['description'];
                     }
-                    if (array_key_exist('address', $data)) {
-                        $group->address = $data['address'];
+                    if (array_key_exist('lat', $data)) {
+                        $group->location->lat = $data['lat'];
                     }
+                    if (array_key_exist('lng', $data)) {
+                        $group->location->lng = $data['lng'];
+                    }
+                    if (array_key_exist('public', $data)) {
+                        $event->public = $data['public'];
+                    }
+                    
                     $group->save();
 
                     return response(['status' => 'Edit successfull'], 200);

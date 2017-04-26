@@ -407,11 +407,22 @@ class EventFunctions
                         $event->description = $data['description'];
                     }
                     if (array_key_exist('start', $data)) {
-                        $event->address = $data['start'];
+                        $event->start = $data['start'];
                     }
                     if (array_key_exist('expires', $data)) {
-                        $event->address = $data['expires'];
+                        $event->expires = $data['expires'];
                     }
+                    if (array_key_exist('lat', $data)) {
+                        $event->location->lat = $data['lat'];
+                    }
+                    if (array_key_exist('lng', $data)) {
+                        $event->location->lng = $data['lng'];
+                    }
+                    if (array_key_exist('public', $data)) {
+                        $event->public = $data['public'];
+                    }
+
+                    
 
                     $event->save();
                     
