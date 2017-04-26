@@ -163,8 +163,8 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     /* POST */
     Route::post('/chat/user', 'MessengerController@sendToUser');
-    Route::post('/chat/group', 'MessengerController@sendToGroup');
-    Route::post('/chat/event', 'MessengerController@sendToEvent');
+    Route::post('/chat/group', 'MessengerController@sendInGroup');
+    Route::post('/chat/event', 'MessengerController@sendInEvent');
 
     /* GET */
     Route::get('/user/messages', 'MessengerController@getUserMessages');
