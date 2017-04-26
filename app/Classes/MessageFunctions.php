@@ -17,6 +17,7 @@ class MessageFunctions
 
         $message->user()->associate($user->id);
         $message->channel()->associate($channel->id);
+        $message->save();
         return response(['status' => 'Message sent successfully'], 200);
     }
 }
