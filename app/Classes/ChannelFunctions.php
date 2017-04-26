@@ -20,7 +20,7 @@ class ChannelFunctions
         if (is_object($channel)) {
             return $channel;
         }
-        return createUserChannel($user, $friend);
+        return ChannelFunctions::createUserChannel($user, $friend);
     }
 
     private static function createUserChannel($user, $friend) {
