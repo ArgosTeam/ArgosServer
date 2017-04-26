@@ -12,9 +12,10 @@ use App\Classes\PhotoFunctions;
 class ChannelFunctions
 {
     public static function getUserChannel($user, $friend) {
-        $channel = $user->whereHas('users', function ($query) use ($friend) {
-            $query->where('users.id', $friend->id);
-        })
+        $channel = $user->channels()
+                 ->whereHas('users', function ($query) use ($friend) {
+                     $query->where('users.id', $friend->id);
+                 })
                  ->first();
         if (is_object($channel)) {
             return $channel;
