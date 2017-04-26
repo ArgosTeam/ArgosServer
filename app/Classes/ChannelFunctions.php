@@ -26,9 +26,9 @@ class ChannelFunctions
     private static function createUserChannel($user, $friend) {
         $channel = new Channel();
 
+        $channel->save();
         $channel->users()->attach($user->id);
         $channel->users()->attach($friend->id);
-        $channel->save();
         return $channel;
     }
 }
