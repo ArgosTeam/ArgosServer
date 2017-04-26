@@ -119,7 +119,8 @@ class MessengerController extends Controller
                    ->where('users.id', $user->id)
                    ->first();
             if (is_object($pivot)) {
-                foreach ($group->channel()->messages()->get() as $message) {
+                $channel = $group->channel;
+                foreach ($channel->messages()->get() as $message) {
                     $results[] = [
                         'id' => $message->id,
                         'content' => $message->content,
@@ -150,7 +151,8 @@ class MessengerController extends Controller
                    ->where('users.id', $user->id)
                    ->first();
             if (is_object($pivot)) {
-                foreach ($event->channel()->messages()->get() as $message) {
+                $channel = $event->channel;
+                foreach ($channel->messages()->get() as $message) {
                     $results[] = [
                         'id' => $message->id,
                         'content' => $message->content,
