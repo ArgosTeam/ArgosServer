@@ -12,6 +12,7 @@ use App\Models\Message;
 use App\Models\Channel;
 use App\Models\Group;
 use App\Classes\ChannelFunctions;
+use App\Classes\MessageFunctions;
 
 class MessengerController extends Controller
 {
