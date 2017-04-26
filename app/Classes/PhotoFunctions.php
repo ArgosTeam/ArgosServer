@@ -121,25 +121,41 @@ class PhotoFunctions
             'admin' => true
         ]);
 
-        $ids = array_key_exists('invites', $data) ? $data['invites'] : [];
-        $users_to_share = User::whereIn('id', $ids)->get();
+        $friends_id = [];
+        $groups_id = [];
+        if (array_key_exists('invites', $data)) {
 
-        foreach ($users_to_share as $shared) {
-            $shared->photos()->attach($photo->id, [
-                'admin' => false
-            ]);
+            $invites = $data['invites'];
+            
+            if (array_key_exists('users', $invites)) {
+                $friends_id = $invites['users'];
+                foreach ($friends_id as $shared) {
+                    $photo->users()->attach($shared, [
+                        'admin' => false
+                    ]);
+                }
+            }
+
+            if (array_key_exists('groups', $invites)) {
+                $groups_id = $invites['groups'];
+                foreach ($groups_id as $group_id) {
+                    $photo->groups()->attach($group_id);
+                }
+            }
+
         }
+        
         if ($photo->public) {
             $user->notify(new NewPublicPicture($user, $photo, 'slack'));
-            foreach ($user->followers()->get() as $follower) {
+            foreach ($user->followers()->whereNotIn('users.id', $friends_id)->get() as $follower) {
                 $follower->notify(new NewPublicPicture($user, $photo, 'database'));
             }
         } else {
             $user->notify(new NewPrivatePicture($user, $photo, 'slack'));
-        }
-
-        if (!empty($users_to_share)) {
-            Notification::send($users_to_share, new NewPrivatePicture($user, $photo, 'database'));
+            if (!empty($friends_id)) {
+                $friends = User::whereIn('users.id', $friends_id)->get();
+                Notification::send($friends, new PrivatePicture($user, $photo, 'database'));
+            }
         }
         
         return (response(['photo_id' => $photo->id], 200));

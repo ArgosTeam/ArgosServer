@@ -71,15 +71,11 @@ class EventFunctions
                 && !empty($invites = $request->input('invites'))) {
 
                 if (array_key_exists('users', $invites)) {
-                    foreach ($invites['users'] as $userInvited) {
-                        $users_id[] = $userInvited;
-                    }
+                    $users_id = $invites['users'];
                 }
 
                 if (array_key_exists('groups', $invites)) {
-                    foreach ($invites['groups'] as $groupInvited) {
-                        $groups_id[] = $groupInvited;
-                    }
+                    $groups_id = $invites['groups'];
                 }
                 
                 if (!empty($users_id)) {
