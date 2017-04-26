@@ -11,7 +11,6 @@ use App\Models\User;
 use App\Models\Message;
 use App\Models\Channel;
 use App\Models\Group;
-use App\Models\Event;
 use App\Classes\ChannelFunctions;
 
 class MessengerController extends Controller
