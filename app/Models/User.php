@@ -104,10 +104,6 @@ class User extends Authenticatable
         return $this->belongsToMany(Channel::class);
     }
 
-    public function channelWith($user_id) {
-        return $this->belongsToMany(Channel::class)
-            ->where('users.id', $user_id);
-    }
 
     /*
     ** All messages from all channels

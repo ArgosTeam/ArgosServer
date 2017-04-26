@@ -155,5 +155,19 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('/comments/event', 'CommentController@event');
     Route::get('/comments/photo', 'CommentController@photo');
     Route::get('/comments/group', 'CommentController@group');
-    
+
+
+    /*
+    ** Messenger routes
+    */
+
+    /* POST */
+    Route::post('/chat/user', 'MessengerController@sendToUser');
+    Route::post('/chat/group', 'MessengerController@sendToUser');
+    Route::post('/chat/event', 'MessengerController@sendToUser');
+
+    /* GET */
+    Route::get('/user/messages', 'MessengerController@getUserMessages');
+    Route::get('/group/messages', 'MessengerController@getGroupMessages');
+    Route::get('/event/messages', 'MessengerController@getEventMessages');
 });
