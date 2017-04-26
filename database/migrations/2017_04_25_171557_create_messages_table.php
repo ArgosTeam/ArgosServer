@@ -22,7 +22,7 @@ class CreateMessagesTable extends Migration
 
             $table->foreign('channel_id')
                 ->references('id')
-                ->on('channels');
+                ->on('channels')
                 ->onDelete('cascade');
 
             $table->integer('user_id')
@@ -30,7 +30,7 @@ class CreateMessagesTable extends Migration
 
             $table->foreign('user_id')
                 ->references('id')
-                ->on('users');
+                ->on('users')
                 ->onDelete('cascade');
             
             $table->timestamps();
