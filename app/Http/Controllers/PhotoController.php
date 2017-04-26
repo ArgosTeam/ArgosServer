@@ -43,4 +43,11 @@ class PhotoController extends Controller
         $data = $request->all();
         return PhotoFunctions::edit($user, $data);
     }
+
+    public function link(Request $request) {
+        $user = Auth::user();
+        $photo_id = $request->input('id');
+        $invites = $request->input('invites');
+        return PhotoFunctions::link($user, $photo_id, $invites);
+    }
 }

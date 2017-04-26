@@ -161,6 +161,43 @@ class PhotoFunctions
         return (response(['photo_id' => $photo->id], 200));
     }
 
+    public static function link($user, $photo_id, $invites) {
+        $photo = Photo::find($photo_id);
+        if (is_object($photo)) {
+            $pivot = $user->photos()
+                   ->where('photos.id', $photo_id)
+                   ->where('admin', true)
+                   ->first();
+            if (is_object($pivot)) {
+
+                if (array_key_exists('users', $invites)) {
+                    $friends_id = $invites['users'];
+                    foreach ($friends_id as $friend_id) {
+                        $photo->users()->attach($friend_id, [
+                            'admin' => false
+                        ]);
+                    }
+
+                    if (!empty($friends_id)) {
+                        $friends = User::whereIn('users.id', $friends_id)->get();
+                        Notification::send($friends, new PrivatePicture($user, $photo, 'database'));
+                    }
+                }
+                
+                if (array_key_exists('groups', $invites)) {
+                    $groups_id = $invites['groups'];
+                    foreach ($groups_id as $group_id) {
+                        $photo->groups()->attach($group_id);
+                    }
+                }
+            }
+
+            return response(['status' => 'Need to be admin'], 403);
+        }
+
+        return response(['status' => 'Photo does not exist'], 403);
+    }
+    
     public static function getInfos($user, $photo_id) {
         $photo = Photo::find($photo_id);
         if (!is_object($photo)) {
