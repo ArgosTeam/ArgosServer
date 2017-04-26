@@ -200,6 +200,7 @@ class GroupFunctions
             $data['name'] = $group->name;
             $data['public'] = $group->public;
             $data['address'] = $group->address;
+            $data['description'] = $group->description;
             $data['date'] = $group->created_at;
             $data['lat'] = $group->location->lat;
             $data['lng'] = $group->location->lng;
@@ -278,7 +279,9 @@ class GroupFunctions
             $request = PhotoFunctions::getUrl($photo, 'regular');
             
             $response[] = [
-                'photo_id' => $photo->id,
+                'id' => $photo->id,
+                'lat' => $photo->location->lat,
+                'lng' => $photo->location->lng,
                 'path' => '' . $request->getUri() . ''
             ];
         }
