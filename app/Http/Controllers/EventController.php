@@ -91,7 +91,7 @@ class EventController extends Controller
     public function unlink(Request $request) {
         $user = Auth::user();
         $event_id = $request->input('id');
-        $invites = $request->input('unlinks');
+        $unlinks = $request->input('unlinks');
         return EventFunctions::unlink($user, $event_id, $unlinks);
     }
     

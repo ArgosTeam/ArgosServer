@@ -118,7 +118,7 @@ class GroupController extends Controller
     public function unlink(Request $request) {
         $user = Auth::user();
         $group_id = $request->input('id');
-        $invites = $request->input('unlinks');
+        $unlinks = $request->input('unlinks');
         return GroupFunctions::unlink($user, $group_id, $unlinks);
     }
 }
