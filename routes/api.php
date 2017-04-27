@@ -77,6 +77,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/event/edit', 'EventController@edit');
     Route::post('/event/refuse_invite', 'EventController@refuse_invite');
     Route::post('/event/link', 'EventController@link');
+    Route::post('/event/link', 'EventController@unlink');
 
     /* GET */
     Route::get('/event/contacts', 'EventController@contacts');

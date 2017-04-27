@@ -401,7 +401,7 @@ class EventFunctions
                    ->first();
             // User need to be admin
             if (is_object($pivot)) {
-                $group->events()->attach($event_id);
+                $group->events()->attach($event->id);
             
                 if ($group->users->contains($user->id)) {
                     EventFunctions::invite($user,
