@@ -39,6 +39,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/photo/comment', 'PhotoController@comment');
     Route::post('/photo/edit', 'PhotoController@edit');
     Route::post('/photo/link', 'PhotoController@link');
+    Route::post('/photo/unlink', 'PhotoController@unlink');
 
     /* GET */
     Route::get('/photo/infos', 'PhotoController@infos');
@@ -119,6 +120,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/group/quit', 'GroupController@quit');
     Route::post('/group/edit', 'GroupController@edit');
     Route::post('/group/link', 'GroupController@link');
+    Route::post('/group/unlink', 'GroupController@unlink');
 
     /* GET */
     Route::get('/group/infos', 'GroupController@infos');

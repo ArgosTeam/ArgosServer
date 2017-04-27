@@ -375,8 +375,45 @@ class GroupFunctions
         return response(['status' => 'Group does not exist'], 403);
     }
 
+    public static function unlink($user, $group_id, $unlinks) {
+        $group = Group::find($group_id);
+        if (is_object($group)) {
+
+            $pivot = $group->users()
+                   ->where('users.id', $user->id)
+                   ->where('admin', true)
+                   ->first();
+
+            // Check if admin with pivot
+            if (is_object($pivot)) {
+                if (array_key_exists('users', $unlinks)) {
+                    foreach ($unlinks['users'] as $user_id) {
+                        $currUser = $group->users()
+                                  ->where('users.id', $user_id)->first();
+
+                        // Unlink only non-admin users
+                        if (!$currUser->pivot->admin) {
+                            $group->users()->detach($userInvited);
+                        }
+                        // Notif slack user unlinked
+                    }
+                }
+
+                if (array_key_exists('groups', $unlinks)) {
+                    foreach ($unlinks['groups'] as $group_id) {
+                        $group->groups()->detach($group_id);
+                        // Notif slack group unlinked
+                    }
+                }
+                return response(['status' => 'Success'], 200);
+            }
+            return response(['status' => 'Need to be admin'], 200);
+        }
+        return response(['status' => 'Group does not exist'], 403);
+    }
+    
     public static function edit($user, $data) {
-        $group = Group::find($data['group_id']);
+        $group = Group::find($data['id']);
         if (is_object($group)) {
             if ($group->users->contains($user->id)) {
 

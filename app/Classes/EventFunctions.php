@@ -312,13 +312,13 @@ class EventFunctions
             
             if (array_key_exists('users', $invites)) {
                 foreach ($invites['users'] as $userInvited) {
-                    $users_id[] = $userInvited->id;
+                    $users_id[] = $userInvited;
                 }
             }
 
             if (array_key_exists('groups', $invites)) {
                 foreach ($invites['groups'] as $groupInvited) {
-                    $groups_id[] = $groupInvited->id;
+                    $groups_id[] = $groupInvited;
                 }
             }
 
@@ -328,6 +328,43 @@ class EventFunctions
             if (!empty($groups_id)) {
                 EventFunctions::link_groups($user, $groups_id, $event->id);
             }
+        }
+        return response(['status' => 'Event does not exist'], 403);
+    }
+
+    public static function unlink($user, $event_id, $unlinks) {
+        $event = Event::find($event_id);
+        if (is_object($event)) {
+
+            $pivot = $event->users()
+                   ->where('users.id', $user->id)
+                   ->where('admin', true)
+                   ->first();
+
+            // Check if admin with pivot
+            if (is_object($pivot)) {
+                if (array_key_exists('users', $unlinks)) {
+                    foreach ($unlinks['users'] as $user_id) {
+                        $currUser = $event->users()
+                                  ->where('users.id', $user_id)->first();
+
+                        // Unlink only non-admin users
+                        if (!$currUser->pivot->admin) {
+                            $event->users()->detach($userInvited);
+                        }
+                        // Notif slack user unlinked
+                    }
+                }
+
+                if (array_key_exists('groups', $unlinks)) {
+                    foreach ($unlinks['groups'] as $group_id) {
+                        $event->groups()->detach($group_id);
+                        // Notif slack group unlinked
+                    }
+                }
+                return response(['status' => 'Success'], 200);
+            }
+            return response(['status' => 'Need to be admin'], 200);
         }
         return response(['status' => 'Event does not exist'], 403);
     }
@@ -392,7 +429,7 @@ class EventFunctions
     }
 
     public static function edit($user, $data) {
-        $event = Event::find($data['event_id']);
+        $event = Event::find($data['id']);
         if (is_object($event)) {
             if ($event->users->contains($user->id)) {
 
@@ -421,8 +458,6 @@ class EventFunctions
                     if (array_key_exist('public', $data)) {
                         $event->public = $data['public'];
                     }
-
-                    
 
                     $event->save();
                     

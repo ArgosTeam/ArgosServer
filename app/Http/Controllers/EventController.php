@@ -87,6 +87,13 @@ class EventController extends Controller
         $invites = $request->input('invites');
         return EventFunctions::link($user, $event_id, $invites);
     }
+
+    public function unlink(Request $request) {
+        $user = Auth::user();
+        $event_id = $request->input('id');
+        $invites = $request->input('unlinks');
+        return EventFunctions::unlink($user, $event_id, $unlinks);
+    }
     
     /*
     ** Invite Users from all groups in groups_id

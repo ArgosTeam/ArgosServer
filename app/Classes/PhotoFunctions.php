@@ -190,6 +190,53 @@ class PhotoFunctions
                         $photo->groups()->attach($group_id);
                     }
                 }
+
+                return response(['status' => 'Success'], 200);
+            }
+
+            return response(['status' => 'Need to be admin'], 403);
+        }
+
+        return response(['status' => 'Photo does not exist'], 403);
+    }
+
+    public static function unlink($user, $photo_id, $unlinks) {
+        $photo = Photo::find($photo_id);
+        if (is_object($photo)) {
+            $pivot = $user->photos()
+                   ->where('photos.id', $photo_id)
+                   ->where('admin', true)
+                   ->first();
+            if (is_object($pivot)) {
+
+                if (array_key_exists('users', $unlinks)) {
+                    $friends_id = $unlinks['users'];
+                    foreach ($friends_id as $friend_id) {
+
+                        $currUser = photo->users()
+                                  ->where('users.id', $friend_id)
+                                  ->first();
+
+                        // Unlink only non-admin
+                        if (!$currUser->pivot->admin) {
+                            $photo->users()->detach($friend_id);
+                        }
+                        // TODO : Add Notification slack user unlinked from photo
+                    }
+
+                }
+                
+                if (array_key_exists('groups', $unlinks)) {
+                    $groups_id = $unlinks['groups'];
+                    foreach ($groups_id as $group_id) {
+                        $photo->groups()->detach($group_id);
+                    }
+
+                    // TODO : Notif slack group unlinked
+                }
+
+                
+                return response(['status' => 'Success'], 200);
             }
 
             return response(['status' => 'Need to be admin'], 403);

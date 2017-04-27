@@ -50,4 +50,11 @@ class PhotoController extends Controller
         $invites = $request->input('invites');
         return PhotoFunctions::link($user, $photo_id, $invites);
     }
+
+    public function unlink(Request $request) {
+        $user = Auth::user();
+        $photo_id = $request->input('id');
+        $invites = $request->input('unlinks');
+        return PhotoFunctions::unlink($user, $photo_id, $invites);
+    }
 }

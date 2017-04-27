@@ -114,4 +114,11 @@ class GroupController extends Controller
                                       $name_begin,
                                       $exclude);
     }
+
+    public function unlink(Request $request) {
+        $user = Auth::user();
+        $group_id = $request->input('id');
+        $invites = $request->input('unlinks');
+        return GroupFunctions::unlink($user, $group_id, $unlinks);
+    }
 }
