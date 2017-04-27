@@ -328,6 +328,8 @@ class EventFunctions
             if (!empty($groups_id)) {
                 EventFunctions::link_groups($user, $groups_id, $event);
             }
+
+            return response(['status' => 'Success'], 200);
         }
         return response(['status' => 'Event does not exist'], 403);
     }

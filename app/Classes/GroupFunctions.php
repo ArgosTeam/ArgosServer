@@ -330,6 +330,8 @@ class GroupFunctions
             if (!empty($groups_id)) {
                 GroupFunctions::link_groups($user, $groups_id, $group);
             }
+
+            return response(['status' => 'Success'], 200);
         }
         return response(['status' => 'Group does not exist'], 403);
     }
