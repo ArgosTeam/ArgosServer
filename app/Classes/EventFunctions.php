@@ -437,25 +437,25 @@ class EventFunctions
                                  ->where('users.id', '=', $user->id)
                                  ->first();
                 if ($currentRelation->pivot->admin) {
-                    if (array_key_exist('name', $data)) {
+                    if (array_key_exists('name', $data)) {
                         $event->name = $data['name'];
                     }
-                    if (array_key_exist('description', $data)) {
+                    if (array_key_exists('description', $data)) {
                         $event->description = $data['description'];
                     }
-                    if (array_key_exist('start', $data)) {
+                    if (array_key_exists('start', $data)) {
                         $event->start = $data['start'];
                     }
-                    if (array_key_exist('expires', $data)) {
+                    if (array_key_exists('expires', $data)) {
                         $event->expires = $data['expires'];
                     }
-                    if (array_key_exist('lat', $data)) {
+                    if (array_key_exists('lat', $data)) {
                         $event->location->lat = $data['lat'];
                     }
-                    if (array_key_exist('lng', $data)) {
+                    if (array_key_exists('lng', $data)) {
                         $event->location->lng = $data['lng'];
                     }
-                    if (array_key_exist('public', $data)) {
+                    if (array_key_exists('public', $data)) {
                         $event->public = $data['public'];
                     }
 

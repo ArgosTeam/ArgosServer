@@ -421,19 +421,19 @@ class GroupFunctions
                                  ->where('users.id', '=', $user->id)
                                  ->first();
                 if ($currentRelation->pivot->admin) {
-                    if (array_key_exist('name', $data)) {
+                    if (array_key_exists('name', $data)) {
                         $group->name = $data['name'];
                     }
-                    if (array_key_exist('description', $data)) {
+                    if (array_key_exists('description', $data)) {
                         $group->description = $data['description'];
                     }
-                    if (array_key_exist('lat', $data)) {
+                    if (array_key_exists('lat', $data)) {
                         $group->location->lat = $data['lat'];
                     }
-                    if (array_key_exist('lng', $data)) {
+                    if (array_key_exists('lng', $data)) {
                         $group->location->lng = $data['lng'];
                     }
-                    if (array_key_exist('public', $data)) {
+                    if (array_key_exists('public', $data)) {
                         $event->public = $data['public'];
                     }
                     

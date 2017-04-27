@@ -74,8 +74,8 @@ class fetchFunctions
         */
         $farLeftY = (float)$poly[0][0];
         $farLeftX = (float)$poly[0][1];
-        $splitV = 8;
-        $splitH = 4;
+        $splitV = 6;
+        $splitH = 3;
 
         /*
         ** Set up vectors 
