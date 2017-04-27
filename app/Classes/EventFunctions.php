@@ -350,7 +350,7 @@ class EventFunctions
 
                         // Unlink only non-admin users
                         if (!$currUser->pivot->admin) {
-                            $event->users()->detach($userInvited);
+                            $event->users()->detach($user_id);
                         }
                         // Notif slack user unlinked
                     }

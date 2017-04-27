@@ -314,13 +314,13 @@ class GroupFunctions
             
             if (array_key_exists('users', $invites)) {
                 foreach ($invites['users'] as $userInvited) {
-                    $users_id[] = $userInvited->id;
+                    $users_id[] = $userInvited;
                 }
             }
 
             if (array_key_exists('groups', $invites)) {
                 foreach ($invites['groups'] as $groupInvited) {
-                    $groups_id[] = $groupInvited->id;
+                    $groups_id[] = $groupInvited;
                 }
             }
 
@@ -393,7 +393,7 @@ class GroupFunctions
 
                         // Unlink only non-admin users
                         if (!$currUser->pivot->admin) {
-                            $group->users()->detach($userInvited);
+                            $group->users()->detach($user_id);
                         }
                         // Notif slack user unlinked
                     }
