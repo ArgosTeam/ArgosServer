@@ -75,6 +75,6 @@ class UserController extends Controller
 
     public function edit(Request $request) {  
         $user = Auth::user();
-        return UserFunctions::edit($request->all());
+        return UserFunctions::edit($user, $request->all());
     }
 }
