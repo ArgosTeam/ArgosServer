@@ -213,7 +213,7 @@ class PhotoFunctions
                     $friends_id = $unlinks['users'];
                     foreach ($friends_id as $friend_id) {
 
-                        $currUser = photo->users()
+                        $currUser = $photo->users()
                                   ->where('users.id', $friend_id)
                                   ->first();
 
