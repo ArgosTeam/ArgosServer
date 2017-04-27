@@ -326,7 +326,7 @@ class EventFunctions
                 EventFunctions::invite($user, $event->id, $users_id);
             }
             if (!empty($groups_id)) {
-                EventFunctions::link_groups($user, $groups_id, $event->id);
+                EventFunctions::link_groups($user, $groups_id, $event);
             }
         }
         return response(['status' => 'Event does not exist'], 403);
