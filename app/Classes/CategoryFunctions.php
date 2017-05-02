@@ -56,7 +56,7 @@ class CategoryFunctions
                 */
                 if ($category) {
                     if ($category->isRoot()) {
-                        $event->categories()->attach($category->id);
+                        $event->inventory()->attach($category->id);
                     }
 
 
