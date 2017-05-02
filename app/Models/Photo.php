@@ -22,7 +22,6 @@ class Photo extends Model
     public function location() {
         return $this->belongsTo(Location::class);
     }
-       
     
     public function hashtags() {
         return $this->belongsToMany(Hashtag::class)
@@ -49,5 +48,9 @@ class Photo extends Model
     public function ratings() {
         return $this->belongsTo(PhotoRating::class)
             ->withTimestamps();
+    }
+
+    public function channel() {
+        return $this->belongsTo(Channel::class);
     }
 }

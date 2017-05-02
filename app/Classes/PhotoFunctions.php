@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Notification;
 use App\Notifications\NewPublicPicture;
 use App\Notifications\NewPrivatePicture;
 use App\Models\User;
+use App\Models\Channel;
 
 class PhotoFunctions
 {
@@ -107,10 +108,14 @@ class PhotoFunctions
         $location->lng = $data['lng'];
         $location->save();
 
+        $channel = new Channel();
+        $channel->save();
+
         /*
         ** Associate location to photo
         */
         $photo->location()->associate($location);
+        $photo->channel()->associate($channel);
         $photo->save();
 
         /*

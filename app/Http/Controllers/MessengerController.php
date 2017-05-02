@@ -86,6 +86,30 @@ class MessengerController extends Controller
         return response(['status' => 'Event does not exist'], 403);
     }
 
+    public function sendOnPhotoChat(Request $request) {
+        $user = Auth::user();
+        $photo_id = $request->input('id');
+        $content = $request->input('content');
+        $photo = Photo::find($photo_id);
+
+        if (is_object($photo)) {
+
+            // TODO : WHO CAN TALK IN PHOTO CHANNEL
+            // $pivot = $photo->users()
+            //        ->where('status', 'accepted')
+            //        ->where('users.id', $user->id)
+            //        ->first();
+            // if (is_object($pivot)) {
+            $channel = $photo->channel;
+            return MessageFunctions::sendMessageInChannel($user, $content, $channel);
+                //}
+
+            //return response(['status' => 'You need to be in event to send messages'], 403);
+        }
+
+        return response(['status' => 'Photo does not exist'], 403);
+    }
+
     public function getUserMessages(Request $request) {
         $user = Auth::user();
         $friend_id = $request->input('id');

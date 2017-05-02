@@ -36,7 +36,6 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     /* POST */
     Route::post('/photo/upload',    'PhotoController@uploadUserImage');
-    Route::post('/photo/comment', 'PhotoController@comment');
     Route::post('/photo/edit', 'PhotoController@edit');
     Route::post('/photo/link', 'PhotoController@link');
     Route::post('/photo/unlink', 'PhotoController@unlink');
@@ -69,7 +68,6 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/event/add', 'EventController@add');
     Route::post('/event/join', 'EventController@join');
     Route::post('/event/accept_join', 'EventController@accept_join');
-    Route::post('/event/comment', 'EventController@comment');
     Route::post('/event/profile_pic', 'EventController@profile_pic');
     Route::post('/event/invite', 'EventController@invite');
     Route::post('/event/accept_invite', 'EventController@accept_invite');
@@ -117,7 +115,6 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/group/invite', 'GroupController@invite');
     Route::post('/group/accept_invite', 'GroupController@accept_invite');
     Route::post('/group/refuse_invite', 'GroupController@refuse_invite');
-    Route::post('/group/comment', 'GroupController@comment');
     Route::post('/group/quit', 'GroupController@quit');
     Route::post('/group/edit', 'GroupController@edit');
     Route::post('/group/link', 'GroupController@link');
@@ -152,15 +149,6 @@ Route::group(['middleware' => 'auth:api'], function () {
     */
     Route::get('/location/geocoding', 'LocationController@geocoding');
 
-    /*
-    ** Routes regarding comments
-    */
-
-    /* GET */
-    Route::get('/comments/event', 'CommentController@event');
-    Route::get('/comments/photo', 'CommentController@photo');
-    Route::get('/comments/group', 'CommentController@group');
-
 
     /*
     ** Messenger routes
@@ -170,6 +158,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/chat/user', 'MessengerController@sendToUser');
     Route::post('/chat/group', 'MessengerController@sendInGroup');
     Route::post('/chat/event', 'MessengerController@sendInEvent');
+    Route::post('/chat/photo', 'MessengerController@sendOnPhotoChat');
 
     /* GET */
     Route::get('/user/messages', 'MessengerController@getUserMessages');

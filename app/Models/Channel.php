@@ -21,4 +21,8 @@ class Channel extends Model
     public function messages() {
         return $this->hasMany(Message::class);
     }
+
+    public function photo() {
+        return $this->hasOne(Photo::class);
+    }
 }
