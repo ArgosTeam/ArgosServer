@@ -56,4 +56,8 @@ class Event extends Model
     public function channel() {
         return $this->belongsTo(Channel::class);
     }
+
+    public function inventory() {
+        return $this->hasMany(Category::class);
+    }
 }

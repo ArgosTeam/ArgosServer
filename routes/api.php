@@ -175,4 +175,16 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('/user/messages', 'MessengerController@getUserMessages');
     Route::get('/group/messages', 'MessengerController@getGroupMessages');
     Route::get('/event/messages', 'MessengerController@getEventMessages');
+
+    /*
+    ** Inventory routes
+    */
+    
+    /* POST */
+    Route::post('/inventory/event/category/add', 'CategoryController@addToEvent');
+    Route::post('/inventory/event/category/remove', 'CategoryController@removeFromEvent');
+    Route::post('/inventory/event/user/update', 'CategoryController@updateUsersCategory');
+
+    /* GET */
+    Route::get('/inventory/event/global', 'CategoryController@getInventory');
 });
