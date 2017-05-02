@@ -193,5 +193,30 @@ class MessengerController extends Controller
         
         return response(['status' => 'Event does not exist', 403]);
     }
+
+    public function getPhotoMessages(Request $request) {
+        $user = Auth::user();
+        $photo_id = $request->input('id');
+        $photo = Photo::find($photo_id);
+
+        if (is_object($photo)) {
+            $results = [];
+            // TODO : CHECK RIGHTS 
+            $channel = $photo->channel;
+            foreach ($channel->messages()->get() as $message) {
+                $results[] = [
+                    'id' => $message->id,
+                    'content' => $message->content,
+                    'user_id' => $message->user->id,
+                    'date' => $message->created_at
+                ];
+            }
+            
+            return response($results, 200);
+            
+        }
+        
+        return response(['status' => 'Photo does not exist', 403]);
+    }
 }
 
