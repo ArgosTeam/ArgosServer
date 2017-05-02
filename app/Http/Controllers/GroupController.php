@@ -74,13 +74,6 @@ class GroupController extends Controller
         return GroupFunctions::link($user, $group_id, $invites);
     }
 
-    public function comment(Request $request) {
-        $user = Auth::user();
-        $group_id = $request->input('id');
-        $content = $request->input('content');
-        return GroupFunctions::comment($user, $group_id, $content);
-    }
-
     public function quit(Request $request) {
         $user = Auth::user();
         $group_id = $request->input('id');

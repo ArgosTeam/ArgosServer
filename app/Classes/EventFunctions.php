@@ -12,7 +12,6 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Intervention\Image\Facades\Image;
 use App\Models\User;
-use App\Models\Comment;
 use App\Models\Channel;
 use App\Classes\PhotoFunctions;
 use App\Notifications\EventAdded;
@@ -255,22 +254,6 @@ class EventFunctions
         $data['admin_name'] = $admin->nickname;
         
         return response($data, 200);
-    }
-
-    public static function comment($user, $event_id, $content) {
-        $event = Event::find($event_id);
-        if (!is_object($event)) {
-            return response('Event does not exist', 403);
-        }
-        $comment = new Comment();
-        $comment->content = $content;
-        $comment->user()->associate($user);
-        if ($comment->save()) {
-            $comment->events()->attach($event->id);
-            return response(['comment_id' => $comment->id], 200);
-        } else {
-            return response(['status' => 'Error while saving'], 403);
-        }
     }
 
     public static function profile_pic($user, $encode, $event_id) {

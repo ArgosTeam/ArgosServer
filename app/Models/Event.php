@@ -29,11 +29,6 @@ class Event extends Model
             ->withTimestamps();
     }
 
-    public function comments() {
-        return $this->belongsToMany(Comment::class)
-            ->withTimestamps();
-    }
-
     public function profile_pic() {
         return $this->belongsTo(Photo::class, 'profile_pic_id');
     }

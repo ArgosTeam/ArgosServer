@@ -20,13 +20,6 @@ class PhotoController extends Controller
         return PhotoFunctions::getInfos($user, $photo_id);
     }
 
-    public function comment(Request $request) {
-        $user = Auth::user();
-        $photo_id = $request->input('id');
-        $content = $request->input('content');
-        PhotoFunctions::comment($user, $photo_id, $content);
-    }
-
     public function contacts(Request $request) {
         $photo_id = $request->input('id');
         $name_begin = $request->input('name_begin');

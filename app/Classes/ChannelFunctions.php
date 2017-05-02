@@ -5,7 +5,6 @@ use App\Models\User;
 use App\Models\Hashtag;
 use App\Models\Photo;
 use App\Models\Location;
-use App\Models\Comment;
 use App\Models\Channel;
 use App\Classes\PhotoFunctions;
 

@@ -47,11 +47,6 @@ class Group extends Model
     public function profile_pic() {
         return $this->belongsTo(Photo::class, 'profile_pic_id');
     }
-
-    public function comments() {
-        return $this->belongsToMany(Comment::class)
-            ->withTimestamps();
-    }
     
     public function events() {
         return $this->belongsToMany(Event::class)

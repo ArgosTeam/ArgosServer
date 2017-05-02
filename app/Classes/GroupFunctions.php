@@ -5,7 +5,6 @@ use App\Models\User;
 use App\Models\Hashtag;
 use App\Models\Photo;
 use App\Models\Location;
-use App\Models\Comment;
 use App\Models\Channel;
 use App\Classes\PhotoFunctions;
 use Illuminate\Support\Facades\Storage;
@@ -287,22 +286,6 @@ class GroupFunctions
         }
 
         return response($response, 200);
-    }
-
-    public static function comment($user, $group_id, $content) {
-        $group = Group::find($group_id);
-        if (!is_object($group)) {
-            return response('Group does not exist', 403);
-        }
-        $comment = new Comment();
-        $comment->content = $content;
-        $comment->user()->associate($user);
-        if ($comment->save()) {
-            $comment->groups()->attach($group->id);
-            return response(['comment_id' => $comment->id], 200);
-        } else {
-            return response(['status' => 'Error while saving'], 403);
-        }
     }
 
     public static function link($user, $group_id, $invites) {
