@@ -60,7 +60,7 @@ class CategoryFunctions
                     }
 
 
-                    return response(['status' => 'Category added successfully'], 200);
+                    return response(['id' => $category->id], 200);
                 }
                 return  response(['status' => 'Category selected to add a '
                                   . 'sub-category does not exist'], 403);
@@ -169,5 +169,25 @@ class CategoryFunctions
         }
 
         return response(['status' => 'Event does not exist'], 403);
+    }
+
+    public static function getInventory($user, $event_id) {
+        $event = Event::find($event_id);
+        if (is_object($event)) {
+            $belong = $user->events()
+                    ->where('events.id', $event->id)
+                    ->where('status', 'accepted')
+                    ->first();
+            if (is_object($belong)) {
+                $inventory = $event->inventory->get()
+                           ->toTree();
+
+                return response($inventory->toJson(), 200);
+            }
+
+            return response(['status' => 'Not in event'], 403);
+        }
+
+        return response(['status' => 'Event does not exists'], 403);
     }
 }

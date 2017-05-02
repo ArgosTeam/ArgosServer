@@ -40,6 +40,10 @@ class CategoryController extends Controller
         return CategoryFunctions::updateUsersCategory($user, $event_id, $category_id, $count);
     }
 
-    
+    public function getInventory(Request $request) {
+        $event_id = $request->input('event_id');
+        $user = Auth::user();
+        return CategoryFunctions::getInventory($user, $event_id);
+    }
     
 }
