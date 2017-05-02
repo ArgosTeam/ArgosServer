@@ -111,4 +111,13 @@ class User extends Authenticatable
     public function messages() {
         return $this->hasMany(Message::class);
     }
+
+    /*
+    ** Inventory
+    */
+    public function categories() {
+        return $this->belongsToMany(Category::class)
+            ->withPivot('count')
+            ->withTimestamps();
+    }
 }

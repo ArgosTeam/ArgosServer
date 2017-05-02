@@ -11,7 +11,7 @@ class CategoryFunctions
     ** Basic Operation on Category
     ** Private protected
     */
-    private static function add($parent_id) {
+    private static function add($parent_id, $name) {
         $parent = null;
         
         if ($parent_id) {
@@ -22,7 +22,7 @@ class CategoryFunctions
         }
         
         $category = new Category([
-            'name' => $request->input('name'),
+            'name' => $name,
             'count' => 0
         ]);
         $category->save();
@@ -41,7 +41,7 @@ class CategoryFunctions
     /*
     ** Public methods for event Inventory
     */
-    public static function addToEvent($user, $parent_id, $event_id) {
+    public static function addToEvent($user, $parent_id, $event_id, $name) {
         $event = Event::find($event_id);
         if (is_object($event)) {
             $admin = $event->users()
@@ -49,7 +49,7 @@ class CategoryFunctions
                    ->where('users.id', $user->id)
                    ->first();
             if (is_object($admin)) {
-                $category = CategoryFunctions::add($parent_id);
+                $category = CategoryFunctions::add($parent_id, $name);
 
                 /*
                 ** Add only root Nodes to relationship
@@ -110,6 +110,62 @@ class CategoryFunctions
             }
         
             return response(['status' => 'Access denied - not admin'], 403);
+        }
+
+        return response(['status' => 'Event does not exist'], 403);
+    }
+
+    /*
+    ** Users-Category handle
+    */
+    public static function updateUsersCategory($user, $event_id, $category_id, $count) {
+        $event = Event::find($event_id);
+        //Event exists ?
+        if (is_object($event)) {
+
+            $belong = $user->events()
+                    ->where('events.id', $event->id)
+                    ->where('status', 'accepted')
+                    ->first();
+
+            // Check if user in event
+            if (is_object($belong)) {
+                
+                $category = Category::find($category_id);
+
+                // Category exists ?
+                if (is_object($category)) {
+                    $userPivot = $category->users()
+                               ->where('users.id', $user->id)
+                               ->first();
+                    /*
+                    ** If user-category already exists, update entry
+                    ** Else create new entry
+                    ** Update global count in category object
+                    */
+                    if (is_object($userPivot)) {
+                        if (($total = $userPivot->pivot->count + $count) >= 0) {
+                            $category->users()->updateExistingPivot($user->id, [
+                                'count' => $total
+                            ]);
+                            $category->count += $count;
+                        }
+                    } else {
+                        $count = $count > 0 ? $count : 1;
+                        $category->users()->attach($user->id, [
+                            'count' => $total
+                        ]);
+                        $category->count += $count;
+                    }
+                    $category->save();
+                    
+                    return response(['status' => 'Success'], 200);
+                }
+                
+                return response(['status' => 'Category does not exist'], 403);
+            }
+            
+            return response(['status' => 'Not in event'], 403);
         }
 
         return response(['status' => 'Event does not exist'], 403);

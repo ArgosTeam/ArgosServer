@@ -18,4 +18,10 @@ class Category extends Model
     public function event() {
         return $this->belongsTo(Category::class);
     }
+
+    public function users() {
+        return $this->belongsToMany(Category::class)
+            ->withPivot('count')
+            ->withTimestamps();
+    }
 }
