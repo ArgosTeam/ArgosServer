@@ -30,4 +30,6 @@ class ChannelFunctions
         $channel->users()->attach($friend->id);
         return $channel;
     }
+
+    
 }

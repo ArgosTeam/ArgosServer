@@ -14,7 +14,9 @@ class AddChannelsToPhotosTable extends Migration
     public function up()
     {
         Schema::table('photos', function (Blueprint $table) {
-            $table->integer('channel_id')->unsigned();
+            $table->integer('channel_id')
+                ->unsigned()
+                ->nullable();
 
             $table->foreign('channel_id')
                 ->references('id')

@@ -100,6 +100,13 @@ class MessengerController extends Controller
             //        ->where('users.id', $user->id)
             //        ->first();
             // if (is_object($pivot)) {
+            if (!$is_object($photo->channel()->first())) {
+                $channel = new Channel();
+                $channel->save();
+                $photo->channel()->associate($channel->id);
+                $photo->save();
+            }
+            
             $channel = $photo->channel;
             return MessageFunctions::sendMessageInChannel($user, $content, $channel);
                 //}
