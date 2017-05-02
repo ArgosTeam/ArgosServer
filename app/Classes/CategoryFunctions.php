@@ -179,7 +179,9 @@ class CategoryFunctions
                     ->where('status', 'accepted')
                     ->first();
             if (is_object($belong)) {
-                $inventory = $event->inventory->get()
+                $inventory = $event->inventory()
+                           ->with('descendants')
+                           ->get()
                            ->toTree();
 
                 return response($inventory->toJson(), 200);

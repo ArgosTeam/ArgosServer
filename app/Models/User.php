@@ -101,7 +101,8 @@ class User extends Authenticatable
     */
 
     public function channels() {
-        return $this->belongsToMany(Channel::class);
+        return $this->belongsToMany(Channel::class)
+            ->withTimestamps();
     }
 
 
