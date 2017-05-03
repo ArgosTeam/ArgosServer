@@ -25,7 +25,8 @@ class CategoryController extends Controller
 
     public function removeFromEvent(Request $request) {
         $user = Auth::user();
-        $category_id = $request->input('id');
+        $event_id = $request->input('id');
+        $category_id = $request->input('cateogry_id');
         return CategoryFunctions::removeFromEvent($user, $event_id, $category_id);
     }
 
