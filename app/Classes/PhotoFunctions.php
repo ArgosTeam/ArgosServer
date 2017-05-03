@@ -273,7 +273,8 @@ class PhotoFunctions
             'admin_url' => $profile_pic_path,
             'admin_id' => $originUser->id,
             'admin_nickname' => $originUser->nickname,
-            'public' => $photo->public
+            'public' => $photo->public,
+            'mode' => $photo->mode
         ];
 
         return response($data, 200);

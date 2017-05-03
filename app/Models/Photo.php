@@ -48,9 +48,17 @@ class Photo extends Model
     public function ratings() {
         return $this->belongsTo(PhotoRating::class)
             ->withTimestamps();
-    }
+    }x
 
     public function channel() {
         return $this->belongsTo(Channel::class);
+    }
+
+    /* 
+    ** Users that unlocked the zoned picture
+    */
+    public function unlocks() {
+        return $this->belongsToMany(User::class, 'unlocks')
+            ->withTimestamps();
     }
 }

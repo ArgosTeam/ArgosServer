@@ -122,4 +122,16 @@ class User extends Authenticatable
             ->withPivot('count')
             ->withTimestamps();
     }
+
+    /*
+    ** Photo zoned
+    */
+    public function unlocks() {
+        return $this->belongsToMany(Photo::class, 'unlocks')
+            ->withTimestamps();
+    }
+
+    public function isUnlocked($photo) {
+        return $this->unlocks->contains($photo_id);
+    }
 }
