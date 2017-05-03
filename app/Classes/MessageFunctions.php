@@ -18,9 +18,11 @@ class MessageFunctions
         $message->user()->associate($user->id);
         $message->channel()->associate($channel->id);
         $message->save();
-        $channel->users()->updateExistingPivot($user->id, [
-            'last_seen_message_id' => $message->id
-        ]);
+        if ($channel->has('users')) {
+            $channel->users()->updateExistingPivot($user->id, [
+                'last_seen_message_id' => $message->id
+            ]);
+        }
         return response(['status' => 'Message sent successfully'], 200);
     }
 }

@@ -13,6 +13,7 @@ use App\Models\Channel;
 use App\Models\Group;
 use App\Classes\ChannelFunctions;
 use App\Classes\MessageFunctions;
+use App\Notifications\NewUserMessage;
 
 class MessengerController extends Controller
 {
@@ -33,7 +34,9 @@ class MessengerController extends Controller
             if ($user->getFriends->contains($friend->id)) {
 
                 $channel = ChannelFunctions::getUserChannel($user, $friend);
-                return MessageFunctions::sendMessageInChannel($user, $content, $channel);
+                $response = MessageFunctions::sendMessageInChannel($user, $content, $channel);
+                $friend->notify(new NewUserMessage($user, $content));
+                return $response;
             }
 
             return response(['status' => 'You need to be friend'], 403);
