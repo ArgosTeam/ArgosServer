@@ -18,7 +18,7 @@ class CategoryController extends Controller
     public function addToEvent(Request $request) {
         $user = Auth::user();
         $parent_id = $request->input('parent_id');
-        $event_id = $request->input('event_id');
+        $event_id = $request->input('id');
         $name = $request->input('name');
         return CategoryFunctions::addToEvent($user, $parent_id, $event_id, $name);
     }
@@ -33,7 +33,7 @@ class CategoryController extends Controller
     ** Non-admin
     */
     public function updateUsersCategory(Request $request) {
-        $event_id = $request->input('event_id');
+        $event_id = $request->input('id');
         $category_id = $request->input('category_id');
         $count = $request->input('count');
         $user = Auth::user();
@@ -41,7 +41,7 @@ class CategoryController extends Controller
     }
 
     public function getInventory(Request $request) {
-        $event_id = $request->input('event_id');
+        $event_id = $request->input('id');
         $user = Auth::user();
         return CategoryFunctions::getInventory($user, $event_id);
     }
