@@ -155,7 +155,7 @@ class CategoryFunctions
                     } else {
                         $count = $count > 0 ? $count : 1;
                         $category->users()->attach($user->id, [
-                            'count' => $total
+                            'count' => $count
                         ]);
                         $category->count += $count;
                     }

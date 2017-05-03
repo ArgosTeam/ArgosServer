@@ -11,6 +11,7 @@ use App\Models\User;
 use App\Models\Message;
 use App\Models\Channel;
 use App\Models\Group;
+use App\Models\Photo;
 use App\Classes\ChannelFunctions;
 use App\Classes\MessageFunctions;
 use App\Notifications\NewUserMessage;
