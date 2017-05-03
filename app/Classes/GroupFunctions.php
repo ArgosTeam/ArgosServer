@@ -419,7 +419,7 @@ class GroupFunctions
                         $group->location->lng = $data['lng'];
                     }
                     if (array_key_exists('public', $data)) {
-                        $event->public = $data['public'];
+                        $group->public = $data['public'];
                     }
                     
                     $group->save();
