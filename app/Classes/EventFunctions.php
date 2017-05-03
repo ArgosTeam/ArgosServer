@@ -1,7 +1,5 @@
 <?php
 namespace App\Classes;
-use App\Http\Requests\SubmitEventCreate;
-use App\Http\Requests\SubmitUploadPhoto;
 use App\Models\Event;
 use App\Models\Group;
 use App\Models\Hashtag;

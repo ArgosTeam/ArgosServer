@@ -3,6 +3,7 @@ namespace App\Classes;
 use App\Models\User;
 use App\Models\Category;
 use App\Models\Event;
+use Illuminate\Support\Facades\Log;
 
 class CategoryFunctions
 {
@@ -184,6 +185,7 @@ class CategoryFunctions
                            ->get()
                            ->toTree();
 
+                Log::info('DEBUG TREE INVENTORY : ' . print_r($inventory, true));
                 return response($inventory->toJson(), 200);
             }
 
