@@ -63,4 +63,13 @@ class PhotoController extends Controller
         $photo_id = $request->input('id');
         return PhotoFunctions::unfollow($user, $photo_id);
     }
+
+    /*
+    ** Handle of photo zoned
+    */
+    public function unlockPicture(Request $request) {
+        $user = Auth::user();
+        $photo_id = Photo::find($request->input('id'));
+        return PhotoFunctions::unlockPicture($user, $photo_id);
+    }
 }

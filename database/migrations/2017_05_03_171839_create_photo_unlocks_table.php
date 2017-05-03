@@ -31,6 +31,7 @@ class CreatePhotoUnlocksTable extends Migration
                 ->onDelete('cascade');
             
             $table->timestamps();
+        });
     }
 
     /**

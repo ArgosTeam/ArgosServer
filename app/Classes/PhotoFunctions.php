@@ -400,4 +400,18 @@ class PhotoFunctions
 
         return response(['status' => 'Photo does not exist'], 403);
     }
+
+    /*
+    ** Photo zoned
+    */
+    public static function unlockPicture($user, $photo_id) {
+        $photo = Photo::find($photo_id);
+        if (is_object($photo) && $photo->mode == 'zoned') {
+            $photo->unlocks()->attach($user->id);
+
+            return response(['status' => 'Photo unlocked'], 200);
+        }
+
+        return response(['status' => 'Photo does not exist or not zoned'], 403);
+    }
 }
