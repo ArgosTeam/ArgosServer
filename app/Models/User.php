@@ -102,6 +102,7 @@ class User extends Authenticatable
 
     public function channels() {
         return $this->belongsToMany(Channel::class)
+            ->withPivot('last_seen_message_id')
             ->withTimestamps();
     }
 

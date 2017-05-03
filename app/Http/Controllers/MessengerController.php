@@ -123,15 +123,24 @@ class MessengerController extends Controller
 
         $results = [];
         $channel = ChannelFunctions::getUserChannel($user, User::find($friend_id));
+        $friend = $channel->users()
+                ->where('users.id', '!=', $user->id)
+                ->first();
         if (is_object($channel)) {
             foreach ($channel->messages()->get() as $message) {
+                $last_seen = $friend->last_seen_message_id == $message->id;
                 $results[] = [
                     'id' => $message->id,
                     'content' => $message->content,
                     'user_id' => $message->user->id,
+                    'last_seen' => $last_seen,
                     'date' => $message->created_at
                 ];
             }
+            $latest_msg = $channel->messages()->latest()->first();
+            $channel->users()->updateExistingPivot($user->id, [
+                'last_seen_message_id' => $latest_msg->id
+            ]);
         }
 
         return response($results, 200);
