@@ -57,7 +57,7 @@ class CategoryFunctions
                 */
                 if ($category) {
                     if ($category->isRoot()) {
-                        $category->event()->attach($event->id);
+                        $category->event()->associate($event->id);
                         $category->save();
                     }
 
