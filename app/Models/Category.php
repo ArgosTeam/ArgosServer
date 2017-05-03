@@ -18,7 +18,7 @@ class Category extends Model
     protected $fillable = ['name', 'count'];
 
     public function event() {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Event::class);
     }
 
     public function users() {
