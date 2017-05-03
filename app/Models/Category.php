@@ -22,7 +22,7 @@ class Category extends Model
     }
 
     public function users() {
-        return $this->belongsToMany(Category::class)
+        return $this->belongsToMany(User::class)
             ->withPivot('count')
             ->withTimestamps();
     }
