@@ -13,7 +13,7 @@ class AddLastSeenToChannelUserTable extends Migration
      */
     public function up()
     {
-        Schema:;table('channel_user', function (Blueprint $table) {
+        Schema::table('channel_user', function (Blueprint $table) {
             $table->integer('last_seen_message_id')
                 ->unsigned()
                 ->nullable();
