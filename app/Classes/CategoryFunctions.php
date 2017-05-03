@@ -101,7 +101,7 @@ class CategoryFunctions
                             ->where('events.id', $event->id)
                             ->first();
                     if (is_object($belong)) {
-                        $category->remove();
+                        $category->delete();
                         return response(['status' => 'Category removed', 200]);
                     }
 
@@ -153,7 +153,7 @@ class CategoryFunctions
                             $category->count += $count;
                         }
                     } else {
-                        $count = $count > 0 ? $count : 1;
+                        $count = $count > 0 ? $count : 0;
                         $category->users()->attach($user->id, [
                             'count' => $count
                         ]);
