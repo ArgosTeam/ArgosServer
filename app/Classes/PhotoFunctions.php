@@ -371,4 +371,32 @@ class PhotoFunctions
 
         return response(['status' => 'Photo does not exist'], 403);
     }
+
+    public static function follow($user, $photo_id) {
+        $photo = Photo::find($photo_id);
+        if (is_object($photo)) {
+            if ($photo->public) {
+                $photo->users()->attach($user->id, [
+                    'admin' => false
+                ]);
+
+                return response(['status' => 'Success'], 200);
+            }
+
+            return response(['status' => 'Photo is private'], 403);
+        }
+
+        return response(['status' => 'Photo does not exist'], 403);
+    }
+
+    public static function unfollow($user, $photo_id) {
+        $photo = Photo::find($photo_id);
+        if (is_object($photo)) {
+            
+            $photo->users()->detach($user->id);
+            return response(['status' => 'Success'], 200);
+        }
+
+        return response(['status' => 'Photo does not exist'], 403);
+    }
 }

@@ -50,4 +50,17 @@ class PhotoController extends Controller
         $unlinks = $request->input('unlinks');
         return PhotoFunctions::unlink($user, $photo_id, $unlinks);
     }
+
+    // Link to album (photos-users)
+    public function follow(Request $request) {
+        $user = Auth::user();
+        $photo_id = $request->input('id');
+        return PhotoFunctions::follow($user, $photo_id);
+    }
+
+    public function unfollow(Request $request) {
+        $user = Auth::user();
+        $photo_id = $request->input('id');
+        return PhotoFunctions::unfollow($user, $photo_id);
+    }
 }
