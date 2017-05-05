@@ -32,10 +32,10 @@ class PhotoFunctions
               break ;
           case "regular":
               $key .= "regular-" . $photo->path;
-              break;
+              break ;
           case "macro":
               $key .= $photo->path;
-              break;
+              break ;
         }
         $command = $client->getCommand('GetObject', [
             'Bucket' => env('S3_BUCKET'),

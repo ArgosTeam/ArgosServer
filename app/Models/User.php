@@ -131,7 +131,7 @@ class User extends Authenticatable
             ->withTimestamps();
     }
 
-    public function isUnlocked($photo) {
+    public function isUnlocked($photo_id) {
         return $this->unlocks->contains($photo_id);
     }
 }
