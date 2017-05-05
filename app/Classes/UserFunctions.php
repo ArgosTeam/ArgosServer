@@ -26,8 +26,7 @@ class UserFunctions
         $profile_pic_path = null;
 
         if (is_object($profile_pic)) {
-            $request = PhotoFunctions::getUrl($profile_pic, 'regular');
-            $profile_pic_path = '' . $request->getUri() . '';
+            $profile_pic_path = PhotoFunctions::getUrl($profile_pic, 'regular');
         }
         
         $response = [];
@@ -129,15 +128,13 @@ class UserFunctions
         $photos = $photos->get();
         $response = [];
         foreach ($photos as $photo) {
-
-            $request = PhotoFunctions::getUrl($photo, 'regular');
             
             $response[] = [
                 'id' => $photo->id,
                 'lat' => $photo->location->lat,
                 'lng' => $photo->location->lng,
                 'description' => $photo->description,
-                'path' => '' . $request->getUri() . '',
+                'path' => PhotoFunctions::getUrl($photo, 'regular'),
                 'public' => $photo->public
             ];
         }
@@ -160,8 +157,7 @@ class UserFunctions
         ];
         if (is_object($profile_pic)) {
             foreach ($keys as $key) {
-                $request = PhotoFunctions::getUrl($profile_pic, $key);
-                $response['profile_pic_' . $key] = '' . $request->getUri() . '';
+                $response['profile_pic_' . $key] = PhotoFunctions::getUrl($profile_pic, $key);
             }
         }
         return response($response, 200);
@@ -191,8 +187,7 @@ class UserFunctions
                 $profile_pic_path = null;
                 $profile_pic = $groupContact->profile_pic()->first();
                 if (is_object($profile_pic)) {
-                    $request = PhotoFunctions::getUrl($profile_pic);
-                    $profile_pic_path = '' . $request->getUri() . '';
+                    $profile_pic_path = PhotoFunctions::getUrl($profile_pic);
                 }
                 $response['groups'][] = [
                     'id' => $groupContact->id,
@@ -207,8 +202,7 @@ class UserFunctions
                 $profile_pic_path = null;
                 $profile_pic = $contact->profile_pic()->first();
                 if (is_object($profile_pic)) {
-                    $request = PhotoFunctions::getUrl($profile_pic);
-                    $profile_pic_path = '' . $request->getUri() . '';
+                    $profile_pic_path = PhotoFunctions::getUrl($profile_pic);
                 }
 
                 $firstname = null;
@@ -252,8 +246,7 @@ class UserFunctions
                 $profile_pic_path = null;
                 $profile_pic = $event->profile_pic()->first();
                 if (is_object($profile_pic)) {
-                    $request = PhotoFunctions::getUrl($profile_pic);
-                    $profile_pic_path = '' . $request->getUri() . '';
+                    $profile_pic_path = PhotoFunctions::getUrl($profile_pic);
                 }
                 
                 $response[] = [
