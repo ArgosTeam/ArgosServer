@@ -15,6 +15,7 @@ use App\Notifications\NewPublicPicture;
 use App\Notifications\NewPrivatePicture;
 use App\Models\User;
 use App\Models\Channel;
+use App\Classes\GeoTools;
 
 class PhotoFunctions
 {
@@ -410,12 +411,27 @@ class PhotoFunctions
     /*
     ** Photo zoned
     */
-    public static function unlockPicture($user, $photo_id) {
+    public static function unlockPicture($user, $photo_id, $userPos) {
         $photo = Photo::find($photo_id);
         if (is_object($photo) && $photo->mode == 'zoned') {
-            $photo->unlocks()->attach($user->id);
+            $photoPos = [];
+            $photoPos[0] = $photo->location->lat;
+            $photoPos[1] = $photo->location->lng;
 
-            return response(['status' => 'Photo unlocked'], 200);
+            /*
+            ** Check if distance is inferior to MIN_UNLOCK_DISTANCE
+            */
+            $d = GeoTools::haversine($userPos, $photoPos);
+            
+            if ($d <= 100.0) {
+            
+                $photo->unlocks()->attach($user->id);
+                return response(['status' => 'Photo unlocked'], 200);
+            }
+
+            return response(['status' => 'You need to be close '
+                             . 'to the picture to unlock it. '
+                             . 'Actual distance is ' . $d . ' meters'], 403);
         }
 
         return response(['status' => 'Photo does not exist or not zoned'], 403);
