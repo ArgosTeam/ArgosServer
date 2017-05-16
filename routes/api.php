@@ -1,4 +1,4 @@
-<?php
+Sunlock<?php
 
 use Illuminate\Http\Request;
 
@@ -45,7 +45,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     //Non-admin
     Route::post('/photo/follow', 'PhotoController@follow');
     Route::post('/photo/unfollow', 'PhotoController@unfollow');
-    Route::unlock('/photo/unlock', 'PhotoController@unlockPicture');
+    Route::post('/photo/unlock', 'PhotoController@unlockPicture');
 
     /* GET */
     Route::get('/photo/infos', 'PhotoController@infos');
