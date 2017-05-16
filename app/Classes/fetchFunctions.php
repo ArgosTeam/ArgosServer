@@ -220,6 +220,7 @@ class fetchFunctions
                                 'path' => $path,
                                 'lat' => $location->lat,
                                 'lng' => $location->lng,
+                                'mode' => $photo->mode,
                                 'photos' => []
                             ];
                             $index += 1;
@@ -230,6 +231,7 @@ class fetchFunctions
                                 'path' => $path,
                                 'lat' => $location->lat,
                                 'lng' => $location->lng,
+                                'mode' => $photo->mode
                             ];
                         }
                         $main = false;
