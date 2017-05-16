@@ -210,14 +210,14 @@ class fetchFunctions
                     if (is_object($location->photo()->first())) {
                         $photo = $location->photo()->first();
 
-                        $request = PhotoFunctions::getUrl($photo, 'avatar');
+                        $path = PhotoFunctions::getUrl($photo, 'avatar');
                         
                         if ($main) {
                             $results[] = [
                                 'type' => 'photo',
                                 'id' => $photo->id,
                                 'name' => $photo->name,
-                                'path' => '' . $request->getUri() . '',
+                                'path' => $path,
                                 'lat' => $location->lat,
                                 'lng' => $location->lng,
                                 'photos' => []
@@ -227,7 +227,7 @@ class fetchFunctions
                             $results[$index]['photos'][] = [
                                 'id' => $photo->id,
                                 'name' => $photo->name,
-                                'path' => '' . $request->getUri() . '',
+                                'path' => $path,
                                 'lat' => $location->lat,
                                 'lng' => $location->lng,
                             ];
@@ -257,8 +257,7 @@ class fetchFunctions
                         $profile_pic_path = null;
             
                         if (is_object($profile_pic)) {
-                            $request = PhotoFunctions::getUrl($profile_pic, 'avatar');
-                            $profile_pic_path = '' . $request->getUri() . '';
+                            $profile_pic_path = PhotoFunctions::getUrl($profile_pic, 'avatar');
                         }
                         
                         // If a group is selected, break the loop
@@ -297,8 +296,7 @@ class fetchFunctions
                         $profile_pic_path = null;
             
                         if (is_object($profile_pic)) {
-                            $request = PhotoFunctions::getUrl($profile_pic, 'avatar');
-                            $profile_pic_path = '' . $request->getUri() . '';
+                            $profile_pic_path = PhotoFunctions::getUrl($profile_pic, 'avatar');
                         }
                         
                         // If an event is selected, break the loop
