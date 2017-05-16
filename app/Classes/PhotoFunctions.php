@@ -15,34 +15,44 @@ use App\Notifications\NewPublicPicture;
 use App\Notifications\NewPrivatePicture;
 use App\Models\User;
 use App\Models\Channel;
+use App\Classes\GeoTools;
 
 class PhotoFunctions
 {
 
     public static function getUrl(Photo $photo, $type = "avatar") {
         // Get signed url from s3
-        $s3 = Storage::disk('s3');
-        $client = $s3->getDriver()->getAdapter()->getClient();
-        $expiry = "+10 minutes";
-
-        $key = env('S3_PREFIX');
-        switch ($type) {
-          case "avatar":
-              $key .= "avatar-" . $photo->path;
-              break ;
-          case "regular":
-              $key .= "regular-" . $photo->path;
-              break ;
-          case "macro":
-              $key .= $photo->path;
-              break ;
+        $user = Auth::user();
+        $path = null;
+        if (!is_object($photo)) {
+            return null;
         }
-        $command = $client->getCommand('GetObject', [
-            'Bucket' => env('S3_BUCKET'),
-            'Key'    => $key,
-        ]);
-        $request = $client->createPresignedRequest($command, $expiry);
-        return $request;
+        $allow = ($photo->mode == 'normal' || $user->isUnlocked($photo->id))
+        if ($allow) {
+            $s3 = Storage::disk('s3');
+            $client = $s3->getDriver()->getAdapter()->getClient();
+            $expiry = "+10 minutes";
+        
+            $key = env('S3_PREFIX');
+            switch ($type) {
+            case "avatar":
+                $key .= "avatar-" . $photo->path;
+                break ;
+            case "regular":
+                $key .= "regular-" . $photo->path;
+                break ;
+            case "macro":
+                $key .= $photo->path;
+                break ;
+            }
+            $command = $client->getCommand('GetObject', [
+                'Bucket' => env('S3_BUCKET'),
+                'Key'    => $key,
+            ]);
+            $request = $client->createPresignedRequest($command, $expiry);
+            $path = (string)$request->getUri();
+        }
+        return $path;
     }
     
     public static function uploadImage($user, $md5, $image) {
@@ -255,7 +265,7 @@ class PhotoFunctions
             return response('Photo not found', 403);
         }
 
-        $request = PhotoFunctions::getUrl($photo, 'macro');
+        $photo_path = PhotoFunctions::getUrl($photo, 'macro');
 
         /*
         ** Return Data with requested parameters
@@ -263,12 +273,11 @@ class PhotoFunctions
         $originUser = User::find($photo->origin_user_id);
         $profile_pic_path = null;
         if (is_object($profile_pic = $originUser->profile_pic()->first())) {
-            $requestOrigin = PhotoFunctions::getUrl($profile_pic, 'macro');
-            $profile_pic_path = '' . $requestOrigin->getUri() . '';
+            $profile_pic_path = PhotoFunctions::getUrl($profile_pic, 'macro');
         }
         $data = [
             'id' => $photo->id,
-            'url' => '' . $request->getUri() . '',
+            'url' => $photo_path,
             'description' => $photo->description,
             'admin_url' => $profile_pic_path,
             'admin_id' => $originUser->id,
@@ -303,8 +312,7 @@ class PhotoFunctions
                 $profile_pic_path = null;
                 $profile_pic = $group->profile_pic()->first();
                 if (is_object($profile_pic)) {
-                    $request = PhotoFunctions::getUrl($profile_pic);
-                    $profile_pic_path = '' . $request->getUri() . '';
+                    $profile_pic_path = PhotoFunctions::getUrl($profile_pic);
                 }
                 $response['groups'][] = [
                     'id' => $group->id,
@@ -319,8 +327,7 @@ class PhotoFunctions
                 $profile_pic_path = null;
                 $profile_pic = $contact->profile_pic()->first();
                 if (is_object($profile_pic)) {
-                    $request = PhotoFunctions::getUrl($profile_pic);
-                    $profile_pic_path = '' . $request->getUri() . '';
+                    $profile_pic_path = PhotoFunctions::getUrl($profile_pic);
                 }
 
                 $firstname = null;
@@ -404,12 +411,27 @@ class PhotoFunctions
     /*
     ** Photo zoned
     */
-    public static function unlockPicture($user, $photo_id) {
+    public static function unlockPicture($user, $photo_id, $userPos) {
         $photo = Photo::find($photo_id);
         if (is_object($photo) && $photo->mode == 'zoned') {
-            $photo->unlocks()->attach($user->id);
+            $photoPos = [];
+            $photoPos[0] = $photo->location->lat;
+            $photoPos[1] = $photo->location->lng;
 
-            return response(['status' => 'Photo unlocked'], 200);
+            /*
+            ** Check if distance is inferior to MIN_UNLOCK_DISTANCE
+            */
+            $d = GeoTools::haversine($userPos, $photoPos);
+            
+            if ($d <= env(MIN_UNLOCK_DISTANCE)) {
+            
+                $photo->unlocks()->attach($user->id);
+                return response(['status' => 'Photo unlocked'], 200);
+            }
+
+            return response(['status' => 'You need to be close '
+                             . 'to the picture to unlock it. '
+                             . 'Actual distance is ' . $d . ' meters'], 403);
         }
 
         return response(['status' => 'Photo does not exist or not zoned'], 403);

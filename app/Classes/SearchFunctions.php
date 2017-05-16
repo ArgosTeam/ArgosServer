@@ -21,8 +21,7 @@ class SearchFunctions {
             $profile_pic = $event->profile_pic()->first();
             $profile_pic_path = null;
             if (is_object($profile_pic)) {
-                $request = PhotoFunctions::getUrl($profile_pic, 'avatar');
-                $profile_pic_path = '' . $request->getUri() . '';
+                $profile_pic_path = PhotoFunctions::getUrl($profile_pic, 'avatar');
             }
             
             $newEntry = [];
@@ -68,11 +67,9 @@ class SearchFunctions {
         foreach ($photos as $photo) {
             $location = $photo->location()->first();
 
-            $request = PhotoFunctions::getUrl($photo, 'regular');
-            
             $response[] = [
                 'id' => $photo->id,
-                'url' => '' . $request->getUri() . '',
+                'url' => PhotoFunctions::getUrl($photo, 'regular'),
                 'name' => $photo->name,
                 'description' => $photo->description,
                 'lat' => $location->lat,
@@ -259,8 +256,7 @@ class SearchFunctions {
                 $profile_pic_path = null;
                 $profile_pic = $item->profile_pic()->first();
                 if (is_object($profile_pic)) {
-                    $request = PhotoFunctions::getUrl($profile_pic);
-                    $profile_pic_path = '' . $request->getUri() . '';
+                    $profile_pic_path = PhotoFunctions::getUrl($profile_pic);
                 }
                 $response[] = [
                     'id' => $item->id,
@@ -281,8 +277,7 @@ class SearchFunctions {
                 $profile_pic_path = null;
                 $profile_pic = $item->profile_pic()->first();
                 if (is_object($profile_pic)) {
-                    $request = PhotoFunctions::getUrl($profile_pic);
-                    $profile_pic_path = '' . $request->getUri() . '';
+                    $profile_pic_path = PhotoFunctions::getUrl($profile_pic);
                 }
                 $response[] = [
                     'id' => $item->id,
@@ -303,8 +298,7 @@ class SearchFunctions {
                 $profile_pic_path = null;
                 $profile_pic = $item->profile_pic()->first();
                 if (is_object($profile_pic)) {
-                    $request = PhotoFunctions::getUrl($profile_pic);
-                    $profile_pic_path = '' . $request->getUri() . '';
+                    $profile_pic_path = PhotoFunctions::getUrl($profile_pic);
                 }
                 $response[] = [
                     'id' => $item->id,

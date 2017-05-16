@@ -70,6 +70,9 @@ class PhotoController extends Controller
     public function unlockPicture(Request $request) {
         $user = Auth::user();
         $photo_id = Photo::find($request->input('id'));
-        return PhotoFunctions::unlockPicture($user, $photo_id);
+        $userPos = [];
+        $userPos[0] = $request->input('lat');
+        $userPos[1] = $request->input('lng');
+        return PhotoFunctions::unlockPicture($user, $photo_id, $userPos);
     }
 }
