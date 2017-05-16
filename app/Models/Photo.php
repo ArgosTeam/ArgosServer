@@ -48,7 +48,7 @@ class Photo extends Model
     public function ratings() {
         return $this->belongsTo(PhotoRating::class)
             ->withTimestamps();
-    }x
+    }
 
     public function channel() {
         return $this->belongsTo(Channel::class);
