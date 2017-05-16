@@ -35,9 +35,9 @@ class RatingController extends Controller
             }
             
             $rate = new PhotoRating();
-            $rate->rating_type()->attach($ratingType->id);
-            $rate->user()->attach($user->id);
-            $rate->photo()->attach($photo->id);
+            $rate->rating_type()->associate($ratingType->id);
+            $rate->user()->associate($user->id);
+            $rate->photo()->associate($photo->id);
             $rate->save();
 
             return response(['status' => 'success'], 200);
@@ -53,9 +53,9 @@ class RatingController extends Controller
             }
             
             $rate = new EventRating();
-            $rate->rating_type()->attach($ratingType->id);
-            $rate->user()->attach($user->id);
-            $rate->event()->attach($event->id);
+            $rate->rating_type()->associate($ratingType->id);
+            $rate->user()->associate($user->id);
+            $rate->event()->associate($event->id);
             $rate->save();
 
             return response(['status' => 'success'], 200);
@@ -71,9 +71,9 @@ class RatingController extends Controller
             }
             
             $rate = new GroupRating();
-            $rate->rating_type()->attach($ratingType->id);
-            $rate->user()->attach($user->id);
-            $rate->group()->attach($group->id);
+            $rate->rating_type()->associate($ratingType->id);
+            $rate->user()->associate($user->id);
+            $rate->group()->associate($group->id);
             $rate->save();
 
             return response(['status' => 'success'], 200);
