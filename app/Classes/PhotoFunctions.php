@@ -16,6 +16,7 @@ use App\Notifications\NewPrivatePicture;
 use App\Models\User;
 use App\Models\Channel;
 use App\Classes\GeoTools;
+use App\Models\RatingType;
 
 class PhotoFunctions
 {
