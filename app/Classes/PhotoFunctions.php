@@ -275,6 +275,16 @@ class PhotoFunctions
         if (is_object($profile_pic = $originUser->profile_pic()->first())) {
             $profile_pic_path = PhotoFunctions::getUrl($profile_pic, 'macro');
         }
+        
+        $ratingTypes = RatingType::all();
+        $rating = [];
+        foreach ($ratingTypes as $ratingType) {
+            $count = PhotoRating::where('photo_id', $photo->id)
+                   ->where('rating_type_id', $ratingType->id)
+                   ->get()
+                   ->count();
+            $rating[$ratingType->name] = $count;
+        }
         $data = [
             'id' => $photo->id,
             'url' => $photo_path,
@@ -283,7 +293,8 @@ class PhotoFunctions
             'admin_id' => $originUser->id,
             'admin_nickname' => $originUser->nickname,
             'public' => $photo->public,
-            'mode' => $photo->mode
+            'mode' => $photo->mode,
+            'rating' => $rating
         ];
 
         return response($data, 200);
@@ -299,8 +310,8 @@ class PhotoFunctions
         $users = $photo->users();
 
         if ($name_begin) {
-            $groups->where('name', 'like', '%' . $name_begin);
-            $users->where('nickname', 'like', '%' . $name_begin);
+            $groups->where('name', 'like', $name_begin . '%');
+            $users->where('nickname', 'like', $name_begin . '%');
         }
 
         $groups = $groups->get();

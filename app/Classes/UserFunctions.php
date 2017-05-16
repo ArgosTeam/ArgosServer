@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Classes;
 
 use Illuminate\Support\Facades\Auth;
@@ -11,6 +10,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Classes\PhotoFunctions;
 use App\Notifications\Follow;
 use App\Notifications\Unfollow;
+use App\Models\RatingType;
 
 class UserFunctions
 {
@@ -153,7 +153,8 @@ class UserFunctions
             'dob' => $user->dob,
             'email' => $user->email,
             'phone' => $user->phone,
-            'user_id' => $user->id
+            'user_id' => $user->id,
+            'ratings' => RatingType::all()->pluck('name')
         ];
         if (is_object($profile_pic)) {
             foreach ($keys as $key) {
