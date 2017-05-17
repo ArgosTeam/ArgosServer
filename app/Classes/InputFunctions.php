@@ -15,9 +15,8 @@ class   InputFunctions
             $hashtag = Hashtag::where('name', $name)
                          ->first();
             if (!is_object($hashtag)) {
-                $hashtag = new Hashtag([
-                    'name' => $name
-                ]);
+                $hashtag = new Hashtag();
+                $hashtag->name = $name;
                 $hashtag->save();
             }
             $elem->hashtags()->attach($hashtag->id);
