@@ -2,7 +2,6 @@
 namespace App\Classes;
 use App\Models\Group;
 use App\Models\User;
-use App\Models\Hashtag;
 use App\Models\Photo;
 use App\Models\Location;
 use App\Models\Channel;

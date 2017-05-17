@@ -2,7 +2,6 @@
 namespace App\Classes;
 use App\Models\Event;
 use App\Models\Group;
-use App\Models\Hashtag;
 use App\Models\Location;
 use App\Models\Photo;
 use Illuminate\Http\Request;

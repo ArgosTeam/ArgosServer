@@ -7,7 +7,6 @@ use App\Models\User;
 use App\Models\Group;
 use App\Models\Event;
 use App\Models\Friend;
-use App\Models\Hashtag;
 use Illuminate\Support\Facades\Input;
 use App\Classes\PhotoFunctions;
 

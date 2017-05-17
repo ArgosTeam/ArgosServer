@@ -2,7 +2,6 @@
 namespace App\Classes;
 use App\Http\Requests\SubmitUploadPhoto;
 use App\Models\Group;
-use App\Models\Hashtag;
 use App\Models\Photo;
 use App\Models\Location;
 use Illuminate\Http\Request;
