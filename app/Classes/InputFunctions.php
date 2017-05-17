@@ -15,16 +15,16 @@ class InputFunctions
         $hashtags = [];
         preg_match_all("/(#\w+)/", $description, $hashtags);
 
-        foreach ($hashtags as $name) {
+        foreach ($hashtags[0] as $name) {
             $hashtag = Hashtag::where('name', $name)
                          ->first();
             if (!is_object($hashtag)) {
                 $hashtag = new Hashtag();
                 $hashtag->name = $name;
-                Log::info('DEBUG GROUP ADD : ' . print_r($group, true));
+                Log::info('DEBUG GROUP ADD : ' . print_r($hashtag, true));
                 $hashtag->save();
+                $elem->hashtags()->attach($hashtag->id);
             }
-            $elem->hashtags()->attach($hashtag->id);
         }
     }
 }
