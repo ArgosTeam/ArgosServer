@@ -282,7 +282,10 @@ class PhotoFunctions
         if (is_object($profile_pic = $originUser->profile_pic()->first())) {
             $profile_pic_path = PhotoFunctions::getUrl($profile_pic, 'macro');
         }
-        
+
+        $rated = PhotoRating::where('users.id', $user->id)
+               ->where('photos.id', $photo->id)
+               ->first();
         $ratingTypes = RatingType::all();
         $rating = [];
         foreach ($ratingTypes as $ratingType) {
@@ -301,7 +304,8 @@ class PhotoFunctions
             'admin_nickname' => $originUser->nickname,
             'public' => $photo->public,
             'mode' => $photo->mode,
-            'rating' => $rating
+            'rating' => $rating,
+            'rated' => (is_object($rated) ? $rated->rating_type->name : null)
         ];
 
         return response($data, 200);

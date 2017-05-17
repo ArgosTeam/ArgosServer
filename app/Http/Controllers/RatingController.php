@@ -30,15 +30,14 @@ class RatingController extends Controller
             $photoRating = PhotoRating::where('user_id', $user->id)
                          ->where('photo_id', $photo->id)
                          ->first();
-            if (is_object($photoRating)) {
-                return response(['status' => 'Already rated'], 403);
+            if (!is_object($photoRating)) {
+                $photoRating = new PhotoRating();
+                $photoRating->user()->associate($user->id);
+                $photoRating->photo()->associate($photo->id);
             }
             
-            $rate = new PhotoRating();
-            $rate->rating_type()->associate($ratingType->id);
-            $rate->user()->associate($user->id);
-            $rate->photo()->associate($photo->id);
-            $rate->save();
+            $photoRating->rating_type()->associate($ratingType->id);
+            $photoRating->save();
 
             return response(['status' => 'success'], 200);
         }
@@ -48,15 +47,14 @@ class RatingController extends Controller
             $eventRating = EventRating::where('user_id', $user->id)
                          ->where('event_id', $event->id)
                          ->first();
-            if (is_object($eventRating)) {
-                return response(['status' => 'Already rated'], 403);
+            if (!is_object($eventRating)) {
+                $eventRating = new EventRating();
+                $eventRating->user()->associate($user->id);
+                $eventRating->event()->associate($event->id);
             }
             
-            $rate = new EventRating();
-            $rate->rating_type()->associate($ratingType->id);
-            $rate->user()->associate($user->id);
-            $rate->event()->associate($event->id);
-            $rate->save();
+            $eventRating->rating_type()->associate($ratingType->id);
+            $eventRating->save();
 
             return response(['status' => 'success'], 200);
         }
@@ -66,15 +64,15 @@ class RatingController extends Controller
             $groupRating = GroupRating::where('user_id', $user->id)
                          ->where('group_id', $group->id)
                          ->first();
-            if (is_object($groupRating)) {
+            if (!is_object($groupRating)) {
+                $groupRating = new GroupRating();
+                $groupRating->user()->associate($user->id);
+                $groupRating->group()->associate($group->id);
                 return response(['status' => 'Already rated'], 403);
             }
             
-            $rate = new GroupRating();
-            $rate->rating_type()->associate($ratingType->id);
-            $rate->user()->associate($user->id);
-            $rate->group()->associate($group->id);
-            $rate->save();
+            $groupRating->rating_type()->associate($ratingType->id);
+            $groupRating->save();
 
             return response(['status' => 'success'], 200);
         }
