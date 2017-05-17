@@ -2,8 +2,11 @@
 
 namespace App\Classes;
 use App\Models\Hashtag;
+use App\Models\Group;
+use App\Models\Event;
+use App\Models\Photo;
 
-class   InputFunctions
+class InputFunctions
 {
 
     // Dashes are illegal chars for hashtags, underscores are allowed.
