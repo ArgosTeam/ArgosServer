@@ -2,7 +2,7 @@
 
 namespace App\Classes;
 use App\Models\Hashtag;
-use Illuminate\Facade\Log;
+use Illuminate\Support\Facades\Log;
 use App\Models\Group;
 use App\Models\Event;
 use App\Models\Photo;
