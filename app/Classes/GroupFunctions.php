@@ -31,7 +31,7 @@ class GroupFunctions
             $channel = new Channel();
             $channel->save();
 
-            $location->save();
+            //$location->save();
             //$group->location()->associate($location);
             $group->channel()->associate($channel);
             $group->save();
@@ -204,8 +204,8 @@ class GroupFunctions
             $data['address'] = $group->address;
             $data['description'] = $group->description;
             $data['date'] = $group->created_at;
-            $data['lat'] = $group->location->lat;
-            $data['lng'] = $group->location->lng;
+            // $data['lat'] = $group->location->lat;
+            // $data['lng'] = $group->location->lng;
 
             $belong =$group->users()
                     ->where('users.id', $user->id)
@@ -412,12 +412,12 @@ class GroupFunctions
                     if (array_key_exists('description', $data)) {
                         $group->description = $data['description'];
                     }
-                    if (array_key_exists('lat', $data)) {
-                        $group->location->lat = $data['lat'];
-                    }
-                    if (array_key_exists('lng', $data)) {
-                        $group->location->lng = $data['lng'];
-                    }
+                    // if (array_key_exists('lat', $data)) {
+                    //     $group->location->lat = $data['lat'];
+                    // }
+                    // if (array_key_exists('lng', $data)) {
+                    //     $group->location->lng = $data['lng'];
+                    // }
                     if (array_key_exists('public', $data)) {
                         $group->public = $data['public'];
                     }
