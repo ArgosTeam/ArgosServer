@@ -338,21 +338,6 @@ class fetchFunctions
         });
     }
 
-    private static function addJoinPhotoGroupFilter($query, $groups_id, $hashtags) {
-        $query->whereHas('photo', function ($joinQuery) use ($groups_id, $hashtags) {
-            $joinQuery->whereHas('groups', function ($joinQuery) use ($groups_id) {
-                if (!empty($groups_id)) {
-                    $joinQuery->whereIn('groups.id', $groups_id);
-                }
-            });
-            if (!empty($hashtags)) {
-                $joinQuery->whereHas('hashtags', function ($joinQuery) use ($hashtags) {
-                    $joinQuery->whereIn('hashtags.name', $hashtags);
-                });
-            }
-        });
-    }
-
     private static function addJoinGroupFilter($query, $groups_id, $users_id) {
         $query->whereHas('group', function ($query) use ($groups_id) {
             if (!empty($groups_id)) {
@@ -364,11 +349,10 @@ class fetchFunctions
     private static function addJoinEventFilter($query, $users_id) {
         $query->whereHas('event', function ($query) use ($users_id) {
             if (!empty($users_id)) {
-                $query->where('events.status', 'accepted')
-                    ->whereHas('users', function ($subquery) use ($users_id) {
-                        $subquery->whereIn('users.id', $users_id)
-                            ->where('event_user.status', 'accepted');
-                    });
+                $query->whereHas('users', function ($subquery) use ($users_id) {
+                    $subquery->whereIn('users.id', $users_id)
+                        ->where('event_user.status', 'accepted');
+                });
             }
         });
     }
