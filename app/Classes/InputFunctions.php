@@ -2,7 +2,6 @@
 
 namespace App\Classes;
 use App\Models\Hashtag;
-use Illuminate\Support\Facades\Log;
 use App\Models\Group;
 use App\Models\Event;
 use App\Models\Photo;
@@ -21,10 +20,9 @@ class InputFunctions
             if (!is_object($hashtag)) {
                 $hashtag = new Hashtag();
                 $hashtag->name = $name;
-                Log::info('DEBUG GROUP ADD : ' . print_r($hashtag, true));
                 $hashtag->save();
-                $elem->hashtags()->attach($hashtag->id);
             }
+            $elem->hashtags()->attach($hashtag->id);                
         }
     }
 }
