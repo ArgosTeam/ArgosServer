@@ -14,7 +14,7 @@ class   InputFunctions
         foreach ($hashtags as $name) {
             $hashtag = Hashtag::where('name', $name)
                          ->first();
-            if (!is_object($checkExists)) {   
+            if (!is_object($hashtag)) {
                 $hashtag = new Hashtag([
                     'name' => $name
                 ]);
