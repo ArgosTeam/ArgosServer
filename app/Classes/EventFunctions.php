@@ -11,6 +11,7 @@ use Intervention\Image\Facades\Image;
 use App\Models\User;
 use App\Models\Channel;
 use App\Classes\PhotoFunctions;
+use App\Classes\InputFunctions;
 use App\Notifications\EventAdded;
 use App\Notifications\EventInvite;
 use App\Notifications\EventInviteAccepted;
@@ -81,6 +82,11 @@ class EventFunctions
                     EventFunctions::link_groups($user, $groups_id, $event);
                 }
             }
+
+            /*
+            ** Process Hashtags in description
+            */
+            InputFunctions::parse($event, $event->description);
             
         } else {
             return response('error while saving event', 403);

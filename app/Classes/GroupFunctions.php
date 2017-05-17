@@ -74,6 +74,11 @@ class GroupFunctions
                     GroupFunctions::link_groups($user, $groups_id, $group);
                 }
             }
+
+            /*
+            ** Process Hashtags in description
+            */
+            InputFunctions::parse($group, $group->description);
             
             return response(['group_id' => $group->id], 200);
         } else {

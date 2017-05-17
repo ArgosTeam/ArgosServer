@@ -159,6 +159,12 @@ class PhotoFunctions
             }
 
         }
+
+        
+        /*
+        ** Process Hashtags in description
+        */
+        InputFunctions::parse($photo, $photo->description);
         
         if ($photo->public) {
             $user->notify(new NewPublicPicture($user, $photo, 'slack'));
