@@ -21,7 +21,7 @@ use App\Models\PhotoRating;
 class PhotoFunctions
 {
 
-    public static function getUrl(Photo $photo, $type = "avatar") {
+    public static function getUrl($photo, $type = "avatar") {
         // Get signed url from s3
         $user = Auth::user();
         $path = null;

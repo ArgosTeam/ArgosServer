@@ -23,16 +23,16 @@ class GroupFunctions
             $group->description = $request->input('description');
             $group->address = $request->input('address');
             
-            $location = new Location([
-                'lat' => $request->input('lat'),
-                'lng' => $request->input('lng')
-            ]);
-
+            // $location = new Location([
+            //     'lat' => $request->input('lat'),
+            //     'lng' => $request->input('lng')
+            // ]);
+ 
             $channel = new Channel();
             $channel->save();
 
             $location->save();
-            $group->location()->associate($location);
+            //$group->location()->associate($location);
             $group->channel()->associate($channel);
             $group->save();
 
