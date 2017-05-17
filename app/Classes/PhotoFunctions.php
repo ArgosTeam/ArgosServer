@@ -283,8 +283,8 @@ class PhotoFunctions
             $profile_pic_path = PhotoFunctions::getUrl($profile_pic, 'macro');
         }
 
-        $rated = PhotoRating::where('users.id', $user->id)
-               ->where('photos.id', $photo->id)
+        $rated = PhotoRating::where('user_id', $user->id)
+               ->where('photo_id', $photo->id)
                ->first();
         $ratingTypes = RatingType::all();
         $rating = [];
