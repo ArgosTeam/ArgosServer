@@ -295,6 +295,10 @@ class PhotoFunctions
                    ->count();
             $rating[$ratingType->name] = $count;
         }
+
+        $following = $photo->users()
+                   ->where('users.id', $user->id)
+                   ->first();
         $data = [
             'id' => $photo->id,
             'url' => $photo_path,
@@ -305,7 +309,8 @@ class PhotoFunctions
             'public' => $photo->public,
             'mode' => $photo->mode,
             'rating' => $rating,
-            'rated' => (is_object($rated) ? $rated->rating_type->name : null)
+            'rated' => (is_object($rated) ? $rated->rating_type->name : null),
+            'following' => is_object($following)
         ];
 
         return response($data, 200);
