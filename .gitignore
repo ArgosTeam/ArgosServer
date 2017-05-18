@@ -1,5 +1,5 @@
 /node_modules
-/storage/*.key
+*.key
 /vendor
 /.idea
 Homestead.json
