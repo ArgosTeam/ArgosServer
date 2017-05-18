@@ -11,6 +11,7 @@ use App\Classes\PhotoFunctions;
 use App\Notifications\Follow;
 use App\Notifications\Unfollow;
 use App\Models\RatingType;
+use Illuminate\Support\Facades\Storage;
 
 class UserFunctions
 {
@@ -144,6 +145,7 @@ class UserFunctions
     public static function getSession($user) {
         $profile_pic = $user->profile_pic()->first();
         $keys = ['avatar', 'regular'];
+        $storagePath = (string)Storage::disk('local')->getDriver()->getAdapter()->getPathPrefix();
         $response = [
             'profile_pic_avatar' => null,
             'profile_pic_regular' => null,
@@ -154,7 +156,9 @@ class UserFunctions
             'email' => $user->email,
             'phone' => $user->phone,
             'user_id' => $user->id,
-            'ratings' => RatingType::all()->pluck('name')
+            'ratings' => RatingType::all()->pluck('name'),
+            'secret_photo' => $storagePath . '/secret.jpeg',
+            'pointer' => $storagePath . '/pointer.png'
         ];
         if (is_object($profile_pic)) {
             foreach ($keys as $key) {
