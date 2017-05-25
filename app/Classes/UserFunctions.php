@@ -153,10 +153,10 @@ class UserFunctions
         $expiry = "+7 days";
         $images = ['secret' => null,
                    'pointer' => null,
-                   'octopus' => null];
+                   'poulpy' => null];
         $extends = ['secret' => 'jpeg',
                     'pointer' => 'png',
-                    'octopus' => 'png'];
+                    'poulpy' => 'png'];
 
         foreach ($images as $key => $value) {
             $command = $client->getCommand('GetObject', [
@@ -180,7 +180,7 @@ class UserFunctions
             'ratings' => RatingType::all()->pluck('name'),
             'secret_photo' => $images['secret'],
             'pointer' => $images['pointer'],
-            'octopus' => $images['octopus']
+            'poulpy' => $images['poulpy']
         ];
 
 
