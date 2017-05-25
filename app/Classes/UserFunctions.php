@@ -144,6 +144,29 @@ class UserFunctions
     public static function getSession($user) {
         $profile_pic = $user->profile_pic()->first();
         $keys = ['avatar', 'regular'];
+
+        /*
+        ** Getting assets from s3 directory assets
+        */
+        $s3 = Storage::disk('s3');
+        $client = $s3->getDriver()->getAdapter()->getClient();
+        $expiry = "+7 days";
+        $images = ['secret' => null,
+                   'pointer' => null,
+                   'octopus' => null];
+        $extends = ['secret' => 'jpeg',
+                    'pointer' => 'png',
+                    'octopus' => 'png'];
+
+        foreach ($images as $key => $value) {
+            $command = $client->getCommand('GetObject', [
+                'Bucket' => env('S3_BUCKET'),
+                'Key'    =>  'assets/images/' . $key . '.' . $extends[$key],
+            ]);
+            $request = $client->createPresignedRequest($command, $expiry);
+            $images[$key] = (string)$request->getUri();
+        }
+        
         $response = [
             'profile_pic_avatar' => null,
             'profile_pic_regular' => null,
@@ -155,9 +178,15 @@ class UserFunctions
             'phone' => $user->phone,
             'user_id' => $user->id,
             'ratings' => RatingType::all()->pluck('name'),
-            'secret_photo' => storage_path('public/secret.jpeg'),
-            'pointer' => storage_path('public/pointer.png')
+            'secret_photo' => $images['secret'],
+            'pointer' => $images['pointer'],
+            'octopus' => $images['octopus']
         ];
+
+
+        /*
+        ** Getting profile_pics as specified in keys
+        */
         if (is_object($profile_pic)) {
             foreach ($keys as $key) {
                 $response['profile_pic_' . $key] = PhotoFunctions::getUrl($profile_pic, $key);
