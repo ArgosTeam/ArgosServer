@@ -172,11 +172,15 @@ class PhotoFunctions
                 $follower->notify(new NewPublicPicture($user, $photo, 'database'));
             }
         } else {
-            $user->notify(new NewPrivatePicture($user, $photo, 'slack'));
-            if (!empty($friends_id)) {
-                $friends = User::whereIn('users.id', $friends_id)->get();
-                Notification::send($friends, new NewPrivatePicture($user, $photo, 'database'));
-            }
+            $user->notify(new NewPrivatePicture($user, $photo, 'slack'));    
+        }
+
+        /*
+        ** Notify Users that a picture is in their album
+        */
+        if (!empty($friends_id)) {
+            $friends = User::whereIn('users.id', $friends_id)->get();
+            Notification::send($friends, new NewPrivatePicture($user, $photo, 'database'));
         }
         
         return (response(['photo_id' => $photo->id], 200));
