@@ -28,7 +28,9 @@ class PhotoFunctions
         if (!is_object($photo)) {
             return null;
         }
-        $allow = ($photo->mode == 'normal' || $user->isUnlocked($photo->id));
+        $allow = ($photo->mode == 'normal'
+                  || $photo->mode == null
+                  || $user->isUnlocked($photo->id));
         if ($allow) {
             $s3 = Storage::disk('s3');
             $client = $s3->getDriver()->getAdapter()->getClient();
