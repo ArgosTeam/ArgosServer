@@ -316,7 +316,9 @@ class PhotoFunctions
             'mode' => $photo->mode,
             'rating' => $rating,
             'rated' => (is_object($rated) ? $rated->rating_type->name : null),
-            'following' => is_object($following)
+            'following' => is_object($following),
+            'lat' => $photo->location->lat,
+            'lng' => $photo->location->lng
         ];
 
         return response($data, 200);
