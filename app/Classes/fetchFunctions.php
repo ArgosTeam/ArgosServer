@@ -72,18 +72,18 @@ class fetchFunctions
         **   So vector AM = Ax + By, A = k - i, B = j - l
         ** Then multiply vector by associated conf in order to split the screen
         */
-        $farLeftY = (float)$poly[0][0];
-        $farLeftX = (float)$poly[0][1];
+        $farLeftY = (float)$poly[0][1];
+        $farLeftX = (float)$poly[0][0];
         $splitV = 6;
         $splitH = 3;
 
         /*
         ** Set up vectors 
         */
-        $vRightX = (float)$poly[1][1] - $farLeftX;
-        $vRightY = (float)$poly[1][0] - $farLeftY;
-        $vDownX = (float)$poly[2][1] - $farLeftX;
-        $vDownY = (float)$poly[2][0] - $farLeftY;
+        $vRightX = (float)$poly[1][0] - $farLeftX;
+        $vRightY = (float)$poly[1][1] - $farLeftY;
+        $vDownX = (float)$poly[2][0] - $farLeftX;
+        $vDownY = (float)$poly[2][1] - $farLeftY;
         
         for ($v = 0; $v < $splitV; $v++) {
             for ($h = 0; $h < $splitH; $h++) {
