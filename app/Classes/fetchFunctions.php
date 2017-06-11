@@ -168,22 +168,22 @@ class fetchFunctions
                     
                 }
 
-                if ($mode == 'group'
-                    || $mode == 'all') {
-                    /*
-                    ** Base of groups request
-                    */
-                    $query_locations_groups = clone $query_base_locations;
-                    fetchFunctions::addJoinGroupFilter($query_locations_groups, $filter['groups'], $filter['users']);
+                // if ($mode == 'group'
+                //     || $mode == 'all') {
+                //     /*
+                //     ** Base of groups request
+                //     */
+                //     $query_locations_groups = clone $query_base_locations;
+                //     fetchFunctions::addJoinGroupFilter($query_locations_groups, $filter['groups'], $filter['users']);
                     
-                    /*
-                    ** Get Groups -- TODO : check rights to display info
-                    */
-                    $locations_groups = $query_locations_groups
-                                      ->latest()
-                                      ->limit(1)
-                                      ->get();
-                }
+                //     /*
+                //     ** Get Groups -- TODO : check rights to display info
+                //     */
+                //     $locations_groups = $query_locations_groups
+                //                       ->latest()
+                //                       ->limit(1)
+                //                       ->get();
+                // }
 
                 if ($mode == 'event'
                     || $mode == 'all') {
