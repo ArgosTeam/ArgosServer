@@ -36,7 +36,7 @@ class SearchFunctions {
             }
             $data[] = $newEntry;
         }
-        return response($data, 200);
+        return response(["content" => $data], 200);
     }
 
 
@@ -76,7 +76,7 @@ class SearchFunctions {
             ];
         }
 
-        return response($response, 200);
+        return response(["content" => $response], 200);
     }
 
     private static function getKnownUsers($user, $nameBegin, $limit, $self = false, $exclude_ids = []) {
@@ -307,6 +307,6 @@ class SearchFunctions {
             }
         }
 
-        return response($response, 200);
+        return response(["content" => $response], 200);
     }
 }
