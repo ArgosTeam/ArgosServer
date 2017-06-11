@@ -13,6 +13,6 @@ class FetchController extends Controller
 
     public function fetch(Request $request) {
         $data = $request->input();
-        return response(fetchFunctions::fetch($data));
+        return response(["content" => fetchFunctions::fetch($data)], 200);
     }
 }
