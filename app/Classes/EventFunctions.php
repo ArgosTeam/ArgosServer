@@ -246,7 +246,7 @@ class EventFunctions
         $data['admin_url'] = $profile_pica_path;
         $data['admin_name'] = $admin->nickname;
         
-        return response($data, 200);
+        return response(["content" => $data], 200);
     }
 
     public static function profile_pic($user, $encode, $event_id) {

@@ -66,7 +66,7 @@ class UserFunctions
             $response['own'] = false;
         }
         
-        return response($response, 200);
+        return response(["content" => $response], 200);
     }
 
     public static function follow($user, $user_id) {
