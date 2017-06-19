@@ -232,7 +232,7 @@ class GroupFunctions
             $data['admin_nickname'] = $admin->nickname;
             $data['admin_url'] = $profile_pic_path;
             
-            return response(["content" => $data], 200);
+            return response($data, 200);
         }
         return response(['status' => 'Group does not exist'], 403);
     }

@@ -66,7 +66,7 @@ class UserFunctions
             $response['own'] = false;
         }
         
-        return response(["content" => $response], 200);
+        return response($response, 200);
     }
 
     public static function follow($user, $user_id) {
@@ -138,7 +138,7 @@ class UserFunctions
                 'public' => $photo->public
             ];
         }
-        return response($response, 200);
+        return response(['content' => $response], 200);
     }
 
     public static function getSession($user) {
