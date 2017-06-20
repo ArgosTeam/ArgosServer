@@ -206,8 +206,8 @@ class UserFunctions
         $users = $currentUser->getFriends();
 
         if ($name_begin) {
-            $groups->where('name', 'like', '%' . $name_begin);
-            $users->where('nickname', 'like', '%' . $name_begin);
+            $groups->where('name', 'like', $name_begin . '%');
+            $users->where('nickname', 'like', $name_begin . '%');
         }
 
         $groups = $groups->get();
