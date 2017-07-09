@@ -44,7 +44,7 @@ class NotificationController extends Controller
             ];
         }
 
-        return response(["content" => $response], 200);
+        return response($response, 200);
     }
 
     public function markAsRead(Request $request) {
