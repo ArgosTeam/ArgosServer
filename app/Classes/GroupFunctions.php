@@ -198,7 +198,7 @@ class GroupFunctions
             }
             
             $data['group_id'] = $group_id;
-            $data['profile_pic'] = $profile_pic_path;
+            $data['profile_pic_regular'] = $profile_pic_path;
             $data['name'] = $group->name;
             $data['public'] = $group->public;
             $data['address'] = $group->address;
