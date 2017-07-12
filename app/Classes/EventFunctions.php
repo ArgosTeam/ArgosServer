@@ -210,7 +210,7 @@ class EventFunctions
         $profile_pic_path = PhotoFunctions::getUrl($profile_pic, 'regular');
           
         $data['name'] = $event->name;
-        $data['profile_pic'] = $profile_pic_path;
+        $data['profile_pic_regular'] = $profile_pic_path;
         $data['description'] = $event->description;
         $data['public'] = $event->public;
         $data['date'] = $event->start;
