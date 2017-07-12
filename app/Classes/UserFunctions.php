@@ -32,7 +32,7 @@ class UserFunctions
         $response = [];
         $response['id'] = $userProfile->id;
         $response['nickname'] = '';
-        $response['profile_pic'] = $profile_pic_path;
+        $response['profile_pic_regular'] = $profile_pic_path;
         $response['nickname'] = $userProfile->nickname;
         $response['university'] = '';
         $response['master'] = '';
