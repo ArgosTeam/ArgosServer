@@ -292,7 +292,7 @@ class UserFunctions
                 ];
             }
 
-            return response($response, 200);
+            return response(['content' => $response], 200);
         }
         
         return response(['status' => 'User does not exist'], 403);
