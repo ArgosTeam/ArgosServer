@@ -162,6 +162,14 @@ class PhotoFunctions
 
         }
 
+        /*
+        ** Unlock photo for self if mode = zoned
+        */
+        if ($photo->mode == "zoned") {
+            $userPos = [$photo->lat, $photo->lng];
+            PhotoFunctions::unlockPicture($user, $photo->id, $userPos);
+        }
+
         
         /*
         ** Process Hashtags in description
