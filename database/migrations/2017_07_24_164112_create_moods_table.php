@@ -16,7 +16,7 @@ class CreateMoodsTable extends Migration
     {
         $moods = ['mood_0', 'mood_1', 'mood_2', 'mood_3', 'mood_4', 'mood_5'];
         
-        Schema::table('moods', function (Blueprint $table) {
+        Schema::create('moods', function (Blueprint $table) {
             $table->increments('id');
             
             $table->string('name');
