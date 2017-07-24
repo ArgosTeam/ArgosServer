@@ -55,4 +55,8 @@ class Event extends Model
     public function inventory() {
         return $this->hasMany(Category::class);
     }
+
+    public function category() {
+        return $this->belongsTo(EventCategory::class);
+    }
 }

@@ -42,9 +42,14 @@ class EventFunctions
         $channel = new Channel();
         $channel->save();
 
+        $event_type = EventCategory::where('name', $data['type'])
+                    ->first();
+
         $event->channel()->associate($channel);
         
         $event->location()->associate($location);
+
+        $event->category()->associate($event_type);
         
         if ($event->save()) {
             
