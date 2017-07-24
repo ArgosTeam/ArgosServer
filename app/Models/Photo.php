@@ -61,4 +61,8 @@ class Photo extends Model
         return $this->belongsToMany(User::class, 'unlocks')
             ->withTimestamps();
     }
+
+    public function mood() {
+        return $this->belongsTo(Mood::class);
+    }
 }
