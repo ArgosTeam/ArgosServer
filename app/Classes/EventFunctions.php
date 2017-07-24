@@ -439,6 +439,14 @@ class EventFunctions
                     if (array_key_exists('public', $data)) {
                         $event->public = $data['public'];
                     }
+                    if (array_key_exists('type', $data)) {
+                        $event->category()->dissociate();
+
+                        $event_category = EventCategory::where('name', $data['type'])
+                                        ->first();
+
+                        $event->category()->associate($event_category);
+                    }
 
                     $event->save();
                     
