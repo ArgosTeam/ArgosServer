@@ -112,6 +112,15 @@ class PhotoFunctions
         $photo->public = $data['public'];
         $photo->mode = $data['mode'];
         $photo->description = $data['description'];
+
+        /*
+        ** Checking mood info
+        */
+        if (array_key_exists('mood', $data)) {
+            $mood = Mood::where('name', $data['mood']);
+
+            $photo->mood()->associate($mood);
+        }
         
         /*
         ** Create new location, each upload image from user is geolocalised
@@ -412,6 +421,14 @@ class PhotoFunctions
                 if (array_key_exists('public', $data)) {
                     $photo->public = $data['public'];
                 }
+                /*
+                ** Checking mood info
+                */
+                if (array_key_exists('mood', $data)) {
+                    $mood = Mood::where('name', $data['mood']);    
+                    $photo->mood()->associate($mood);
+                }
+                
                 $photo->save();
 
                 return response(['status' => 'Edit successfull'], 200);
