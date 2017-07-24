@@ -532,7 +532,8 @@ class GroupFunctions
                     'invited' => ((is_object($pivot) && $pivot->status == 'invited')
                                   ? true : false),
                     'accepted' => ((is_object($pivot) && $pivot->status == 'accepted')
-                                   ? true : false)
+                                   ? true : false),
+                    'date' => $event->start
                 ];
             }
 

@@ -291,7 +291,8 @@ class UserFunctions
                     'invited' => ($event->pivot->status == 'invited'
                                   ? true : false),
                     'accepted' => ($event->pivot->status == 'accepted'
-                                   ? true : false)
+                                   ? true : false),
+                    'date' => $event->start
                 ];
             }
 

@@ -220,7 +220,6 @@ class EventFunctions
         $data['public'] = $event->public;
         $data['date'] = $event->start;
         $data['expires'] = $event->expires;
-        $data['address'] = '';
         $data['public'] = $event->public;
         $data['lat'] = $event->location->lat;
         $data['lng'] = $event->location->lng;
