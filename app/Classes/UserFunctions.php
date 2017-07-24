@@ -41,6 +41,9 @@ class UserFunctions
         $response['lastname'] = null;
         $response['followers'] = $userProfile->followers()->get()->count();
         $response['following'] = $userProfile->followed()->get()->count();
+        $response['events_count'] = $userProfile->events()->count();
+        $response['groups_count'] = $userProfile->groups()->count();
+        $response['friends_count'] = $userProfile->getFriends()->count();
 
         $followPivot = $userProfile->followers()
                      ->where('users.id', $user->id)
