@@ -486,6 +486,7 @@ class PhotoFunctions
             */
             $d = GeoTools::haversine($userPos, $photoPos);
 
+            Log::info('DISTANCE IS : ' . $d);
             if ($d <= env('MIN_UNLOCK_DISTANCE')) {
             
                 $photo->unlocks()->attach($user->id);
