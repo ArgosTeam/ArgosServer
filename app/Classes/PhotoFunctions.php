@@ -178,8 +178,6 @@ class PhotoFunctions
         */
         if ($photo->mode == "zoned") {
             $userPos = [$photo->location->lat, $photo->location->lng];
-            Log::info('USERPOS : ' . print_r($userPos, true));
-            Log::info('PHOTOPOS : ' . $photo->location->lat . ' ' . $photo->location->lng);
             PhotoFunctions::unlockPicture($user, $photo->id, $userPos);
         }
 
