@@ -15,6 +15,7 @@ use App\Classes\InputFunctions;
 use App\Notifications\EventAdded;
 use App\Notifications\EventInvite;
 use App\Notifications\EventInviteAccepted;
+use App\Models\EventCategory;
 
 class EventFunctions
 {    

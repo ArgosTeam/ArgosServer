@@ -17,6 +17,7 @@ use App\Models\Channel;
 use App\Classes\GeoTools;
 use App\Models\RatingType;
 use App\Models\PhotoRating;
+use App\Models\Mood;
 
 class PhotoFunctions
 {
