@@ -118,7 +118,8 @@ class PhotoFunctions
         ** Checking mood info
         */
         if (array_key_exists('mood', $data)) {
-            $mood = Mood::where('name', $data['mood']);
+            $mood = Mood::where('name', $data['mood'])
+                  ->first();
 
             $photo->mood()->associate($mood);
         }
@@ -426,7 +427,8 @@ class PhotoFunctions
                 ** Checking mood info
                 */
                 if (array_key_exists('mood', $data)) {
-                    $mood = Mood::where('name', $data['mood']);    
+                    $mood = Mood::where('name', $data['mood'])
+                          ->first();    
                     $photo->mood()->associate($mood);
                 }
                 
