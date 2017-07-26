@@ -177,7 +177,9 @@ class PhotoFunctions
         ** Unlock photo for self if mode = zoned
         */
         if ($photo->mode == "zoned") {
-            $userPos = [$photo->lat, $photo->lng];
+            $userPos = [$photo->location->lat, $photo->location->lng];
+            Log::info('USERPOS : ' . print_r($userPos, true));
+            Log::info('PHOTOPOS : ' . $photo->location->lat . ' ' . $photo->location->lng);
             PhotoFunctions::unlockPicture($user, $photo->id, $userPos);
         }
 
