@@ -21,7 +21,7 @@ class GeoTools
            + cos($l1) * cos($l2)
            * sin($delta2 / 2) * sin($delta2 / 2);
 
-        $c = 2 * atan2(sqrt(a), sqrt(1-a));
+        $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
 
         $distance = $r * $c;
 
