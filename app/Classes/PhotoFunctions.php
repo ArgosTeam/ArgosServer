@@ -17,6 +17,7 @@ use App\Models\Channel;
 use App\Classes\GeoTools;
 use App\Models\RatingType;
 use App\Models\PhotoRating;
+use App\Models\Mood;
 
 class PhotoFunctions
 {
@@ -112,6 +113,16 @@ class PhotoFunctions
         $photo->public = $data['public'];
         $photo->mode = $data['mode'];
         $photo->description = $data['description'];
+
+        /*
+        ** Checking mood info
+        */
+        if (array_key_exists('mood', $data)) {
+            $mood = Mood::where('name', $data['mood'])
+                  ->first();
+
+            $photo->mood()->associate($mood);
+        }
         
         /*
         ** Create new location, each upload image from user is geolocalised
@@ -160,6 +171,14 @@ class PhotoFunctions
                 }
             }
 
+        }
+
+        /*
+        ** Unlock photo for self if mode = zoned
+        */
+        if ($photo->mode == "zoned") {
+            $userPos = [$photo->location->lat, $photo->location->lng];
+            PhotoFunctions::unlockPicture($user, $photo->id, $userPos);
         }
 
         
@@ -404,6 +423,15 @@ class PhotoFunctions
                 if (array_key_exists('public', $data)) {
                     $photo->public = $data['public'];
                 }
+                /*
+                ** Checking mood info
+                */
+                if (array_key_exists('mood', $data)) {
+                    $mood = Mood::where('name', $data['mood'])
+                          ->first();    
+                    $photo->mood()->associate($mood);
+                }
+                
                 $photo->save();
 
                 return response(['status' => 'Edit successfull'], 200);
@@ -457,8 +485,9 @@ class PhotoFunctions
             ** Check if distance is inferior to MIN_UNLOCK_DISTANCE
             */
             $d = GeoTools::haversine($userPos, $photoPos);
-            
-            if ($d <= env(MIN_UNLOCK_DISTANCE)) {
+
+            Log::info('DISTANCE IS : ' . $d);
+            if ($d <= env('MIN_UNLOCK_DISTANCE')) {
             
                 $photo->unlocks()->attach($user->id);
                 return response(['status' => 'Photo unlocked'], 200);

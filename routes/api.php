@@ -19,7 +19,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     ** Main request view rating and last
     */
     
-    Route::get('/fetch',            'FetchController@fetch');
+    Route::post('/fetch',            'FetchController@fetch');
     
 
     /*

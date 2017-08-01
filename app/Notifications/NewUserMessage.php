@@ -20,6 +20,7 @@ class NewUserMessage extends Notification
     public function __construct(User $user, $content)
     {
         $this->userFrom = $user;
+        $this->content = $content;
     }
 
     /**

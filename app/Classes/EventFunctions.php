@@ -15,6 +15,7 @@ use App\Classes\InputFunctions;
 use App\Notifications\EventAdded;
 use App\Notifications\EventInvite;
 use App\Notifications\EventInviteAccepted;
+use App\Models\EventCategory;
 
 class EventFunctions
 {    
@@ -42,9 +43,14 @@ class EventFunctions
         $channel = new Channel();
         $channel->save();
 
+        $event_type = EventCategory::where('name', $data['type'])
+                    ->first();
+
         $event->channel()->associate($channel);
         
         $event->location()->associate($location);
+
+        $event->category()->associate($event_type);
         
         if ($event->save()) {
             
@@ -215,7 +221,6 @@ class EventFunctions
         $data['public'] = $event->public;
         $data['date'] = $event->start;
         $data['expires'] = $event->expires;
-        $data['address'] = '';
         $data['public'] = $event->public;
         $data['lat'] = $event->location->lat;
         $data['lng'] = $event->location->lng;
@@ -433,6 +438,14 @@ class EventFunctions
                     }
                     if (array_key_exists('public', $data)) {
                         $event->public = $data['public'];
+                    }
+                    if (array_key_exists('type', $data)) {
+                        $event->category()->dissociate();
+
+                        $event_category = EventCategory::where('name', $data['type'])
+                                        ->first();
+
+                        $event->category()->associate($event_category);
                     }
 
                     $event->save();
