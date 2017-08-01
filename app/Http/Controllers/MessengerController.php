@@ -147,7 +147,7 @@ class MessengerController extends Controller
             ]);
         }
 
-        return response($results, 200);
+        return response(["content" => $results], 200);
     }
 
     public function getGroupMessages(Request $request) {
@@ -173,7 +173,7 @@ class MessengerController extends Controller
                     ];
                 }
 
-                return response($results, 200);
+                return response(["content" => $results], 200);
             }
 
             return response(['status' => 'Access denied to messenger'], 200);
@@ -205,7 +205,7 @@ class MessengerController extends Controller
                     ];
                 }
 
-                return response($results, 200);
+                return response(["content" => $results], 200);
             }
 
             return response(['status' => 'Access denied to messenger'], 200);
@@ -232,7 +232,7 @@ class MessengerController extends Controller
                 ];
             }
             
-            return response($results, 200);
+            return response(["content" => $results], 200);
             
         }
         
