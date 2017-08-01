@@ -324,6 +324,9 @@ class PhotoFunctions
         $following = $photo->users()
                    ->where('users.id', $user->id)
                    ->first();
+
+        $mood = $photo->mood()->first();
+        
         $data = [
             'id' => $photo->id,
             'url' => $photo_path,
@@ -336,6 +339,7 @@ class PhotoFunctions
             'rating' => $rating,
             'rated' => (is_object($rated) ? $rated->rating_type->name : null),
             'following' => is_object($following),
+            'mood' => is_object($mood) ? $mood->name : null,
             'lat' => $photo->location->lat,
             'lng' => $photo->location->lng
         ];

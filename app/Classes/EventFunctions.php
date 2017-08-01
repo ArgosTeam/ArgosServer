@@ -229,6 +229,8 @@ class EventFunctions
                        ->where('status', 'accepted')
                        ->get()
                        ->count();
+        $category = $event->category()->first();
+        $data['type'] = is_object($category) ? $category->name : null;
 
         $belong = $user->events()
                 ->where('events.id', '=', $event_id)
