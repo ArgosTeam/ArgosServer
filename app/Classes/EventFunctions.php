@@ -214,7 +214,8 @@ class EventFunctions
         $data = [];
         $profile_pic = $event->profile_pic()->first();
         $profile_pic_path = PhotoFunctions::getUrl($profile_pic, 'regular');
-          
+
+        $data['id'] = $event->id;
         $data['name'] = $event->name;
         $data['profile_pic_regular'] = $profile_pic_path;
         $data['description'] = $event->description;
