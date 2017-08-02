@@ -123,25 +123,24 @@ class UserFunctions
     }
 
     public static function getUserAlbum($user, $all) {
-        $photos = $user->photos()
-                ->where('admin', '=', true);
+        $photos = $user->photos();
         if (!$all) {
             $photos->where('public', '=', true);
         }
         $photos = $photos->get();
-        $response = [];
         foreach ($photos as $photo) {
-            
-            $response[] = [
+            $key = $photo->origin_user_id == $user->id ? 'own' : 'shared';
+            $response[$key][] = [
                 'id' => $photo->id,
                 'lat' => $photo->location->lat,
                 'lng' => $photo->location->lng,
                 'description' => $photo->description,
                 'path' => PhotoFunctions::getUrl($photo, 'regular'),
-                'public' => $photo->public
+                'public' => $photo->public,
+                'admin' => $photo->pivot->admin
             ];
         }
-        return response(['content' => $response], 200);
+        return response(["content" => $response], 200);
     }
 
     public static function getSession($user) {
