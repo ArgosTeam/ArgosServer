@@ -43,14 +43,15 @@ class EventFunctions
         $channel = new Channel();
         $channel->save();
 
-        $event_type = EventCategory::where('name', $data['type'])
-                    ->first();
+        if (array_key_exists($data, 'type')) {
+            $event_type = EventCategory::where('name', $data['type'])
+                        ->first();
+            $event->category()->associate($event_type);
+        }
 
         $event->channel()->associate($channel);
         
         $event->location()->associate($location);
-
-        $event->category()->associate($event_type);
         
         if ($event->save()) {
             
@@ -443,7 +444,9 @@ class EventFunctions
                         $event->public = $data['public'];
                     }
                     if (array_key_exists('type', $data)) {
-                        $event->category()->dissociate();
+                        if (is_object($event->category()->first())) {
+                            $event->category()->dissociate();
+                        }
 
                         $event_category = EventCategory::where('name', $data['type'])
                                         ->first();
