@@ -15,7 +15,8 @@ class AddEventCategoriesToEvent extends Migration
     {
         Schema::table('events', function (Blueprint $table) {
             $table->integer('event_category_id')
-                ->unsigned();
+                ->unsigned()
+                ->nullable();
 
             $table->foreign('event_category_id')
                 ->references('id')
