@@ -10,7 +10,7 @@ class PriorityQueue extends SplPriorityQueue {
     public function toArray($limit = -1) {
         $array = [];
 
-        $count = 0
+        $count = 0;
         foreach (clone $this as $item) {
             $array[] = $item;
             ++$count;

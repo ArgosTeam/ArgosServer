@@ -257,10 +257,17 @@ class SearchFunctions {
                 if (is_object($profile_pic)) {
                     $profile_pic_path = PhotoFunctions::getUrl($profile_pic);
                 }
+
+                $pivotFriend = $user->friends
+                             ->where('friend_id', $item->id)
+                             ->first();
+                
                 $response[] = [
                     'id' => $item->id,
                     'profile_pic' => $profile_pic_path,
-                    'name' => $item->nickname
+                    'name' => $item->nickname,
+                    'pending' => is_object($pivotFriend) && !$pivotFriend->pivot->active,
+                    'friend' => is_object($pivotFriend) && $pivotFriend->pivot->active
                 ];
             }
         }
