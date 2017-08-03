@@ -4,6 +4,7 @@ namespace App\Classes;
 
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use App\Models\User;
 use App\Notifications\FriendRequest;
 use App\Notifications\FriendRequestAccepted;
@@ -89,6 +90,7 @@ class FriendFunctions
             $results->insert($friend, $total_weight);
         }
 
+        Log::info("DEBUG FAVORITES : " . print_r($results->toArray(env('FRIENDS_FAVORITES_COUNT')), true));
         return response(["content" => $results->toArray(env('FRIENDS_FAVORITES_COUNT'))]);
     }
 }
