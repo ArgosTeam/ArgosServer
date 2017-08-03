@@ -133,11 +133,20 @@ class MessengerController extends Controller
         if (is_object($channel)) {
             foreach ($channel->messages()->get() as $message) {
                 $last_seen = $friend->last_seen_message_id == $message->id;
+
+                $profile_pic = $message->user->profile_pic()->first();
+                $profile_pic_path = null;
+
+                if (is_object($profile_pic)) {
+                    $profile_pic_path = PhotoFunctions::getUrl($profile_pic, 'avatar');
+                }
+                
                 $results[] = [
                     'id' => $message->id,
                     'content' => $message->content,
                     'user_id' => $message->user->id,
                     'last_seen' => $last_seen,
+                    'profile_pic' => $profile_pic_path,
                     'date' => $message->created_at
                 ];
             }
@@ -165,10 +174,18 @@ class MessengerController extends Controller
             if (is_object($pivot)) {
                 $channel = $group->channel;
                 foreach ($channel->messages()->get() as $message) {
+                    $profile_pic = $message->user->profile_pic()->first();
+                    $profile_pic_path = null;
+
+                    if (is_object($profile_pic)) {
+                        $profile_pic_path = PhotoFunctions::getUrl($profile_pic, 'avatar');
+                    }
+                    
                     $results[] = [
                         'id' => $message->id,
                         'content' => $message->content,
                         'user_id' => $message->user->id,
+                        'profile_pic' => $profile_pic_path,
                         'date' => $message->created_at
                     ];
                 }
@@ -196,11 +213,20 @@ class MessengerController extends Controller
                    ->first();
             if (is_object($pivot)) {
                 $channel = $event->channel;
+
+                $profile_pic = $message->user->profile_pic()->first();
+                $profile_pic_path = null;
+
+                if (is_object($profile_pic)) {
+                    $profile_pic_path = PhotoFunctions::getUrl($profile_pic, 'avatar');
+                }
+                
                 foreach ($channel->messages()->get() as $message) {
                     $results[] = [
                         'id' => $message->id,
                         'content' => $message->content,
                         'user_id' => $message->user->id,
+                        'profile_pic' => $profile_pic_path,
                         'date' => $message->created_at
                     ];
                 }
@@ -224,10 +250,18 @@ class MessengerController extends Controller
             // TODO : CHECK RIGHTS 
             $channel = $photo->channel;
             foreach ($channel->messages()->get() as $message) {
+                $profile_pic = $message->user->profile_pic()->first();
+                $profile_pic_path = null;
+
+                if (is_object($profile_pic)) {
+                    $profile_pic_path = PhotoFunctions::getUrl($profile_pic, 'avatar');
+                }
+                
                 $results[] = [
                     'id' => $message->id,
                     'content' => $message->content,
                     'user_id' => $message->user->id,
+                    'profile_pic' => $profile_pic_path,
                     'date' => $message->created_at
                 ];
             }
