@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Hashtag extends Model
 {
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'count'];
     
     public function photos() {
         return $this->belongsToMany(Photo::class)

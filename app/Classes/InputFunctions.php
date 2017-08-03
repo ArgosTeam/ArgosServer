@@ -20,8 +20,11 @@ class InputFunctions
             if (!is_object($hashtag)) {
                 $hashtag = new Hashtag();
                 $hashtag->name = $name;
-                $hashtag->save();
+                $hashtag->count = 1;
+            } else {
+                $hashtag->count += 1;
             }
+            $hashtag->save();
             $elem->hashtags()->attach($hashtag->id);                
         }
     }

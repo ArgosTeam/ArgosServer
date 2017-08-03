@@ -44,6 +44,10 @@ class UserFunctions
         $response['events_count'] = $userProfile->events()->count();
         $response['groups_count'] = $userProfile->groups()->count();
         $response['friends_count'] = $userProfile->getFriends()->count();
+        $response['photos_count'] = $userProfile->photos()
+                                  ->where('admin', true)
+                                  ->count();
+        $response['messages_count'] = $userProfile->messages->count();
 
         $followPivot = $userProfile->followers()
                      ->where('users.id', $user->id)

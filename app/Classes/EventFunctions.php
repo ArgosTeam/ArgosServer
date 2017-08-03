@@ -101,8 +101,6 @@ class EventFunctions
         
         return response(['event_id' => $event->id], 200);
     }
-
-    
     
     public static function join($user, $event_id) {
         $event = Event::find($event_id);

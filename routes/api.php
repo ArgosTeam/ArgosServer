@@ -187,4 +187,11 @@ Route::group(['middleware' => 'auth:api'], function () {
 
     /* GET */
     Route::get('/inventory/event/global', 'CategoryController@getInventory');
+
+    /*
+    ** Hashtags related
+    */
+
+    /* POST */
+    Route::post('/hashtag/trendings', 'HashtagController@trendings');
 });
