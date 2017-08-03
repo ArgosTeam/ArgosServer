@@ -134,4 +134,11 @@ class User extends Authenticatable
     public function isUnlocked($photo_id) {
         return $this->unlocks->contains($photo_id);
     }
+
+    /*
+    ** Photo Rating
+    */
+    public function photoRatings() {
+        return $this->hasMany(PhotoRating::class);
+    }
 }

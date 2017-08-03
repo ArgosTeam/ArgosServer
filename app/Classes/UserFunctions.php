@@ -129,8 +129,7 @@ class UserFunctions
         }
         $photos = $photos->get();
         foreach ($photos as $photo) {
-            $key = $photo->origin_user_id == $user->id ? 'own' : 'shared';
-            $response[$key][] = [
+            $response[] = [
                 'id' => $photo->id,
                 'lat' => $photo->location->lat,
                 'lng' => $photo->location->lng,
