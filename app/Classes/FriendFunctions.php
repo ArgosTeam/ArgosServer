@@ -105,9 +105,24 @@ class FriendFunctions
             ], $total_weight);
         }
 
+        /*
+        ** Ratio = priority / maxPriority
+        ** minimum maxPriority is 50 else, it is the max priority obtained by calculation
+        */
+        $maxPriorityMin = 50;
+        $maxPriority = $results->current()["priority"] > $maxPriorityMin ? $results->current()->priority : $maxPriorityMin;
+
+        // Serialize data
+        $arrayToReturn = $results->toArray(env('FRIENDS_FAVORITES_COUNT'));
+
+        // Update Ratio
+        $index = 0;
         while ($results->valid()) {
-            Log::info("DEBUG FAVORITES : " . print_r($results->current(), true);
+            $arrayToReturn[$index]["favorite_ratio"] = (Double)$results->current()["priority"] / (Double)$maxPriority;
+            $results->next();
+            ++$index;
         }
-        return response(["content" => $results->toArray(env('FRIENDS_FAVORITES_COUNT'))]);
+        
+        return response(["content" => $arrayToReturn]);
     }
 }
