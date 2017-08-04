@@ -1,9 +1,7 @@
 <?php
 namespace App\Classes;
 
-class PriorityQueue extends SplPriorityQueue {
-
-    private $queue = new Queue();
+class PriorityQueue extends \SplPriorityQueue {
 
     public function compare($priority1, $priority2) { 
         if ($priority1 === $priority2) return 0; 
