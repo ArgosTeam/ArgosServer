@@ -64,7 +64,8 @@ class FriendFunctions
     }
 
     public static function getFavorites($user) {
-        $friends = $user->getFriends();
+        $friends = $user->getFriends()
+                 ->get();
 
         // Impact of algorithm only applies on photos where user is admin
         $self_album_ids = $user->photos()
@@ -87,10 +88,26 @@ class FriendFunctions
                            ->count();
 
             $total_weight = $shared_weight * $shared_count + $ranking_weight * $ranking_count;
-            $results->insert($friend, $total_weight);
+
+            $profile_pic_path = null;
+            $profile_pic = $friend->profile_pic()->first();
+            if (is_object($profile_pic)) {
+                $profile_pic_path = PhotoFunctions::getUrl($profile_pic);
+            }
+            
+            $results->insert([
+                'id' => $friend->id,
+                'profile_pic' => $profile_pic_path,
+                'nickname' => $friend->nickname,
+                'firstname' => $friend->firstname,
+                'lastname' => $friend->lastname,
+                'favorite_ratio' => null
+            ], $total_weight);
         }
 
-        Log::info("DEBUG FAVORITES : " . print_r($results->toArray(env('FRIENDS_FAVORITES_COUNT')), true));
+        while ($results->valid()) {
+            Log::info("DEBUG FAVORITES : " . print_r($results->current(), true);
+        }
         return response(["content" => $results->toArray(env('FRIENDS_FAVORITES_COUNT'))]);
     }
 }
