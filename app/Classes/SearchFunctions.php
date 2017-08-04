@@ -320,14 +320,15 @@ class SearchFunctions {
                       ->limit($count)
                       ->get();
 
-            $results = [];
+            $response['photos'] = [];
+            $response['events'] = [];
             foreach ($hashtags as $hashtag) {
                 // Return hashtags link
                 $photos = $hashtag->photos()->get();
                 if (!empty($photos)) {
                     foreach ($photos as $photo) {
                         $url = PhotoFunctions::getUrl($photo);
-                        $results['photos'][] = [
+                        $response['photos'][] = [
                             'id' => $photo->id,
                             'lat' => $photo->location->lat,
                             'lng' => $photo->location->lng,
@@ -344,7 +345,7 @@ class SearchFunctions {
                             $profile_pic_path = PhotoFunctions::getUrl($profile_pic);
                         }
                         
-                        $results['events'][] = [
+                        $response['events'][] = [
                             'id' => $event->id,
                             'lat' => $event->location->lat,
                             'lng' => $event->location->lng,
@@ -353,8 +354,7 @@ class SearchFunctions {
                     }
                 }
             }
-            return response(["content" => $results], 200);        
         }
-
+        return response(["content" => $response], 200);
     }
 }
