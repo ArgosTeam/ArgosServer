@@ -320,9 +320,9 @@ class SearchFunctions {
                       ->limit($count)
                       ->get();
 
+            $results = [];
             foreach ($hashtags as $hashtag) {
                 // Return hashtags link
-                $results = [];
                 $photos = $hashtag->photos()->get();
                 if (!empty($photos)) {
                     foreach ($photos as $photo) {
