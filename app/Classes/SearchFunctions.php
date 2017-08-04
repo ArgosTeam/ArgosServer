@@ -353,8 +353,8 @@ class SearchFunctions {
                     }
                 }
             }
+            return response(["content" => $results], 200);        
         }
 
-        return response(["content" => $results], 200);
     }
 }
