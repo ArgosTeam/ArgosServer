@@ -314,6 +314,16 @@ class SearchFunctions {
             }
         }
 
+        if ($mode == "hashtags") {
+            $hashtags = Hashtag::where('name', 'like', $name_begin . '%')
+                      ->limit($count)
+                      ->get();
+
+            foreach ($hashtags as $hashtag) {
+                // Return hashtags link
+            }
+        }
+
         return response(["content" => $response], 200);
     }
 }

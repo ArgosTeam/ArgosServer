@@ -485,6 +485,7 @@ class EventFunctions
             $response = ['groups' => [], 'users' => []];
             foreach ($groups as $group) {
                 $profile_pic = $group->profile_pic()->first();
+                $profile_pic_path = null;
                 if (is_object($profile_pic)) {
                     $profile_pic_path = PhotoFunctions::getUrl($profile_pic);
                 }
