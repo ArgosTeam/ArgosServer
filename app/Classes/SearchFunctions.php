@@ -259,7 +259,7 @@ class SearchFunctions {
                     $profile_pic_path = PhotoFunctions::getUrl($profile_pic);
                 }
 
-                $pivotFriend = $user->friends
+                $pivotFriend = $user->friends()
                              ->where('friend_id', $item->id)
                              ->first();
                 
