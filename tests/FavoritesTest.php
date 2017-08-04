@@ -16,7 +16,7 @@ class FavoritesTest extends TestCase {
                                      [
                                          'grant_type' => 'password',
                                          'client_id' => '2',
-                                         'client_secret' => 'BwWvV7ecYlc42uGhBRojBWEHMtqfZeyKEJz5kVw0',
+                                         'client_secret' => 'Sf1lYjZkcXBkS8DyC1txUUo18gjP1BtOlBVdwDzb',
                                          'username' => 'aure.girardeau@gmail.com',
                                          'password' => 'toto',
                                          'scope' => '*'
