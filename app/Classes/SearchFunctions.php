@@ -317,7 +317,7 @@ class SearchFunctions {
         }
 
         if ($mode == "hashtags") {
-            $hashtags = Hashtag::where('name', 'like', $name_begin . '%')
+            $hashtags = Hashtag::where('name', 'like', '#' . $name_begin . '%')
                       ->orderBy('count', 'desc')
                       ->limit($count)
                       ->get();
