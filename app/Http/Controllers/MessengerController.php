@@ -15,6 +15,7 @@ use App\Models\Photo;
 use App\Classes\ChannelFunctions;
 use App\Classes\MessageFunctions;
 use App\Notifications\NewUserMessage;
+use App\Classes\PhotoFunctions;
 
 class MessengerController extends Controller
 {

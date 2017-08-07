@@ -269,7 +269,7 @@ class SearchFunctions {
                     'name' => $item->nickname,
                     'pending' => is_object($pivotFriend) && !$pivotFriend->pivot->active,
                     'friend' => is_object($pivotFriend) && $pivotFriend->pivot->active,
-                    'own' => is_object($pivotFriend) && $pivotFriend->own
+                    'own' => is_object($pivotFriend) && $pivotFriend->pivot->own
                 ];
             }
         }

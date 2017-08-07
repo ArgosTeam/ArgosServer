@@ -2,7 +2,6 @@
 
 namespace App\Classes;
 
-
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use App\Models\User;
@@ -25,7 +24,6 @@ class FriendFunctions
         } else {
             $user->notify(new FriendRequest($user, $friend, 'database'));
         }
-        $user->followed()->attach($friend->id);
         return response(['status' => 'success'], 200);
     }
 
@@ -38,6 +36,8 @@ class FriendFunctions
         } else {
             $user->notify(new FriendRequestAccepted($user, $friend, 'slack'));
         }
+        
+        $user->followed()->attach($friend->id);
         return response(['status' => 'success'], 200);
     }
 
@@ -73,8 +73,9 @@ class FriendFunctions
             $friend->photos()->detach($photo_id);
         }
 
-        // Remove friendship
+        // Remove friendship and followers
         $user->friends()->detach($friend->id);
+        $user->followers()->detach($friend->id);
 
         return response(['status' => 'success'], 200);
     }
