@@ -132,6 +132,7 @@ class UserFunctions
             $photos->where('public', '=', true);
         }
         $photos = $photos->get();
+        $response = [];
         foreach ($photos as $photo) {
             $response[] = [
                 'id' => $photo->id,
