@@ -363,7 +363,6 @@ class GroupFunctions
                 if ($pivotUser->pivot->admin) {
                     if ($group->users()->count() > 1) {
                         $nextUser = $group->users()
-                                  ->where('groups.id', $group->id)
                                   ->where('users.id', '!=', $user->id)
                                   ->first();
                         $nextUser->groups()->updateExistingPivot($group->id, [

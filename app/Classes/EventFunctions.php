@@ -417,7 +417,6 @@ class EventFunctions
                 if ($pivotUser->pivot->admin) {
                     if ($event->users()->count() > 1) {
                         $nextUser = $event->users()
-                                  ->where('events.id', $event->id)
                                   ->where('users.id', '!=', $user->id)
                                   ->first();
                         $nextUser->events()->updateExistingPivot($event->id, [
