@@ -341,7 +341,8 @@ class PhotoFunctions
             'following' => is_object($following),
             'mood' => is_object($mood) ? $mood->name : null,
             'lat' => $photo->location->lat,
-            'lng' => $photo->location->lng
+            'lng' => $photo->location->lng,
+            'date' => $photo->created_at
         ];
 
         return response($data, 200);

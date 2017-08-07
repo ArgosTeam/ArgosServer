@@ -322,7 +322,6 @@ class SearchFunctions {
                       ->limit($count)
                       ->get();
 
-            $response['hashtags'] = [];
             foreach ($hashtags as $hashtag) {
                 // Return hashtags link
                 $response[] = [
