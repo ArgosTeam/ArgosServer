@@ -22,7 +22,7 @@ class FriendController extends Controller
      }
 
     public function accept(Request $request) {
-        $user = Auth::user()->id;
+        $user = Auth::user();
         $friend_id = $request->input("id");
         $friend = User::find($friend_id);
         FriendFunctions::accept($friend, $user, true);
