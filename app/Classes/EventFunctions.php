@@ -412,7 +412,7 @@ class EventFunctions
                  */
                 $pivotUser = $user->events()
                        ->where('event_id', $event_id)
-                       ->get();
+                       ->first();
 
                 if ($pivotUser->pivot->admin) {
                     if ($event->users()->count() > 1) {

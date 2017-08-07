@@ -358,7 +358,7 @@ class GroupFunctions
                  */
                 $pivotUser = $user->groups()
                        ->where('group_id', $group_id)
-                       ->get();
+                       ->first();
 
                 if ($pivotUser->pivot->admin) {
                     if ($group->users()->count() > 1) {
