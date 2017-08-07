@@ -224,10 +224,12 @@ class EventFunctions
         $data['public'] = $event->public;
         $data['lat'] = $event->location->lat;
         $data['lng'] = $event->location->lng;
-        $data['count'] = $event->users()
+        $data['users_count'] = $event->users()
                        ->where('status', 'accepted')
                        ->get()
                        ->count();
+        $data['groups_count'] = $event->groups()->count();
+        $data['photos_count'] = $event->photos()->count();
         $category = $event->category()->first();
         $data['type'] = is_object($category) ? $category->name : null;
 
