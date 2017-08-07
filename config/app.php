@@ -186,10 +186,6 @@ return [
 
         // Geocoder
         Geocoder\Laravel\Providers\GeocoderService::class,
-        
-        // Generate migrations from existing db
-        // Way\Generators\GeneratorsServiceProvider::class,
-        // Xethron\MigrationsGenerator\MigrationsGeneratorServiceProvider::class,
     ],
 
     /*

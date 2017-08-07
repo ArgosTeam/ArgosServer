@@ -352,6 +352,30 @@ class GroupFunctions
         $group = Group::find($group_id);
         if (is_object($group)) {
             if ($group->users->contains($user->id)) {
+                /*
+                 *  If user is admin, set the next user to admin
+                 *  If no users left, delete the group 
+                 */
+                $pivotUser = $user->groups()
+                       ->where('group_id', $group_id)
+                       ->get();
+
+                if ($pivotUser->pivot->admin) {
+                    if ($group->users()->count() > 1) {
+                        $nextUser = $group->users()
+                                  ->where('groups.id', $group->id)
+                                  ->where('users.id', '!=', $user->id)
+                                  ->first();
+                        $nextUser->groups()->updateExistingPivot($group->id, [
+                            'admin' => true
+                        ]);
+                    } else {
+                        // No more users in group
+                        $group->delete();
+                        return response(['status' => 'Group quit and deleted successfully'], 200);
+                    }
+                }
+                
                 $group->users()->detach($user->id);
                 return response(['status' => 'Group quit successfully'], 200);
             }

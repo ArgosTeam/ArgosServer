@@ -405,6 +405,31 @@ class EventFunctions
         $event = Event::find($event_id);
         if (is_object($event)) {
             if ($event->users->contains($user->id)) {
+
+                /*
+                 *  If user is admin, set the next user to admin
+                 *  If no users left, delete the event 
+                 */
+                $pivotUser = $user->events()
+                       ->where('event_id', $event_id)
+                       ->get();
+
+                if ($pivotUser->pivot->admin) {
+                    if ($event->users()->count() > 1) {
+                        $nextUser = $event->users()
+                                  ->where('events.id', $event->id)
+                                  ->where('users.id', '!=', $user->id)
+                                  ->first();
+                        $nextUser->events()->updateExistingPivot($event->id, [
+                            'admin' => true
+                        ]);
+                    } else {
+                        // No more users in event
+                        $event->delete();
+                        return response(['status' => 'Event quit and deleted successfully'], 200);
+                    }
+                }
+                
                 $event->users()->detach($user->id);
                 return response(['status' => 'Event quit successfully'], 200);
             }
