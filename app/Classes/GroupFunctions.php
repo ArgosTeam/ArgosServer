@@ -204,10 +204,8 @@ class GroupFunctions
             $data['address'] = $group->address;
             $data['description'] = $group->description;
             $data['date'] = $group->created_at;
-            // $data['lat'] = $group->location->lat;
-            // $data['lng'] = $group->location->lng;
 
-            $belong =$group->users()
+            $belong = $group->users()
                     ->where('users.id', $user->id)
                     ->first();
 
@@ -231,6 +229,10 @@ class GroupFunctions
             $data['admin_id'] = $admin->id;
             $data['admin_nickname'] = $admin->nickname;
             $data['admin_url'] = $profile_pic_path;
+
+            $data['events_count'] = $group->events()->count();
+            $data['users_count'] = $group->users()->count();
+            $data['photos_count'] = $group->photos()->count();
             
             return response($data, 200);
         }
@@ -364,6 +366,7 @@ class GroupFunctions
                     if ($group->users()->count() > 1) {
                         $nextUser = $group->users()
                                   ->where('users.id', '!=', $user->id)
+                                  ->where('status', 'accepted')
                                   ->first();
                         $nextUser->groups()->updateExistingPivot($group->id, [
                             'admin' => true

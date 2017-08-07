@@ -418,6 +418,7 @@ class EventFunctions
                     if ($event->users()->count() > 1) {
                         $nextUser = $event->users()
                                   ->where('users.id', '!=', $user->id)
+                                  ->where('status', 'accepted')
                                   ->first();
                         $nextUser->events()->updateExistingPivot($event->id, [
                             'admin' => true
@@ -425,12 +426,14 @@ class EventFunctions
                     } else {
                         // No more users in event
                         $event->delete();
-                        return response(['status' => 'Event quit and deleted successfully'], 200);
+                        return response(['status' => 'Event quit and deleted successfully',
+                                         'state' => 'deleted'], 200);
                     }
                 }
                 
                 $event->users()->detach($user->id);
-                return response(['status' => 'Event quit successfully'], 200);
+                return response(['status' => 'Event quit successfully',
+                                 'state' => 'quit'], 200);
             }
             return response(['status' => 'User does not belong to event'], 403);
         }
