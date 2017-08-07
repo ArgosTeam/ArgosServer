@@ -49,8 +49,8 @@ class FriendController extends Controller
         $user = Auth::user();
         $friend_id = $request->friend('id');
         $friend = User::find($friend_id);
-        FriendFunctions::delete($friend, $user);
-        return FriendFunctions::delete($user, $friend);
+        FriendFunctions::remove($friend, $user);
+        return FriendFunctions::remove($user, $friend);
     }
 
     public function favorites(Request $request) {
