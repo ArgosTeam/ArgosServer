@@ -109,6 +109,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/friend/accept', 'FriendController@accept');
     Route::post('/friend/refuse', 'FriendController@refuse');
     Route::post('/friend/cancel', 'FriendController@cancel');
+    Route::post('/friend/delete', 'FriendController@delete');
 
     /* GET */
     Route::get('/friend/favorites', 'FriendController@favorites');

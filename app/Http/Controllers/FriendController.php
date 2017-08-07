@@ -14,8 +14,8 @@ class FriendController extends Controller
    
     public function add(Request $request) {
         $user = Auth::user();
-        $friendId = $request->input("id");
-        $friend = User::find($friendId);
+        $friend_id = $request->input("id");
+        $friend = User::find($friend_id);
         FriendFunctions::add($friend, $user);
         $response = FriendFunctions::add($user, $friend, true);
         return $response;
@@ -23,26 +23,34 @@ class FriendController extends Controller
 
     public function accept(Request $request) {
         $user = Auth::user()->id;
-        $friendId = $request->input("id");
-        $friend = User::find($friendId);
+        $friend_id = $request->input("id");
+        $friend = User::find($friend_id);
         FriendFunctions::accept($friend, $user, true);
         return FriendFunctions::accept($user, $friend);
     }
 
     public function refuse(Request $request) {
         $user = Auth::user();
-        $friendId = $request->input("id");
-        $friend = User::find($friendId);
+        $friend_id = $request->input("id");
+        $friend = User::find($friend_id);
         FriendFunctions::refuse($friend, $user, true);
         return FriendFunctions::refuse($user, $friend);
     }
 
     public function cancel(Request $request) {
         $user = Auth::user();
-        $friendId = $request->input("id");
-        $friend = User::find($friendId);
+        $friend_id = $request->input("id");
+        $friend = User::find($friend_id);
         FriendFunctions::cancel($friend, $user);
         return FriendFunctions::cancel($user, $friend);
+    }
+
+    public function remove(Request $request) {
+        $user = Auth::user();
+        $friend_id = $request->friend('id');
+        $friend = User::find($friend_id);
+        FriendFunctions::delete($friend, $user);
+        return FriendFunctions::delete($user, $friend);
     }
 
     public function favorites(Request $request) {

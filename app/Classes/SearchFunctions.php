@@ -268,7 +268,8 @@ class SearchFunctions {
                     'profile_pic' => $profile_pic_path,
                     'name' => $item->nickname,
                     'pending' => is_object($pivotFriend) && !$pivotFriend->pivot->active,
-                    'friend' => is_object($pivotFriend) && $pivotFriend->pivot->active
+                    'friend' => is_object($pivotFriend) && $pivotFriend->pivot->active,
+                    'own' => is_object($pivotFriend) && $pivotFriend->own
                 ];
             }
         }
@@ -317,42 +318,17 @@ class SearchFunctions {
 
         if ($mode == "hashtags") {
             $hashtags = Hashtag::where('name', 'like', $name_begin . '%')
+                      ->orderBy('count', 'desc')
                       ->limit($count)
                       ->get();
 
-            $response['photos'] = [];
-            $response['events'] = [];
+            $response['hashtags'] = [];
             foreach ($hashtags as $hashtag) {
                 // Return hashtags link
-                $photos = $hashtag->photos()->get();
-                if (!empty($photos)) {
-                    foreach ($photos as $photo) {
-                        $url = PhotoFunctions::getUrl($photo);
-                        $response['photos'][] = [
-                            'id' => $photo->id,
-                            'lat' => $photo->location->lat,
-                            'lng' => $photo->location->lng,
-                            'url' => $url
-                        ];
-                    }
-                }
-                $events = $hashtag->events()->get();
-                if (!empty($events)) {
-                    foreach ($events as $event) {
-                        $profile_pic_path = null;
-                        $profile_pic = $event->profile_pic()->first();
-                        if (is_object($profile_pic)) {
-                            $profile_pic_path = PhotoFunctions::getUrl($profile_pic);
-                        }
-                        
-                        $response['events'][] = [
-                            'id' => $event->id,
-                            'lat' => $event->location->lat,
-                            'lng' => $event->location->lng,
-                            'profile_pic' => $profile_pic_path
-                        ];
-                    }
-                }
+                $response[] = [
+                    'id' => $hashtag->id,
+                    'name' => $hashtag->name
+                ];
             }
         }
         return response(["content" => $response], 200);

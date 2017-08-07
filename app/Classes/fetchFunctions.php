@@ -143,7 +143,8 @@ class fetchFunctions
                 $locations_groups = collect();
                 $locations_events = collect();
                 if ($mode == 'photo'
-                    || $mode == 'all') {
+                    || $mode == 'all'
+                    || $mode = 'hashtags') {
                     
                     /*
                     ** Base of photos request, add conditions on locations to be in the screen
@@ -155,7 +156,9 @@ class fetchFunctions
                     /*
                     ** Add query filters dependencies
                     */
-                    fetchFunctions::addJoinPhotoUserFilter($query_locations_photos_users, $filter['users'], $filter['hashtags']);
+                    fetchFunctions::addJoinPhotoUserFilter($query_locations_photos_users,
+                                                           $filter['users'],
+                                                           $filter['hashtags']);
 
                     /*
                     ** Get Users picture
@@ -165,30 +168,15 @@ class fetchFunctions
                                             ->orderBy('created_at', 'desc')
                                             ->limit(15)
                                             ->get();
-                    
                 }
 
-                // if ($mode == 'group'
-                //     || $mode == 'all') {
-                //     /*
-                //     ** Base of groups request
-                //     */
-                //     $query_locations_groups = clone $query_base_locations;
-                //     fetchFunctions::addJoinGroupFilter($query_locations_groups, $filter['groups'], $filter['users']);
-                    
-                //     /*
-                //     ** Get Groups -- TODO : check rights to display info
-                //     */
-                //     $locations_groups = $query_locations_groups
-                //                       ->latest()
-                //                       ->limit(1)
-                //                       ->get();
-                // }
-
                 if ($mode == 'event'
-                    || $mode == 'all') {
+                    || $mode == 'all'
+                    || $mode == 'hashtags') {
                     $query_locations_events = clone $query_base_locations;
-                    fetchFunctions::addJoinEventFilter($query_locations_events, $filter['users']);
+                    fetchFunctions::addJoinEventFilter($query_locations_events,
+                                                       $filter['users'],
+                                                       $filter['hashtags']);
 
                     $locations_events = $query_locations_events
                                       ->latest()
@@ -346,12 +334,17 @@ class fetchFunctions
         });
     }
 
-    private static function addJoinEventFilter($query, $users_id) {
-        $query->whereHas('event', function ($query) use ($users_id) {
+    private static function addJoinEventFilter($query, $users_id, $hashtags) {
+        $query->whereHas('event', function ($query) use ($users_id, $hashtags) {
             if (!empty($users_id)) {
                 $query->whereHas('users', function ($subquery) use ($users_id) {
                     $subquery->whereIn('users.id', $users_id)
                         ->where('event_user.status', 'accepted');
+                });
+            }
+            if (!empty($hashtags)) {
+                $query->whereHas('hashtags', function ($subquery) use ($hashtags) {
+                    $subquery->whereIn('hashtags.name', $hashtags);
                 });
             }
         });

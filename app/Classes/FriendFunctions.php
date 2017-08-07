@@ -63,6 +63,22 @@ class FriendFunctions
         return response(['status' => 'success'], 200);
     }
 
+    public static function remove($user, $friend) {
+        // Remove all photos shared from user to friend, remove only relationship
+        $photos = $friend->photos()
+                ->where('origin_user_id', $user->id)
+                ->get()
+                ->pluck('id');
+        foreach ($photos as $photo_id) {
+            $friend->photos()->detach($photo_id);
+        }
+
+        // Remove friendship
+        $user->friends()->detach($friend->id);
+
+        return response(['status' => 'success'], 200);
+    }
+
     public static function getFavorites($user) {
         $friends = $user->getFriends()
                  ->get();
