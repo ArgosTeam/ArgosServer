@@ -233,6 +233,7 @@ class GroupFunctions
             $data['events_count'] = $group->events()->count();
             $data['users_count'] = $group->users()->count();
             $data['photos_count'] = $group->photos()->count();
+            $data['messages_count'] = $group->channel()->messages()->count();
             
             return response($data, 200);
         }
