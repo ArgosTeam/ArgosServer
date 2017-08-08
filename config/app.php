@@ -186,6 +186,12 @@ return [
 
         // Geocoder
         Geocoder\Laravel\Providers\GeocoderService::class,
+
+
+        /*
+         * Laravel Push Notifications
+         */
+        Davibennun\LaravelPushNotification\LaravelPushNotificationServiceProvider::class,
     ],
 
     /*
@@ -232,9 +238,8 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-
-        'Image' => Intervention\Image\Facades\Image::class
-
+        'Image' => Intervention\Image\Facades\Image::class,
+        'PushNotification' => Davibennun\LaravelPushNotification\Facades\PushNotification::class
     ],
 
 ];
