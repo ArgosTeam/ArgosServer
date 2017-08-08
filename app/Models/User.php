@@ -146,6 +146,7 @@ class User extends Authenticatable
     ** Locations user
     */
     public function locations() {
-        return $this->belongsToMany(Location::class, 'location_users');
+        return $this->belongsToMany(Location::class, 'location_users')
+            ->withTimestamps();
     }
 }
