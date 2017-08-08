@@ -47,7 +47,7 @@ class FriendController extends Controller
 
     public function remove(Request $request) {
         $user = Auth::user();
-        $friend_id = $request->friend('id');
+        $friend_id = $request->input('id');
         $friend = User::find($friend_id);
         FriendFunctions::remove($friend, $user);
         return FriendFunctions::remove($user, $friend);

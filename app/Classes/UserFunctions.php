@@ -45,7 +45,6 @@ class UserFunctions
         $response['groups_count'] = $userProfile->groups()->count();
         $response['friends_count'] = $userProfile->getFriends()->count();
         $response['photos_count'] = $userProfile->photos()
-                                  ->where('admin', true)
                                   ->count();
         $response['messages_count'] = $userProfile->messages->count();
 
