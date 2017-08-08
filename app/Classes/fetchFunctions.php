@@ -129,8 +129,8 @@ class fetchFunctions
         $mode = $data['mode'];
         $results = fetchFunctions::fetchAll($cells, $filter, $mode);
 
-        if (array_key_exists('lat', $data)
-            && array_key_exists('lng', $data)) {
+        if (array_key_exists('user_lat', $data)
+            && array_key_exists('user_lng', $data)) {
             $location = Location::create([
                 'lat' => $data['user_lat'],
                 'lng' => $data['user_lng']
