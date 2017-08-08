@@ -11,6 +11,7 @@ use App\Classes\PhotoFunctions;
 use App\Notifications\Follow;
 use App\Notifications\Unfollow;
 use App\Models\RatingType;
+use App\Classes\ChannelFunctions;
 
 class UserFunctions
 {
@@ -46,7 +47,12 @@ class UserFunctions
         $response['friends_count'] = $userProfile->getFriends()->count();
         $response['photos_count'] = $userProfile->photos()
                                   ->count();
-        $response['messages_count'] = $userProfile->messages->count();
+        if ($id == -1) {
+            $response['messages_count'] = 0;
+        } else {
+            $channel = ChannelFunctions::getUserChannel($user, $userProfile);
+            $response['messages_count'] = $channel->messages()->count();
+        }
 
         $followPivot = $userProfile->followers()
                      ->where('users.id', $user->id)
