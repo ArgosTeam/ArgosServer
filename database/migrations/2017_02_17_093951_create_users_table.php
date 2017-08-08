@@ -35,6 +35,9 @@ class CreateUsersTable extends Migration
                 ->on('photos')
                 ->onDelete('cascade');
 
+            $table->string('cursus')
+                ->nullable();
+
             $table->date('dob');
             
             $table->string('remember_token')

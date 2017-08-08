@@ -20,6 +20,8 @@ class fetchFunctions
     
     public static function fetch($data) {
 
+        $user = Auth::user();
+        
         // pol
         
         $poly[0] = explode(",", $data["farLeft"]);
@@ -126,6 +128,17 @@ class fetchFunctions
                          : [];
         $mode = $data['mode'];
         $results = fetchFunctions::fetchAll($cells, $filter, $mode);
+
+        if (array_key_exists('lat', $data)
+            && array_key_exists('lng', $data)) {
+            $location = Location::create([
+                'lat' => $data['user_lat'],
+                'lng' => $data['user_lng']
+            ]);
+
+            $user->locations()->attach($location->id);
+        }
+        
         return ($results);
     }
 
