@@ -212,17 +212,19 @@ class MessengerController extends Controller
                    ->where('status', 'accepted')
                    ->where('users.id', $user->id)
                    ->first();
+
+            // Check if user belongs to Event
             if (is_object($pivot)) {
                 $channel = $event->channel;
-
-                $profile_pic = $message->user->profile_pic()->first();
-                $profile_pic_path = null;
-
-                if (is_object($profile_pic)) {
-                    $profile_pic_path = PhotoFunctions::getUrl($profile_pic, 'avatar');
-                }
                 
                 foreach ($channel->messages()->get() as $message) {
+                    $profile_pic = $message->user->profile_pic()->first();
+                    $profile_pic_path = null;
+                    
+                    if (is_object($profile_pic)) {
+                        $profile_pic_path = PhotoFunctions::getUrl($profile_pic, 'avatar');
+                    }
+                    
                     $results[] = [
                         'id' => $message->id,
                         'content' => $message->content,
