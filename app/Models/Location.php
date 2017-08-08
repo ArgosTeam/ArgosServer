@@ -21,5 +21,7 @@ class Location extends Model
         return $this->hasOne(Group::class);
     }
 
-    
+    public function users() {
+        return $this->belongsToMany(User::class, 'location_users');
+    }
 }

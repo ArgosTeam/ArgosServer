@@ -141,4 +141,11 @@ class User extends Authenticatable
     public function photoRatings() {
         return $this->hasMany(PhotoRating::class);
     }
+
+    /*
+    ** Locations user
+    */
+    public function locations() {
+        return $this->belongsToMany(Location::class, 'location_users');
+    }
 }
