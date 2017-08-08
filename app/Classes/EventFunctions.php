@@ -43,7 +43,7 @@ class EventFunctions
         $channel = new Channel();
         $channel->save();
 
-        if (array_key_exists($data, 'type')) {
+        if (array_key_exists('type', $data)) {
             $event_type = EventCategory::where('name', $data['type'])
                         ->first();
             $event->category()->associate($event_type);
