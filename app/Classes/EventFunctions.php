@@ -230,7 +230,7 @@ class EventFunctions
                        ->count();
         $data['groups_count'] = $event->groups()->count();
         $data['photos_count'] = $event->photos()->count();
-        $data['messages_count'] = $event->channel()->messages()->count();
+        $data['messages_count'] = $event->channel->messages->count();
         $category = $event->category()->first();
         $data['type'] = is_object($category) ? $category->name : null;
 
