@@ -22,6 +22,7 @@ class Location extends Model
     }
 
     public function users() {
-        return $this->belongsToMany(User::class, 'location_users');
+        return $this->belongsToMany(User::class, 'location_users')
+            ->withTimestamps();
     }
 }
