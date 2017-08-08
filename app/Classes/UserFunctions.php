@@ -40,6 +40,7 @@ class UserFunctions
         $response['stats'] = '';
         $response['firstname'] = null;
         $response['lastname'] = null;
+        $response['cursus'] = $userProfile->cursus;
         $response['followers'] = $userProfile->followers()->get()->count();
         $response['following'] = $userProfile->followed()->get()->count();
         $response['events_count'] = $userProfile->events()->count();
@@ -162,21 +163,6 @@ class UserFunctions
         $s3 = Storage::disk('s3');
         $client = $s3->getDriver()->getAdapter()->getClient();
         $expiry = "+7 days";
-        $images = ['secret' => null,
-                   'pointer' => null,
-                   'poulpy' => null];
-        $extends = ['secret' => 'jpeg',
-                    'pointer' => 'png',
-                    'poulpy' => 'png'];
-
-        foreach ($images as $key => $value) {
-            $command = $client->getCommand('GetObject', [
-                'Bucket' => env('S3_BUCKET'),
-                'Key'    =>  'assets/images/' . $key . '.' . $extends[$key],
-            ]);
-            $request = $client->createPresignedRequest($command, $expiry);
-            $images[$key] = (string)$request->getUri();
-        }
         
         $response = [
             'profile_pic_avatar' => null,
@@ -188,10 +174,7 @@ class UserFunctions
             'email' => $user->email,
             'phone' => $user->phone,
             'user_id' => $user->id,
-            'ratings' => RatingType::all()->pluck('name'),
-            'secret_photo' => $images['secret'],
-            'pointer' => $images['pointer'],
-            'poulpy' => $images['poulpy']
+            'cursus' => $user->cursus
         ];
 
 
@@ -328,6 +311,9 @@ class UserFunctions
         }
         if (array_key_exists('dob', $data)) {
             $user->dob = $data['dob'];
+        }
+        if (array_key_exists('cursus', $data)) {
+            $user->cursus = $data['cursus'];
         }
         $user->save();
         
