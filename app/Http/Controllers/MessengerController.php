@@ -99,13 +99,8 @@ class MessengerController extends Controller
 
         if (is_object($photo)) {
 
-            // TODO : WHO CAN TALK IN PHOTO CHANNEL
-            // $pivot = $photo->users()
-            //        ->where('status', 'accepted')
-            //        ->where('users.id', $user->id)
-            //        ->first();
-            // if (is_object($pivot)) {
-            if (!$is_object($photo->channel()->first())) {
+            
+            if (!is_object($photo->channel()->first())) {
                 $channel = new Channel();
                 $channel->save();
                 $photo->channel()->associate($channel->id);
@@ -114,9 +109,6 @@ class MessengerController extends Controller
             
             $channel = $photo->channel;
             return MessageFunctions::sendMessageInChannel($user, $content, $channel);
-                //}
-
-            //return response(['status' => 'You need to be in event to send messages'], 403);
         }
 
         return response(['status' => 'Photo does not exist'], 403);

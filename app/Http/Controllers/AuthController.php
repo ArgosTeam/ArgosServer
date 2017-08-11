@@ -17,10 +17,10 @@ class AuthController extends Controller
         $phoneCheck = User::where('phone', '=', $data['phone'])->first();
 
         if (is_object($userCheck)) {
-            return (response()->json(['status' => 'Nickname already exists']));
+            return response(['status' => 'Nickname already exists'], 403);
         }
-        if (is_object($phoneCheck)){
-            return (response()->json(['status' => 'Phone number already used']));
+        if (is_object($phoneCheck)) {
+            return response(['status' => 'Phone number already used'], 403);
         }
 
         //Create User
