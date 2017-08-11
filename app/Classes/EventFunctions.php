@@ -416,7 +416,7 @@ class EventFunctions
                        ->first();
 
                 if ($pivotUser->pivot->admin) {
-                    if ($event->users()->count() > 1) {
+                    if ($event->users()->where('status', 'accepted')->count() > 1) {
                         $nextUser = $event->users()
                                   ->where('users.id', '!=', $user->id)
                                   ->where('status', 'accepted')
