@@ -364,7 +364,7 @@ class GroupFunctions
                        ->first();
 
                 if ($pivotUser->pivot->admin) {
-                    if ($group->users()->count() > 1) {
+                    if ($group->users()->where('status', 'accepted')->count() > 1) {
                         $nextUser = $group->users()
                                   ->where('users.id', '!=', $user->id)
                                   ->where('status', 'accepted')
