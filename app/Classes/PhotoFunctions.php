@@ -112,7 +112,10 @@ class PhotoFunctions
         $photo = PhotoFunctions::uploadImage($user, $md5, $decode);
         $photo->public = $data['public'];
         $photo->mode = $data['mode'];
-        $photo->description = $data['description'];
+
+        if (array_key_exists('description', $data)) {
+            $photo->description = $data['description'];
+        }
 
         /*
         ** Checking mood info
