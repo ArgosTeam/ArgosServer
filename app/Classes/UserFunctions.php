@@ -29,6 +29,19 @@ class UserFunctions
         if (is_object($profile_pic)) {
             $profile_pic_path = PhotoFunctions::getUrl($profile_pic, 'regular');
         }
+
+        $public_groups_count = $userProfile->groups()
+                             ->where('public', true)
+                             ->where('status', 'accepted')
+                             ->count();
+
+        $private_groups_count = $userProfile->groups()
+                              ->where('public', false)
+                              ->where('status', 'accepted')
+                              ->whereHas('users', function ($query) use ($user) {
+                                  $query->where('users.id', $user->id);
+                              })
+                              ->count();
         
         $response = [];
         $response['id'] = $userProfile->id;
@@ -44,13 +57,7 @@ class UserFunctions
         $response['followers'] = $userProfile->followers()->get()->count();
         $response['following'] = $userProfile->followed()->get()->count();
         $response['events_count'] = $userProfile->events()->count();
-        $response['groups_count'] = $userProfile->groups()
-                                  ->where('public', true)
-                                  ->orWhere('private', true)
-                                  ->whereHas('users', function ($joinQuery) use ($user) {
-                                      $joinQuery->where('users.id', $user->id)
-                                  })
-                                  ->count();
+        $response['groups_count'] = $public_groups_count + $private_groups_count;
         $response['friends_count'] = $userProfile->getFriends()->count();
         $response['photos_count'] = $userProfile->photos()
                                   ->count();
@@ -92,7 +99,7 @@ class UserFunctions
         $followed = User::find($user_id);
         if (is_object($followed)) {
             if ($user->followed->contains($user_id)) {
-                return response(['status' => 'User alredy followed'], 403);
+                return response(['status' => 'User already followed'], 403);
             }
             $user->followed()->attach($user_id);
             $user->notify(new Follow($followed, 'slack'));
