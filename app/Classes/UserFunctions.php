@@ -202,14 +202,32 @@ class UserFunctions
         return response($response, 200);
     }
 
+    private static function getGroups($userProfile, $user) {
+        // Only prvate groups that user has already joined can be displayed on a profile
+        $private_groups = $userProfile->groups()
+                        ->where('public', false)
+                        ->where('status', 'accepted')
+                        ->whereHas('users', function ($query) use ($user) {
+                            $query->where('users.id', $user->id)
+                                ->where('status', 'accepted');
+                        })
+                        ->get();
+
+        $public_groups = $userProfile->groups()
+                       ->where('public', true)
+                       ->where('status', 'accepted')
+                       ->get();
+
+        return $public_groups->merge($private_groups);
+    }
+    
     public static function getRelatedContacts($user,
                                               $user_id,
                                               $name_begin,
                                               $exclude) {
         
         $currentUser = ($user_id == -1 ? $user : User::find($user_id));
-        $groups = $currentUser->groups()
-                ->where('status', 'accepted');
+        $groups = UserFunctions::getGroups();
         $users = $currentUser->getFriends();
 
         if ($name_begin) {
