@@ -44,7 +44,13 @@ class UserFunctions
         $response['followers'] = $userProfile->followers()->get()->count();
         $response['following'] = $userProfile->followed()->get()->count();
         $response['events_count'] = $userProfile->events()->count();
-        $response['groups_count'] = $userProfile->groups()->count();
+        $response['groups_count'] = $userProfile->groups()
+                                  ->where('public', true)
+                                  ->orWhere('private', true)
+                                  ->whereHas('users', function ($joinQuery) use ($user) {
+                                      $joinQuery->where('users.id', $user->id)
+                                  })
+                                  ->count();
         $response['friends_count'] = $userProfile->getFriends()->count();
         $response['photos_count'] = $userProfile->photos()
                                   ->count();
