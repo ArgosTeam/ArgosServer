@@ -439,6 +439,20 @@ class PhotoFunctions
                           ->first();    
                     $photo->mood()->associate($mood);
                 }
+
+                /*
+                ** Checking mode
+                */
+                if (array_key_exists('mode', $data)) {
+                    $photo->mode = $data['mode'];
+                    
+                    if ($data['mode'] == 'zoned') {
+                        // Check if unlocks exists for self, if not create it
+                        if (!$user->isUnlocked($photo->id)) {
+                            $photo->unlocks()->attach($user->id);
+                        }
+                    }
+                }
                 
                 $photo->save();
 
