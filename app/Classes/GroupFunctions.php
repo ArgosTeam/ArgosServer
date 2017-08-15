@@ -196,6 +196,14 @@ class GroupFunctions
             if (is_object($profile_pic)) {
                 $profile_pic_path = PhotoFunctions::getUrl($profile_pic, 'regular');
             }
+
+            if ($user->belongsToGroup($group_id)) {
+                $groups = $group->groups()->get();
+                $photos = $group->photos()->get();
+            } else {
+                $groups = GroupFunctions::getGroupsOnEventGroupProfile($group, $user, null);
+                $photos = GroupFunctions::getPhotosOnProfile($group, $user);
+            }
             
             $data['group_id'] = $group_id;
             $data['profile_pic_regular'] = $profile_pic_path;
@@ -231,8 +239,11 @@ class GroupFunctions
             $data['admin_url'] = $profile_pic_path;
 
             $data['events_count'] = $group->events->count();
-            $data['users_count'] = $group->users->count();
-            $data['photos_count'] = $group->photos->count();
+            $data['users_count'] = $group->users()
+                                 ->where('status', 'accepted')
+                                 ->count();
+            $data['groups_count'] = $groups->count();
+            $data['photos_count'] = $photos->count();
             $data['messages_count'] = $group->channel->messages->count();
             
             return response($data, 200);
@@ -271,20 +282,47 @@ class GroupFunctions
         return response(['photo_id' => $photo->id], 200);
     }
 
+    /*
+    ** Methods to get the public display mode of group/photos (user does not belong to group)
+    ** If user belongs to group, it can access all datas of the group with group->elem()
+    */
+    public static function getPhotosOnProfile($user, $group) {
+        // get private pictures that user can see
+        $private_pictures = $group->photos()
+                          ->where('public', false)
+                          ->whereHas('users', function ($query) use ($user) {
+                              $query->where('users.id', $user->id)
+                                  ->where('status', 'accepted');
+                          })
+                          ->get();
+
+        $public_pictures = $group->photos()
+                         ->where('public', true)
+                         ->get();
+
+        $photos = $private_pictures->merge($public_pictures);
+        return $photos;
+    }
+    
     public static function photos($user, $group_id) {
         $group = Group::find($group_id);
         if (!is_object($group)) {
             return response(['status' => 'Group does not exists'], 403);
         }
 
+        $photos = GroupFunctions::getPhotosOnProfile($user, $group);
+
         $response = [];
-        foreach ($group->photos as $photo) {
-            
+        foreach ($photos as $photo) {
             $response[] = [
                 'id' => $photo->id,
                 'lat' => $photo->location->lat,
                 'lng' => $photo->location->lng,
-                'path' => PhotoFunctions::getUrl($photo, 'regular')
+                'description' => $photo->description,
+                'path' => PhotoFunctions::getUrl($photo, 'regular'),
+                'public' => $photo->public,
+                'mode' => $photo->mode,
+                'admin' => $photo->pivot->admin
             ];
         }
 
@@ -466,16 +504,14 @@ class GroupFunctions
                                               $exclude) {
         $group = Group::find($group_id);
 
-        $groups = $group->groups();
+        $groups = GroupFunctions::getGroupsOnEventGroupProfile($group, $user, $name_begin);
         $users = $group->users()
                ->where('status', 'accepted');
 
         if ($name_begin) {
-            $groups->where('name', 'like', '%' . $name_begin);
             $users->where('nickname', 'like', '%' . $name_begin);
         }
 
-        $groups = $groups->get();
         $users = $users->get();
         
         if (is_object($group)) {
@@ -570,6 +606,7 @@ class GroupFunctions
         return response(['status' => 'Group does not exist'], 403);
     }
 
+    // User Profile, get groups.
     public static function getGroupsOnUserProfile($userProfile, $user, $name_begin) {
         // Only prvate groups that user has already joined can be displayed on a profile
         $private_groups = $userProfile->groups()
@@ -595,16 +632,17 @@ class GroupFunctions
         return $public_groups->merge($private_groups);
     }
 
-    public static function getGroupsOnEventProfile($eventProfile, $user, $name_begin) {
+    // Event and Group profile get groups contacts if not in event/group
+    public static function getGroupsOnEventGroupProfile($element, $user, $name_begin) {
         // Only prvate groups that user has already joined can be displayed on a profile
-        $private_groups = $eventProfile->groups()
+        $private_groups = $element->groups()
                         ->where('public', false)
                         ->whereHas('users', function ($query) use ($user) {
                             $query->where('users.id', $user->id)
                                 ->where('status', 'accepted');
                         });
 
-        $public_groups = $eventProfile->groups()
+        $public_groups = $element->groups()
                        ->where('public', true);
         
         if ($name_begin) {

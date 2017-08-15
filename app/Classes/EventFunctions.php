@@ -220,7 +220,7 @@ class EventFunctions
             $groups = $event->groups()->get();
             $photos = $event->photos()->get();
         } else {
-            $groups = GroupFunctions::getGroupsOnProfile($event, $user, null);
+            $groups = GroupFunctions::getGroupsOnEventGroupProfile($event, $user, null);
             $photos = EventFunctions::getPhotosOnProfile($event, $user);
         }
         
@@ -542,7 +542,7 @@ class EventFunctions
                     ->where('name', 'like', $name_begin . '%')
                     ->get();
         } else {
-            $groups = GroupFunctions::getGroupsOnEventProfile($event, $user, $name_begin);
+            $groups = GroupFunctions::getGroupsOnEventGroupProfile($event, $user, $name_begin);
         }
         $users = $event->users()
                ->where('status', 'accepted');

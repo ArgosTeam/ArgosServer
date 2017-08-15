@@ -41,6 +41,13 @@ class User extends Authenticatable
             ->withPivot('admin', 'status');
     }
 
+    public function belongsToGroup($group_id) {
+        return is_object($this->groups()
+                         ->where('groups.id', $group_id)
+                         ->where('status', 'accepted')
+                         ->first());
+    }
+    
     public function events() {
         return $this->belongsToMany(Event::class)
             ->withTimestamps()
