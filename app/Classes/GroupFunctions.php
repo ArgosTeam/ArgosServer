@@ -309,7 +309,11 @@ class GroupFunctions
             return response(['status' => 'Group does not exists'], 403);
         }
 
-        $photos = GroupFunctions::getPhotosOnProfile($user, $group);
+        if ($user->belongsToGroup($group->id)) {
+            $photos = $group->photos()->get();
+        } else {
+            $photos = GroupFunctions::getPhotosOnProfile($user, $group);
+        }
 
         $response = [];
         foreach ($photos as $photo) {
