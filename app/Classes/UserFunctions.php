@@ -30,8 +30,9 @@ class UserFunctions
             $profile_pic_path = PhotoFunctions::getUrl($profile_pic, 'regular');
         }
 
-        $groups = GroupFunctions::getGroupsOnProfile($currentUser, $user, $name_begin);
+        $groups = GroupFunctions::getGroupsOnProfile($userProfile, $user, null);
         $photos = UserFunctions::getUserAlbum($userProfile, $user);
+        $events = EventFunctions::getEventsOnProfile($userProfile, $user, null);
         
         $response = [];
         $response['id'] = $userProfile->id;
@@ -46,7 +47,7 @@ class UserFunctions
         $response['cursus'] = $userProfile->cursus;
         $response['followers'] = $userProfile->followers()->get()->count();
         $response['following'] = $userProfile->followed()->get()->count();
-        $response['events_count'] = $userProfile->events()->count();
+        $response['events_count'] = $events->count();
         $response['groups_count'] = $groups->count();
         $response['friends_count'] = $userProfile->getFriends()->count();
         $response['photos_count'] = count($photos);

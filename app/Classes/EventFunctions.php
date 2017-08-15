@@ -559,4 +559,28 @@ class EventFunctions
         }
         return response(['status' => 'Group does not exists'], 403);
     }
+
+    public static function getEventsOnProfile($element, $user, $name_begin) {
+        $private_events = $element->events()
+                        ->where('public', false)
+                        ->where('status', 'accepted')
+                        ->whereHas('users', function ($query) use ($user) {
+                            $query->where('users.id', $user->id)
+                                ->where('status', 'accepted');
+                        });
+
+        $public_events = $element->events()
+                       ->where('public', true)
+                       ->where('status', 'accepted');
+        
+        if ($name_begin) {
+            $private_events->where('name', 'like', $name_begin . '%');
+            $public_events->where('name', 'like', $name_begin . '%');
+        }
+        
+        $private_events = $private_events->get();
+        $public_events = $public_events->get();
+        
+        return $public_events->merge($private_events);
+    }
 }
