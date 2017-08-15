@@ -397,6 +397,31 @@ class EventFunctions
 
         return response(['status' => 'Event does not exist'], 403);
     }
+
+    public static function unlink_photos($user, $event_id, $photo_ids) {
+        $event = Event::find($event_id);
+        if (is_object($event)) {
+            if ($user->belongsToEvent($event_id)) {
+                $photos = Photo::whereIn('id', $photo_ids)
+                        ->get();
+                // Check if user has photo in his album
+                $response_msg = "Success";
+                foreach ($photos as $photo) {
+                    if ($user->photos->contains($photo->id)) {
+                        $event->photos()->detach($photo->id);
+                    } else {
+                        $response_msg = "One of the photo is not in your album";
+                    }
+                }
+
+                return response(['status' => $response_msg], 200);
+            }
+
+            return response(['status' => 'User needs to be in the event'], 403);
+        }
+
+        return response(['status' => 'Event does not exist'], 403);
+    }
     
     /*
     ** Methods to get the public display mode of event/photos (user does not belong to event)
@@ -440,8 +465,7 @@ class EventFunctions
                 'description' => $photo->description,
                 'path' => PhotoFunctions::getUrl($photo, 'regular'),
                 'public' => $photo->public,
-                'mode' => $photo->mode,
-                'admin' => $photo->pivot->admin
+                'mode' => $photo->mode
             ];
         }
 

@@ -84,6 +84,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/event/link', 'EventController@link');
     Route::post('/event/unlink', 'EventController@unlink');
     Route::post('/event/photo/link', 'EventController@link_photos');
+    Route::post('/event/photo/unlink', 'EventController@unlink_photos');
 
     /* GET */
     Route::get('/event/contacts', 'EventController@contacts');

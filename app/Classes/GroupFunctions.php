@@ -324,8 +324,7 @@ class GroupFunctions
                 'description' => $photo->description,
                 'path' => PhotoFunctions::getUrl($photo, 'regular'),
                 'public' => $photo->public,
-                'mode' => $photo->mode,
-                'admin' => $photo->pivot->admin
+                'mode' => $photo->mode
             ];
         }
 
