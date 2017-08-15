@@ -332,6 +332,10 @@ class GroupFunctions
         return response(['content' => $response], 200);
     }
 
+    /*
+    ** ADMIN links
+    */
+    
     public static function link($user, $group_id, $invites) {
         $group = Group::find($group_id);
         if (is_object($group)) {
@@ -360,6 +364,34 @@ class GroupFunctions
 
             return response(['status' => 'Success'], 200);
         }
+        return response(['status' => 'Group does not exist'], 403);
+    }
+
+    /*
+    ** NON-ADMIN links
+    */
+    public static function link_photos($user, $group_id, $photo_ids) {
+        $group = Group::find($group_id);
+        if (is_object($group)) {
+            if ($user->belongsToGroup($group_id)) {
+                $photos = Photo::whereIn('id', $photo_ids)
+                        ->get();
+                // Check if user has photo in his album
+                $response_msg = "Success";
+                foreach ($photos as $photo) {
+                    if ($user->photos->contains($photo->id)) {
+                        $group->photos()->attach($photo->id);
+                    } else {
+                        $response_msg = "One of the photo is not in your album";
+                    }
+                }
+
+                return response(['status' => $response_msg], 200);
+            }
+
+            return response(['status' => 'User needs to be in the group'], 403);
+        }
+
         return response(['status' => 'Group does not exist'], 403);
     }
     

@@ -122,5 +122,10 @@ class EventController extends Controller
                                                   $exclude);
     }
 
-    
+    public function link_photos(Request $request) {
+        $event_id = $request->input('id');
+        $photo_ids = $request->input('items');
+        $user = Auth::user();
+        return EventFunctions::link_photos($user, $event_id, $photo_ids);
+    }
 }

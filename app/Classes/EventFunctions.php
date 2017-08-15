@@ -299,6 +299,9 @@ class EventFunctions
         return response(['photo_id' => $photo->id], 200);
     }
 
+    /*
+    ** ADMIN links
+    */
     public static function link($user, $event_id, $invites) {
         $event = Event::find($event_id);
         if (is_object($event)) {
@@ -350,7 +353,7 @@ class EventFunctions
                         if (!$currUser->pivot->admin) {
                             $event->users()->detach($user_id);
                         }
-                        // Notif slack user unlinked
+                        // TODO : Notif slack user unlinked
                     }
                 }
 
@@ -364,6 +367,34 @@ class EventFunctions
             }
             return response(['status' => 'Need to be admin'], 200);
         }
+        return response(['status' => 'Event does not exist'], 403);
+    }
+
+    /*
+    ** NON-ADMIN links
+    */
+    public static function link_photos($user, $event_id, $photo_ids) {
+        $event = Event::find($event_id);
+        if (is_object($event)) {
+            if ($user->belongsToEvent($event_id)) {
+                $photos = Photo::whereIn('id', $photo_ids)
+                        ->get();
+                // Check if user has photo in his album
+                $response_msg = "Success";
+                foreach ($photos as $photo) {
+                    if ($user->photos->contains($photo->id)) {
+                        $event->photos()->attach($photo->id);
+                    } else {
+                        $response_msg = "One of the photo is not in your album";
+                    }
+                }
+
+                return response(['status' => $response_msg], 200);
+            }
+
+            return response(['status' => 'User needs to be in the event'], 403);
+        }
+
         return response(['status' => 'Event does not exist'], 403);
     }
     

@@ -83,6 +83,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/event/refuse_invite', 'EventController@refuse_invite');
     Route::post('/event/link', 'EventController@link');
     Route::post('/event/unlink', 'EventController@unlink');
+    Route::post('/event/photo/link', 'EventController@link_photos');
 
     /* GET */
     Route::get('/event/contacts', 'EventController@contacts');
@@ -130,6 +131,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/group/edit', 'GroupController@edit');
     Route::post('/group/link', 'GroupController@link');
     Route::post('/group/unlink', 'GroupController@unlink');
+    Route::post('/group/photo/link', 'GroupController@link_photos');
     
     /* GET */
     Route::get('/group/infos', 'GroupController@infos');
