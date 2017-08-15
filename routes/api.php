@@ -133,6 +133,8 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::post('/group/link', 'GroupController@link');
     Route::post('/group/unlink', 'GroupController@unlink');
     Route::post('/group/photo/link', 'GroupController@link_photos');
+    Route::post('/group/event/link', 'GroupController@link_event');
+    Route::post('/group/event/unlink', 'GroupController@unlink_event');
     
     /* GET */
     Route::get('/group/infos', 'GroupController@infos');

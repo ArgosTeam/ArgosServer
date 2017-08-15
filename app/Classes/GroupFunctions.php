@@ -393,6 +393,83 @@ class GroupFunctions
 
         return response(['status' => 'Group does not exist'], 403);
     }
+
+    public static function unlink_photos($user, $group_id, $photo_ids) {
+        $group = Group::find($group_id);
+        if (is_object($group)) {
+            if ($user->belongsToGroup($group_id)) {
+                $photos = Photo::whereIn('id', $photo_ids)
+                        ->get();
+                // Check if user has photo in his album
+                $response_msg = "Success";
+                foreach ($photos as $photo) {
+                    if ($user->photos->contains($photo->id)) {
+                        $group->photos()->detach($photo->id);
+                    } else {
+                        $response_msg = "One of the photo is not in your album";
+                    }
+                }
+
+                return response(['status' => $response_msg], 200);
+            }
+
+            return response(['status' => 'User needs to be in the group'], 403);
+        }
+
+        return response(['status' => 'Group does not exist'], 403);
+    }
+
+    public static function link_event($user, $events_id, $group_id) {
+        $group = Group::find($group_id);
+        if (is_object($group)) {
+            if ($user->belongsToGroup($group_id)) {
+
+                $events = Event::whereIn('id', $events_id)
+                        ->get();
+
+                $response_msg = 'Success';
+                foreach ($events as $event) {
+                    if ($user->belongsToEvent($event->id)) {
+                        $group->events()->attach($event->id);
+                    } else {
+                        $response_msg = 'User does not belong to one of the event';
+                    }
+                }
+
+                return response(['status' => $response_msg], 200);
+            }
+
+            return response(['status' => 'User needs to be in group to do this action']);
+        }
+
+        return response(['status' => 'Group does not exist'], 403);
+    }
+
+    public static function unlink_event($user, $events_id, $group_id) {
+        $group = Group::find($group_id);
+        if (is_object($group)) {
+            if ($user->belongsToGroup($group_id)) {
+
+                $events = Event::whereIn('id', $events_id)
+                        ->get();
+
+                $response_msg = 'Success';
+                foreach ($events as $event) {
+                    if ($user->belongsToEvent($event->id)) {
+                        $group->events()->detach($event->id);
+                    } else {
+                        $response_msg = 'User does not belong to one of the event';
+                    }
+                }
+
+                return response(['status' => $response_msg], 200);
+            }
+
+            return response(['status' => 'User needs to be in group to do this action']);
+        }
+
+        return response(['status' => 'Group does not exist'], 403);
+    }
     
     public static function link_groups($user, $groups_id, $group) {
         $groups = Group::whereIn('groups.id', $groups_id)->get();
