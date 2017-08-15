@@ -67,7 +67,7 @@ class UserController extends Controller
         $user = Auth::user();
         $name_begin = $request->input('name_begin');
         $exclude = $request->input('excludes');
-        return UserFunctions::events($serProfile,
+        return UserFunctions::events($userProfile,
                                      $user,
                                      $name_begin,
                                      $exclude);

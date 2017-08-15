@@ -30,7 +30,7 @@ class UserFunctions
             $profile_pic_path = PhotoFunctions::getUrl($profile_pic, 'regular');
         }
 
-        $groups = GroupFunctions::getGroupsOnProfile($userProfile, $user, null);
+        $groups = GroupFunctions::getGroupsOnUserProfile($userProfile, $user, null);
         $photos = UserFunctions::getUserAlbum($userProfile, $user);
         $events = EventFunctions::getEventsOnProfile($userProfile, $user, null);
         
@@ -210,7 +210,7 @@ class UserFunctions
                                               $exclude) {
         
         $currentUser = ($user_id == -1 ? $user : User::find($user_id));
-        $groups = GroupFunctions::getGroupsOnProfile($currentUser, $user, $name_begin);
+        $groups = GroupFunctions::getGroupsOnUserProfile($currentUser, $user, $name_begin);
         $users = $currentUser->getFriends();
 
         if ($name_begin) {

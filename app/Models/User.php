@@ -47,6 +47,13 @@ class User extends Authenticatable
             ->withPivot('status', 'admin');
     }
 
+    public function belongsToEvent($event_id) {
+        return is_object($this->events()
+                         ->where('events.id', $event_id)
+                         ->where('status', 'accepted')
+                         ->first());
+    }
+
     public function friends() {
         return $this->belongsToMany(User::class, 'user_users', 'user_id', 'friend_id')
             ->withPivot('active', 'own')

@@ -214,6 +214,16 @@ class EventFunctions
         $profile_pic = $event->profile_pic()->first();
         $profile_pic_path = PhotoFunctions::getUrl($profile_pic, 'regular');
 
+        // In an event, if a user belongs to it, he can see all elements on the profile
+        // Else, he can see only elements public and related to him
+        if ($user->belongsToEvent($event->id)) {
+            $groups = $event->groups()->get();
+            $photos = $event->photos()->get();
+        } else {
+            $groups = GroupFunctions::getGroupsOnProfile($event, $user, null);
+            $photos = EventFunctions::getPhotosOnProfile($event, $user);
+        }
+        
         $data['id'] = $event->id;
         $data['name'] = $event->name;
         $data['profile_pic_regular'] = $profile_pic_path;
@@ -228,8 +238,8 @@ class EventFunctions
                        ->where('status', 'accepted')
                        ->get()
                        ->count();
-        $data['groups_count'] = $event->groups()->count();
-        $data['photos_count'] = $event->photos()->count();
+        $data['groups_count'] = $groups->count();
+        $data['photos_count'] = $photos->count();
         $data['messages_count'] = $event->channel->messages->count();
         $category = $event->category()->first();
         $data['type'] = is_object($category) ? $category->name : null;
@@ -356,21 +366,48 @@ class EventFunctions
         }
         return response(['status' => 'Event does not exist'], 403);
     }
+    
+    /*
+    ** Methods to get the public display mode of event/photos (user does not belong to event)
+    ** If user belongs to event, it can access all datas of the event with event->elem()
+    */
+    public static function getPhotosOnProfile($user, $event) {
+        // get private pictures that user can see
+        $private_pictures = $event->photos()
+                          ->where('public', false)
+                          ->whereHas('users', function ($query) use ($user) {
+                              $query->where('users.id', $user->id)
+                                  ->where('status', 'accepted');
+                          })
+                          ->get();
 
+        $public_pictures = $event->photos()
+                         ->where('public', true)
+                         ->get();
+
+        $photos = $private_pictures->merge($public_pictures);
+        return $photos;
+    }
+    
     public static function photos($user, $event_id) {
         $event = Event::find($event_id);
         if (!is_object($event)) {
             return response(['status' => 'Event does not exists'], 403);
         }
 
+        $photos = EventFunctions::getPhotosOnProfile($user, $event);
+
         $response = [];
-        foreach ($event->photos as $photo) {
-            
+        foreach ($photos as $photo) {
             $response[] = [
                 'id' => $photo->id,
                 'lat' => $photo->location->lat,
                 'lng' => $photo->location->lng,
-                'path' => PhotoFunctions::getUrl($photo, 'regular')
+                'description' => $photo->description,
+                'path' => PhotoFunctions::getUrl($photo, 'regular'),
+                'public' => $photo->public,
+                'mode' => $photo->mode,
+                'admin' => $photo->pivot->admin
             ];
         }
 
@@ -498,17 +535,22 @@ class EventFunctions
                                               $name_begin,
                                               $exclude) {
         $event = Event::find($event_id);
+        $name_begin = ($name_begin ? $name_begin : '');
 
-        $groups = $event->groups();
+        if ($user->belongsToEvent($event_id)) {
+            $groups = $event->groups()
+                    ->where('name', 'like', $name_begin . '%')
+                    ->get();
+        } else {
+            $groups = GroupFunctions::getGroupsOnEventProfile($event, $user, $name_begin);
+        }
         $users = $event->users()
                ->where('status', 'accepted');
 
         if ($name_begin) {
-            $groups->where('name', 'like', '%' . $name_begin);
-            $users->where('nickname', 'like', '%' . $name_begin);
+            $users->where('nickname', 'like', $name_begin . '%');
         }
-
-        $groups = $groups->get();
+        
         $users = $users->get();
         
         if (is_object($event)) {
