@@ -291,8 +291,7 @@ class GroupFunctions
         $private_pictures = $group->photos()
                           ->where('public', false)
                           ->whereHas('users', function ($query) use ($user) {
-                              $query->where('users.id', $user->id)
-                                  ->where('status', 'accepted');
+                              $query->where('users.id', $user->id);
                           })
                           ->get();
 
