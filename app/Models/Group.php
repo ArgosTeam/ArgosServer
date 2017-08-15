@@ -45,8 +45,7 @@ class Group extends Model
     }
 
     public function profile_pic() {
-        return $this->belongsTo(Photo::class, 'profile_pic_id')
-            ->withTimestamps();
+        return $this->belongsTo(Photo::class, 'profile_pic_id');
     }
     
     public function events() {
