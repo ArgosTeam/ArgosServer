@@ -394,7 +394,11 @@ class EventFunctions
             return response(['status' => 'Event does not exists'], 403);
         }
 
-        $photos = EventFunctions::getPhotosOnProfile($user, $event);
+        if ($user->belongsToEvent($event->id)) {
+            $photos = $event->photos()->get();
+        } else {
+            $photos = EventFunctions::getPhotosOnProfile($user, $event);
+        }
 
         $response = [];
         foreach ($photos as $photo) {
