@@ -61,12 +61,14 @@ class UserController extends Controller
 
     public function events(Request $request) {
         $user_id = $request->input('id');
-        $user = ($user_id == -1
-                 ? Auth::user()
-                 : User::find($user_id));
+        $userProfile = ($user_id == -1
+                        ? Auth::user()
+                        : User::find($user_id));
+        $user = Auth::user();
         $name_begin = $request->input('name_begin');
         $exclude = $request->input('excludes');
-        return UserFunctions::events($user,
+        return UserFunctions::events($serProfile,
+                                     $user,
                                      $name_begin,
                                      $exclude);
     }

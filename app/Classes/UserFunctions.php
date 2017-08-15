@@ -268,16 +268,13 @@ class UserFunctions
         return response(['status' => 'Group does not exists'], 403);
     }
 
-    public static function events($user,
+    public static function events($userProfile,
+                                  $user,
                                   $name_begin,
                                   $exclude) {
-        if (is_object($user)) {
+        if (is_object($userProfile)) {
             $response = [];
-            $events = $user->events();
-            if ($name_begin) {
-                $events->where('name', 'like', '%' . $name_begin);
-            }
-            $events = $events->get();
+            $events = EventFunctions::getEventsOnProfile($userProfile, $user, $name_begin);
             
             foreach ($events as $event) {
 
