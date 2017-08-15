@@ -10,7 +10,8 @@ class Photo extends Model
     protected $fillable = ['name', 'description', 'path', 'origin_user_id', 'location_id', 'md5', 'public', 'mode'];
 
     public function groups() {
-        return $this->belongsToMany(Group::class);
+        return $this->belongsToMany(Group::class)
+            ->withTimestamps();
     }
 
     public function users() {
