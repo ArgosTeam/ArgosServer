@@ -36,13 +36,11 @@ class UserController extends Controller
     }
 
     public function photos(Request $request) {
-        $user = $request->input('id') == -1
-              ? Auth::user()
-              : User::find($request->input('id'));
-        $all = $request->input('id') == -1
-             ? true
-             : false;
-        return UserFunctions::getUserAlbum($user, $all);
+        $userProfile = $request->input('id') == -1
+                     ? Auth::user()
+                     : User::find($request->input('id'));
+        $user = Auth::user();
+        return response(['content' => UserFunctions::getUserAlbum($userProfile, $user)], 200);
     }
 
     public function session(Request $request) {

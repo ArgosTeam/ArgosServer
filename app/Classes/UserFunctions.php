@@ -43,6 +43,8 @@ class UserFunctions
                               })
                               ->count();
         
+        $photos = UserFunctions::getUserAlbum($userProfile, $user);
+        
         $response = [];
         $response['id'] = $userProfile->id;
         $response['nickname'] = '';
@@ -59,8 +61,7 @@ class UserFunctions
         $response['events_count'] = $userProfile->events()->count();
         $response['groups_count'] = $public_groups_count + $private_groups_count;
         $response['friends_count'] = $userProfile->getFriends()->count();
-        $response['photos_count'] = $userProfile->photos()
-                                  ->count();
+        $response['photos_count'] = count($photos);
         if ($id == -1) {
             $response['messages_count'] = 0;
         } else {
@@ -145,12 +146,23 @@ class UserFunctions
         return response(['photo_id' => $photo->id], 200);
     }
 
-    public static function getUserAlbum($user, $all) {
-        $photos = $user->photos();
-        if (!$all) {
-            $photos->where('public', '=', true);
-        }
-        $photos = $photos->get();
+    public static function getUserAlbum($userProfile, $user) {
+
+        // Get private photos that user is allow to see on userProfile
+        $private_pictures = $userProfile->photos()
+                          ->where('public', false)
+                          ->whereHas('users', function ($query) use ($user) {
+                              $query->where('users.id', $user->id);
+                          })
+                          ->get();
+
+        // Get public pictures
+        $public_pictures = $userProfile->photos()
+                         ->where('public', true)
+                         ->get();
+        
+        $photos = $private_picture->merge($public_pictures);
+        
         $response = [];
         foreach ($photos as $photo) {
             $response[] = [
@@ -160,10 +172,11 @@ class UserFunctions
                 'description' => $photo->description,
                 'path' => PhotoFunctions::getUrl($photo, 'regular'),
                 'public' => $photo->public,
+                'mode' => $photo->mode,
                 'admin' => $photo->pivot->admin
             ];
         }
-        return response(["content" => $response], 200);
+        return $response;
     }
 
     public static function getSession($user) {
