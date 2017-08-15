@@ -414,7 +414,7 @@ class EventFunctions
             ];
         }
 
-        return response($response, 200);
+        return response(['content' => $response], 200);
     }
 
     public static function link_groups($user, $groups_id, $event) {

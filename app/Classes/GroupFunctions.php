@@ -309,7 +309,7 @@ class GroupFunctions
             return response(['status' => 'Group does not exists'], 403);
         }
 
-        if ($user->belongsToGroup($group->id)) {
+        if ($user->belongsToGroup($group_id)) {
             $photos = $group->photos()->get();
         } else {
             $photos = GroupFunctions::getPhotosOnProfile($user, $group);
@@ -329,7 +329,7 @@ class GroupFunctions
             ];
         }
 
-        return response($response, 200);
+        return response(['content' => $response], 200);
     }
 
     public static function link($user, $group_id, $invites) {
