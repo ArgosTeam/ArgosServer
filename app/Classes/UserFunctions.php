@@ -221,8 +221,8 @@ class UserFunctions
             $public_groups->where('name', 'like', $name_begin . '%');
         }
 
-        $private_groups->get();
-        $public_groups->get();
+        $private_groups = $private_groups->get();
+        $public_groups = $public_groups->get();
         
         return $public_groups->merge($private_groups);
     }
