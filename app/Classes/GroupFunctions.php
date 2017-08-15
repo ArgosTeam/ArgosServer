@@ -744,7 +744,7 @@ class GroupFunctions
     }
 
     // Event and Group profile get groups contacts if not in event/group
-    public static function getGroupsOnEventnGroupProfile($element, $user, $name_begin) {
+    public static function getGroupsOnEventGroupProfile($element, $user, $name_begin) {
         // Only prvate groups that user has already joined can be displayed on a profile
         $private_groups = $element->groups()
                         ->where('public', false)
