@@ -202,7 +202,7 @@ class UserFunctions
         return response($response, 200);
     }
 
-    private static function getGroups($userProfile, $user) {
+    private static function getGroups($userProfile, $user, $name_begin) {
         // Only prvate groups that user has already joined can be displayed on a profile
         $private_groups = $userProfile->groups()
                         ->where('public', false)
@@ -210,14 +210,20 @@ class UserFunctions
                         ->whereHas('users', function ($query) use ($user) {
                             $query->where('users.id', $user->id)
                                 ->where('status', 'accepted');
-                        })
-                        ->get();
+                        });
 
         $public_groups = $userProfile->groups()
                        ->where('public', true)
-                       ->where('status', 'accepted')
-                       ->get();
+                       ->where('status', 'accepted');
 
+        if ($name_begin) {
+            $private_groups->where('name', 'like', $name_begin . '%');
+            $public_groups->where('name', 'like', $name_begin . '%');
+        }
+
+        $private_groups->get();
+        $public_groups->get();
+        
         return $public_groups->merge($private_groups);
     }
     
@@ -227,15 +233,13 @@ class UserFunctions
                                               $exclude) {
         
         $currentUser = ($user_id == -1 ? $user : User::find($user_id));
-        $groups = UserFunctions::getGroups();
+        $groups = UserFunctions::getGroups($currentUser, $user, $name_begin);
         $users = $currentUser->getFriends();
 
         if ($name_begin) {
-            $groups->where('name', 'like', $name_begin . '%');
             $users->where('nickname', 'like', $name_begin . '%');
         }
 
-        $groups = $groups->get();
         $users = $users->get();
         
         if (is_object($currentUser)) {
