@@ -419,12 +419,12 @@ class GroupFunctions
         return response(['status' => 'Group does not exist'], 403);
     }
 
-    public static function link_event($user, $events_id, $group_id) {
+    public static function link_events($user, $group_id, $event_ids) {
         $group = Group::find($group_id);
         if (is_object($group)) {
             if ($user->belongsToGroup($group_id)) {
 
-                $events = Event::whereIn('id', $events_id)
+                $events = Event::whereIn('id', $event_ids)
                         ->get();
 
                 $response_msg = 'Success';
@@ -445,12 +445,12 @@ class GroupFunctions
         return response(['status' => 'Group does not exist'], 403);
     }
 
-    public static function unlink_event($user, $events_id, $group_id) {
+    public static function unlink_events($user, $group_id, $event_ids) {
         $group = Group::find($group_id);
         if (is_object($group)) {
             if ($user->belongsToGroup($group_id)) {
 
-                $events = Event::whereIn('id', $events_id)
+                $events = Event::whereIn('id', $event_ids)
                         ->get();
 
                 $response_msg = 'Success';
@@ -744,7 +744,7 @@ class GroupFunctions
     }
 
     // Event and Group profile get groups contacts if not in event/group
-    public static function getGroupsOnEventGroupProfile($element, $user, $name_begin) {
+    public static function getGroupsOnEventnGroupProfile($element, $user, $name_begin) {
         // Only prvate groups that user has already joined can be displayed on a profile
         $private_groups = $element->groups()
                         ->where('public', false)

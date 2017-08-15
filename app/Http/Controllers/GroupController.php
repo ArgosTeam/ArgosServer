@@ -121,4 +121,26 @@ class GroupController extends Controller
         $user = Auth::user();
         return GroupFunctions::link_photos($user, $group_id, $photo_ids);
     }
+
+    public function unlink_photos(Request $request) {
+        $group_id = $request->input('id');
+        $photo_ids = $request->input('items');
+        $user = Auth::user();
+        return GroupFunctions::unlink_photos($user, $group_id, $photo_ids);
+    }
+
+    public function link_events(Request $request) {
+        $group_id = $request->input('id');
+        $event_ids = $request->input('items');
+        $user = Auth::user();
+        return GroupFunctions::link_events($user, $group_id, $event_ids);
+    }
+
+    public function unlink_events(Request $request) {
+        $group_id = $request->input('id');
+        $event_ids = $request->input('items');
+        $user = Auth::user();
+        return GroupFunctions::unlink_events($user, $group_id, $event_ids);
+    }
+
 }

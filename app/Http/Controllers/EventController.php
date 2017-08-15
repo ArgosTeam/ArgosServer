@@ -128,4 +128,11 @@ class EventController extends Controller
         $user = Auth::user();
         return EventFunctions::link_photos($user, $event_id, $photo_ids);
     }
+
+    public function unlink_photos(Request $request) {
+        $event_id = $request->input('id');
+        $photo_ids = $request->input('items');
+        $user = Auth::user();
+        return EventFunctions::unlink_photos($user, $event_id, $photo_ids);
+    }
 }
