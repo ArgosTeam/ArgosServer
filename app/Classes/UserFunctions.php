@@ -30,19 +30,7 @@ class UserFunctions
             $profile_pic_path = PhotoFunctions::getUrl($profile_pic, 'regular');
         }
 
-        $public_groups_count = $userProfile->groups()
-                             ->where('public', true)
-                             ->where('status', 'accepted')
-                             ->count();
-
-        $private_groups_count = $userProfile->groups()
-                              ->where('public', false)
-                              ->where('status', 'accepted')
-                              ->whereHas('users', function ($query) use ($user) {
-                                  $query->where('users.id', $user->id);
-                              })
-                              ->count();
-        
+        $groups = GroupFunctions::getGroupsOnProfile($currentUser, $user, $name_begin);
         $photos = UserFunctions::getUserAlbum($userProfile, $user);
         
         $response = [];
@@ -59,7 +47,7 @@ class UserFunctions
         $response['followers'] = $userProfile->followers()->get()->count();
         $response['following'] = $userProfile->followed()->get()->count();
         $response['events_count'] = $userProfile->events()->count();
-        $response['groups_count'] = $public_groups_count + $private_groups_count;
+        $response['groups_count'] = $groups->count();
         $response['friends_count'] = $userProfile->getFriends()->count();
         $response['photos_count'] = count($photos);
         if ($id == -1) {
@@ -161,7 +149,7 @@ class UserFunctions
                          ->where('public', true)
                          ->get();
         
-        $photos = $private_picture->merge($public_pictures);
+        $photos = $private_pictures->merge($public_pictures);
         
         $response = [];
         foreach ($photos as $photo) {
@@ -214,31 +202,6 @@ class UserFunctions
         }
         return response($response, 200);
     }
-
-    private static function getGroups($userProfile, $user, $name_begin) {
-        // Only prvate groups that user has already joined can be displayed on a profile
-        $private_groups = $userProfile->groups()
-                        ->where('public', false)
-                        ->where('status', 'accepted')
-                        ->whereHas('users', function ($query) use ($user) {
-                            $query->where('users.id', $user->id)
-                                ->where('status', 'accepted');
-                        });
-
-        $public_groups = $userProfile->groups()
-                       ->where('public', true)
-                       ->where('status', 'accepted');
-
-        if ($name_begin) {
-            $private_groups->where('name', 'like', $name_begin . '%');
-            $public_groups->where('name', 'like', $name_begin . '%');
-        }
-
-        $private_groups = $private_groups->get();
-        $public_groups = $public_groups->get();
-        
-        return $public_groups->merge($private_groups);
-    }
     
     public static function getRelatedContacts($user,
                                               $user_id,
@@ -246,7 +209,7 @@ class UserFunctions
                                               $exclude) {
         
         $currentUser = ($user_id == -1 ? $user : User::find($user_id));
-        $groups = UserFunctions::getGroups($currentUser, $user, $name_begin);
+        $groups = GroupFunctions::getGroupsOnProfile($currentUser, $user, $name_begin);
         $users = $currentUser->getFriends();
 
         if ($name_begin) {

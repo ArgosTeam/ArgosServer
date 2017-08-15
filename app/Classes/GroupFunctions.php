@@ -569,4 +569,30 @@ class GroupFunctions
         
         return response(['status' => 'Group does not exist'], 403);
     }
+
+    //Element can be either Event/Group/User
+    public static function getGroupsOnProfile($element, $user, $name_begin) {
+        // Only prvate groups that user has already joined can be displayed on a profile
+        $private_groups = $element->groups()
+                        ->where('public', false)
+                        ->where('status', 'accepted')
+                        ->whereHas('users', function ($query) use ($user) {
+                            $query->where('users.id', $user->id)
+                                ->where('status', 'accepted');
+                        });
+
+        $public_groups = $element->groups()
+                         ->where('public', true)
+                         ->where('status', 'accepted');
+
+        if ($name_begin) {
+            $private_groups->where('name', 'like', $name_begin . '%');
+            $public_groups->where('name', 'like', $name_begin . '%');
+        }
+
+        $private_groups = $private_groups->get();
+        $public_groups = $public_groups->get();
+        
+        return $public_groups->merge($private_groups);
+    }
 }
