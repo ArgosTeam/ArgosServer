@@ -181,6 +181,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('/group/messages', 'MessengerController@getGroupMessages');
     Route::get('/event/messages', 'MessengerController@getEventMessages');
     Route::get('/photo/messages', 'MessengerController@getPhotoMessages');
+    Route::get('/messenger/channels', 'MessengerController@getAllChannels');
 
     /*
     ** Inventory routes

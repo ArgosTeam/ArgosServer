@@ -30,5 +30,57 @@ class ChannelFunctions
         return $channel;
     }
 
-    
+    public static function listAllUserChannels($user) {
+        $reponse = new PriorityQueue();
+        $response->setExtractFlags(PriorityQueue::EXTR_BOTH);
+        foreach ($user->channels()->get() as $channel) {
+            $channel_infos = [];
+            if ($channel->has('event')) {
+                $event = $channel->event()->first();
+                
+                $channel_infos['type'] = 'event';
+                $channel_infos['id'] = $event->id;
+                $channel_infos['profile_pic'] = PhotoFunctions::getUrl($event->profile_pic()->first());
+            } else if ($channel->has('group')) {
+                $group = $channel->group()->first();
+                
+                $channel_infos['type'] = 'group';
+                $channel_infos['id'] = $group->id;
+                $channel_infos['profile_pic'] = PhotoFunctions::getUrl($group->profile_pic()->first());
+            } else if ($channel->has('photo')) {
+                $photo = $channel->photo()->first();
+                
+                $channel_infos['type'] = 'photo';
+                $channel_infos['id'] = $photo->id;
+                $channel_infos['profile_pic'] = PhotoFunctions::getUrl($photo);
+            } else {
+                $friend = $channel->users()
+                        ->whereNot('id', $user->id)
+                        ->first();
+                
+                $channel_infos['type'] = 'user';
+                $channel_infos['id'] = $friend->id;
+                $channel_infos['profile_pic'] = PhotoFunctions::getUrl($friend->profile_pic()->first());
+            }
+
+            $channel_infos['last_msg'] = null;
+            $channel_infos['active'] = false;
+            $weight = 0;
+            $last_msg = $channel->messages()->last();
+            if (is_object($last_msg)) {
+                $channel_infos['last_msg'] = $last_msg->content;
+                $weight = $last_msg->id;
+                $last_read = Message::find($channel->pivot->last_seen_message_id);
+
+                if (!is_object($last_read) || $last_read->id != $last_msg->id) {
+                    $channel_infos['active'] = true;
+                }
+            }
+
+            // Using las_message_id as weight to sort by date, if no messages 0
+            $response->insert($channel_infos, $weight);
+        }
+
+        return $response->toArray();
+    }
 }

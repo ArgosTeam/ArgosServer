@@ -267,5 +267,12 @@ class MessengerController extends Controller
         
         return response(['status' => 'Photo does not exist', 403]);
     }
+
+    // Main messenger requests to get all messages in all channels related to self user
+    public function getAllChannels(Request $request) {
+        $user = Auth::user();
+        $response = ChannelFunctions::listAllUserChannels($user);
+        return response(['content' => $response], 200);
+    }
 }
 
