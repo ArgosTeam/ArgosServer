@@ -19,8 +19,12 @@ class NotificationController extends Controller
         $response = [];
         foreach ($notifications as $notification) {
             $userFrom = User::find($notification->data['user_id']);
-            
 
+            // If no object, user does not exist any more, delete notif
+            if (!is_object($userFrom)) {
+                $notification->delete();
+                continue;
+            }
             $profile_pic_path = null;
             $profile_pic = $userFrom->profile_pic()->first();
             if (is_object($profile_pic)) {
