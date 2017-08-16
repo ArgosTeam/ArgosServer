@@ -82,7 +82,7 @@ class GroupFunctions
             
             return response(['group_id' => $group->id], 200);
         } else {
-            return response('User not found', 403);
+            return response(['status' => 'User not found'], 403);
         }
     }
 
@@ -200,9 +200,11 @@ class GroupFunctions
             if ($user->belongsToGroup($group_id)) {
                 $groups = $group->groups()->get();
                 $photos = $group->photos()->get();
+                $events = $group->events()->get();
             } else {
                 $groups = GroupFunctions::getGroupsOnEventGroupProfile($group, $user, null);
                 $photos = GroupFunctions::getPhotosOnProfile($group, $user);
+                $events = EventFunctions::getEventsOnGroupProfile($group);
             }
             
             $data['group_id'] = $group_id;
@@ -682,11 +684,16 @@ class GroupFunctions
         $group = Group::find($group_id);
         if (is_object($group)) {
             $response = [];
-            $events = $group->events();
-            if ($name_begin) {
-                $events->where('name', 'like', '%' . $name_begin);
+
+            if ($user->belongsToGroup($group_id)) {
+                $events = $group->events();
+                if ($name_begin) {
+                    $events->where('name', 'like', $name_begin . '%');
+                }
+                $events = $events->get();
+            } else {
+                $events = EventFunctions::getEventsOnGroupProfile($group, $user, $name_begin);
             }
-            $events = $events->get();
             
             foreach ($events as $event) {
 
