@@ -204,7 +204,7 @@ class GroupFunctions
             } else {
                 $groups = GroupFunctions::getGroupsOnEventGroupProfile($group, $user, null);
                 $photos = GroupFunctions::getPhotosOnProfile($group, $user);
-                $events = EventFunctions::getEventsOnGroupProfile($group);
+                $events = EventFunctions::getEventsOnGroupProfile($group, $user);
             }
             
             $data['group_id'] = $group_id;
@@ -718,7 +718,7 @@ class GroupFunctions
                 ];
             }
 
-            return response($response, 200);
+            return response(['content' => $response], 200);
         }
         
         return response(['status' => 'Group does not exist'], 403);
