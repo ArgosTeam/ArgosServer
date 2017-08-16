@@ -443,7 +443,7 @@ class PhotoFunctions
                 /*
                 ** Checking mode
                 */
-                if (array_key_exists('mode', $data)) {
+                if (array_key_exists('mode', $data) && ($data['mode'] == 'zoned' || $data['mode'] == 'normal')) {
                     $photo->mode = $data['mode'];
                     
                     if ($data['mode'] == 'zoned') {
@@ -452,6 +452,8 @@ class PhotoFunctions
                             $photo->unlocks()->attach($user->id);
                         }
                     }
+                } else {
+                    return response(['status' => 'Wrong type of mode'], 403);
                 }
                 
                 $photo->save();
