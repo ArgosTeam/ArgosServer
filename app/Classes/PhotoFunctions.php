@@ -229,7 +229,7 @@ class PhotoFunctions
 
                     if (!empty($friends_id)) {
                         $friends = User::whereIn('users.id', $friends_id)->get();
-                        Notification::send($friends, new PrivatePicture($user, $photo, 'database'));
+                        Notification::send($friends, new NewPrivatePicture($user, $photo, 'database'));
                     }
                 }
                 
