@@ -144,9 +144,12 @@ class MessengerController extends Controller
                 ];
             }
             $latest_msg = $channel->messages()->latest()->first();
-            $channel->users()->updateExistingPivot($user->id, [
-                'last_seen_message_id' => $latest_msg->id
-            ]);
+
+            if (is_object($latest_msg)) {
+                $channel->users()->updateExistingPivot($user->id, [
+                    'last_seen_message_id' => $latest_msg->id
+                ]);
+            }
         }
 
         return response(["content" => $results], 200);
