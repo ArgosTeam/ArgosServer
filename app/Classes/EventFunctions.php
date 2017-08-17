@@ -684,7 +684,7 @@ class EventFunctions
         return $public_events->merge($private_events);
     }
 
-    public static function getEventsOnGroupProfile($group, $user, $name_begin) {
+    public static function getEventsOnGroupProfile($group, $user, $name_begin = null) {
         $private_events = $group->events()
                         ->where('public', false)
                         ->whereHas('users', function ($query) use ($user) {
