@@ -31,7 +31,7 @@ class ChannelFunctions
         $channel->users()->attach($user->id, [
             'user_conv' => true
         ]);
-        $channel->users()->attach($friend->id. [
+        $channel->users()->attach($friend->id, [
             'user_conv' => true
         ]);
         return $channel;
@@ -63,7 +63,12 @@ class ChannelFunctions
             } else {
                 $friend = $channel->users()
                         ->where('users.id', '!=', $user->id)
+                        ->where('user_conv', true)
                         ->first();
+
+                if (!is_object($friend)) {
+                    continue;
+                }
                 
                 $channel_infos['type'] = 'user';
                 $channel_infos['id'] = $friend->id;
@@ -73,7 +78,9 @@ class ChannelFunctions
             $channel_infos['last_msg'] = null;
             $channel_infos['active'] = false;
             $weight = 0;
-            $last_msg = $channel->messages()->last();
+            $last_msg = $channel->messages()
+                      ->orderBy('created_at', 'desc')
+                      ->first();
             if (is_object($last_msg)) {
                 $channel_infos['last_msg'] = $last_msg->content;
                 $weight = $last_msg->id;
