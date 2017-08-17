@@ -28,8 +28,12 @@ class ChannelFunctions
         $channel = new Channel();
 
         $channel->save();
-        $channel->users()->attach($user->id);
-        $channel->users()->attach($friend->id);
+        $channel->users()->attach($user->id, [
+            'user_conv' => true
+        ]);
+        $channel->users()->attach($friend->id. [
+            'user_conv' => true
+        ]);
         return $channel;
     }
 
