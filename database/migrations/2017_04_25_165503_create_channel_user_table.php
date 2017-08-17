@@ -29,6 +29,9 @@ class CreateChannelUserTable extends Migration
                 ->references('id')
                 ->on('users')
                 ->onDelete('cascade');
+
+            $table->tinyInteger('user_conv')
+                ->default(0);
             
             $table->timestamps();
         });

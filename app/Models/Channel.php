@@ -16,7 +16,7 @@ class Channel extends Model
 
     public function users() {
         return $this->belongsToMany(User::class)
-            ->withPivot('last_seen_message_id')
+            ->withPivot('last_seen_message_id', 'user_conv')
             ->withTimestamps();
     }
 

@@ -5,6 +5,9 @@ use App\Models\User;
 use App\Models\Photo;
 use App\Models\Location;
 use App\Models\Channel;
+use App\Models\Message;
+use Illuminate\Support\Facades\Log;
+
 use App\Classes\PhotoFunctions;
 
 class ChannelFunctions
@@ -31,23 +34,23 @@ class ChannelFunctions
     }
 
     public static function listAllUserChannels($user) {
-        $reponse = new PriorityQueue();
+        $response = new PriorityQueue();
         $response->setExtractFlags(PriorityQueue::EXTR_BOTH);
         foreach ($user->channels()->get() as $channel) {
             $channel_infos = [];
-            if ($channel->has('event')) {
+            if ($channel->event) {
                 $event = $channel->event()->first();
-                
+
                 $channel_infos['type'] = 'event';
                 $channel_infos['id'] = $event->id;
                 $channel_infos['profile_pic'] = PhotoFunctions::getUrl($event->profile_pic()->first());
-            } else if ($channel->has('group')) {
+            } else if ($channel->group) {
                 $group = $channel->group()->first();
                 
                 $channel_infos['type'] = 'group';
                 $channel_infos['id'] = $group->id;
                 $channel_infos['profile_pic'] = PhotoFunctions::getUrl($group->profile_pic()->first());
-            } else if ($channel->has('photo')) {
+            } else if ($channel->photo) {
                 $photo = $channel->photo()->first();
                 
                 $channel_infos['type'] = 'photo';
@@ -55,7 +58,7 @@ class ChannelFunctions
                 $channel_infos['profile_pic'] = PhotoFunctions::getUrl($photo);
             } else {
                 $friend = $channel->users()
-                        ->whereNot('id', $user->id)
+                        ->where('users.id', '!=', $user->id)
                         ->first();
                 
                 $channel_infos['type'] = 'user';
