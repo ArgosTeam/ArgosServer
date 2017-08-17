@@ -48,18 +48,16 @@ class ChannelFunctions
                 $channel_infos['type'] = 'event';
                 $channel_infos['id'] = $event->id;
                 $channel_infos['profile_pic'] = PhotoFunctions::getUrl($event->profile_pic()->first());
+                $channel_infos['name'] = $event->name;
             } else if ($channel->group) {
                 $group = $channel->group()->first();
                 
                 $channel_infos['type'] = 'group';
                 $channel_infos['id'] = $group->id;
+                $channel_infos['name'] = $group->name;
                 $channel_infos['profile_pic'] = PhotoFunctions::getUrl($group->profile_pic()->first());
             } else if ($channel->photo) {
-                $photo = $channel->photo()->first();
-                
-                $channel_infos['type'] = 'photo';
-                $channel_infos['id'] = $photo->id;
-                $channel_infos['profile_pic'] = PhotoFunctions::getUrl($photo);
+                continue ;
             } else {
                 $friend = $channel->users()
                         ->where('users.id', '!=', $user->id)
@@ -72,6 +70,7 @@ class ChannelFunctions
                 
                 $channel_infos['type'] = 'user';
                 $channel_infos['id'] = $friend->id;
+                $channel_infos['name'] = $friend->nickname;
                 $channel_infos['profile_pic'] = PhotoFunctions::getUrl($friend->profile_pic()->first());
             }
 
