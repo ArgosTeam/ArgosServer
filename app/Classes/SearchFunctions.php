@@ -326,7 +326,8 @@ class SearchFunctions {
                 // Return hashtags link
                 $response[] = [
                     'id' => $hashtag->id,
-                    'name' => $hashtag->name
+                    'name' => $hashtag->name,
+                    'count' => $hashtag->count
                 ];
             }
         }
